@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Diamond : MonoBehaviour {
+public class Diamond : MonoBehaviour, IPooledObject
+{
 
     public GameObject destroyVersion;
     public float speed = 5f;
@@ -23,9 +25,15 @@ public class Diamond : MonoBehaviour {
         rightPosition = new Vector3(5.25f, currPosition.y);
         nextPosition = rightPosition;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    public void OnObjectSpawn()
+    {
+        //currPosition = _RBTransform.localPosition;
+        nextPosition = rightPosition;
+    }
+
+    // Update is called once per frame
+    void Update () {
         _RBTransform.localPosition = currPosition;
         Move();
 	}
@@ -50,4 +58,5 @@ public class Diamond : MonoBehaviour {
         Destroy(destroyV, 2f);
         Destroy(gameObject);
     }
+
 }

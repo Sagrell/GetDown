@@ -7,24 +7,27 @@ public class GameManager : MonoBehaviour {
 
     public static float deltaTime = 0.0f;
     public static float fixedDeltaTime = 0.0f;
+    public static float difficultyIncrease = 1.0001f;
     public float gravity = 50f;
     public PlayerController player;
     public Animator pauseAnim;
     public Text playerScore;
     public Button resume;
+    public float difficulty = 0f;
     bool isPaused;
 
     void Awake () {
         Time.timeScale = 1f;
         Physics.gravity = new Vector3(0, -gravity);
         isPaused = false;
+        //difficultyIncrease = difficulty;
     }
 	
 
 	void Update () {
 
         deltaTime = Time.deltaTime;
-        Time.timeScale = 0.2f;
+        //Time.timeScale = 0.2f;
         if(!player.isAlive())
         {
             StartCoroutine(Dead());

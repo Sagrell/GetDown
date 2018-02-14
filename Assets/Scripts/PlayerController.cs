@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
         _RBLocalRotation = _RBTransform.localRotation;
-        isFreeFalling = false;
         willDie = false;
         alive = true;
         onGround = true;
@@ -52,8 +51,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        speed *= GameManager.difficultyIncrease;
         //Set position and rotation in fixed update cause its depends on collision!
-        if(!isFreeFalling)
+        if(!willDie)
         {
             _RBTransform.localRotation = _RBLocalRotation;
             _RBTransform.localPosition = _RBLocalPosition;
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Jump(Vector3 byAngles, float speed, bool dir)
     {
-        
+        timeForJump = Mathf.Abs(1.5f / speed);
         Vector3 prevPosition = _RBLocalPosition;
         float x = 0;
         float y = 0;
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
         for (float t = 0f; true; t += GameManager.fixedDeltaTime/timeForJump)
         {
             //If player is grounded, then stop falling
-            if (onGround)
+            if (onGround || willDie)
             {
                 break;
             }
@@ -190,7 +190,6 @@ public class PlayerController : MonoBehaviour
         {
             if (willDie)
             {
-               willDie = false;
                DestroyPlayer();
             } else
             {
@@ -200,15 +199,12 @@ public class PlayerController : MonoBehaviour
                 int scoreInt = int.Parse(score.text)+1;
                 score.text = scoreInt.ToString();
                 onGround = true;
-                isFreeFalling = false;
             }
             
         }
         if(collider.tag == "BrokenPlatform")
         {
-            onGround = true;
             willDie = true;
-            isFreeFalling = true;
             collider.gameObject.GetComponent<BrokenPlatform>().destroyPlatform();
         }
     }
