@@ -22,7 +22,6 @@ public class Shield : MonoBehaviour {
         {
             countShield--;
             other.GetComponent<Diamond>().destroyDiamond();
-            Destroy(other.gameObject);
             shieldHitAnim.Play("ShieldHit");
             if (countShield <= 0f)
             {

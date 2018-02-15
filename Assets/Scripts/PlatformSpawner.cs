@@ -8,6 +8,8 @@ public class PlatformSpawner : MonoBehaviour {
     public Transform[] spawnPoints;
     public Transform player;
 
+    public float spawnIn = 50f;
+
     public float coinChance = 0.1f;
     public float diamondChance = 0.05f;
     public float doubleNormalChance = 0.2f;
@@ -43,7 +45,7 @@ public class PlatformSpawner : MonoBehaviour {
 
         objectPooler = ElementsPool.Instance;
 
-        while (playerSpawnerDistance <= 30f)
+        while (playerSpawnerDistance <= spawnIn)
         {
             SpawnNextWave();
             _localPosition.y -= 1.5f;
@@ -55,7 +57,7 @@ public class PlatformSpawner : MonoBehaviour {
     void Update()
     {
         playerSpawnerDistance = Mathf.Abs(_localPosition.y - player.localPosition.y);
-        if (playerSpawnerDistance <= 30f)
+        if (playerSpawnerDistance <= spawnIn)
         {         
             SpawnNextWave();
             _localPosition.y -= 1.5f;

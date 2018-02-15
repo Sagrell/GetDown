@@ -10,12 +10,15 @@ public class Diamond : MonoBehaviour, IPooledObject
     public float speed = 5f;
     public float rotationSpeed = 10f;
 
+    float startSpeed;
     Rigidbody rb;
     Transform _RBTransform;
     Vector3 currPosition;
     Vector3 rightPosition;
     Vector3 leftPosition;
     Vector3 nextPosition;
+
+    GameState GS;
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody>();
@@ -24,6 +27,8 @@ public class Diamond : MonoBehaviour, IPooledObject
         leftPosition = new Vector3(-5.25f, currPosition.y);
         rightPosition = new Vector3(5.25f, currPosition.y);
         nextPosition = rightPosition;
+        startSpeed = speed;
+        GS = GameState.Instance;
     }
 
     public void OnObjectSpawn()
@@ -34,9 +39,10 @@ public class Diamond : MonoBehaviour, IPooledObject
 
     // Update is called once per frame
     void Update () {
-        _RBTransform.localPosition = currPosition;
+        speed = startSpeed * GS.getSpeedFactor();
         Move();
-	}
+        _RBTransform.localPosition = currPosition;
+    }
 
     void Move()
     {
@@ -44,8 +50,8 @@ public class Diamond : MonoBehaviour, IPooledObject
         {
             switchNextPosition();
         }
-        currPosition = Vector3.MoveTowards(currPosition, nextPosition, speed * Time.deltaTime);
-        _RBTransform.Rotate(Vector3.up, rotationSpeed* Time.deltaTime);
+        currPosition = Vector3.MoveTowards(currPosition, nextPosition, speed * GameManager.deltaTime);
+        _RBTransform.Rotate(Vector3.up, rotationSpeed* GameManager.deltaTime);
     }
     void switchNextPosition()
     {
@@ -56,7 +62,8 @@ public class Diamond : MonoBehaviour, IPooledObject
     {
         GameObject destroyV = Instantiate(destroyVersion, transform.position, transform.rotation);
         Destroy(destroyV, 2f);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
+
 
 }

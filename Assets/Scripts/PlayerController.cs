@@ -8,67 +8,77 @@ public class PlayerController : MonoBehaviour
 
     public GameObject destroyVersion;
     public GameObject shield;
-    public Text score;
-    public float timeForJump;
-    public float speed = 2f;
+    public float speed = 4f;
 
 
     //Main camera
     Camera mainCamera;
 
-    float countCoins;
+    float timeForJump;
+    public float startSpeed;
     bool willDie;
     bool alive;
     bool onGround;
-    bool isFreeFalling;
+    bool isShield;
     //Coroutine
     IEnumerator jumping;
 
     //Positions
-    Vector3 playerScreenPos;
+    public Vector3 playerScreenPos;
     Rigidbody rb;
     //Cach
-    Transform _RBTransform;
+    public Transform _RBTransform;
     Vector3 _RBLocalPosition;
     Quaternion _RBLocalRotation;
-    void Awake()
+
+    Vector3 _RBPrevLocalPosition;
+    //GameState
+    GameState GS;
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
         _RBLocalRotation = _RBTransform.localRotation;
+        _RBPrevLocalPosition = _RBLocalPosition;
         willDie = false;
         alive = true;
         onGround = true;
-        countCoins = 0;
         Instantiate(shield, transform);
         jumping = Jump(Vector3.back * 90, speed, true);
         timeForJump = 1.5f / speed;
 
         mainCamera = Camera.main;
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
+        GS = GameState.Instance;
+        startSpeed = speed;
     }
 
     private void FixedUpdate()
     {
-        speed *= GameManager.difficultyIncrease;
+        speed = startSpeed * GS.getSpeedFactor();
         //Set position and rotation in fixed update cause its depends on collision!
-        if(!willDie)
+        if (!willDie && _RBPrevLocalPosition.y != _RBLocalPosition.y)
         {
             _RBTransform.localRotation = _RBLocalRotation;
             _RBTransform.localPosition = _RBLocalPosition;
+            _RBPrevLocalPosition = _RBLocalPosition;
         }
     }
     void Update()
     {
-       
+        if (!willDie && _RBPrevLocalPosition.y != _RBLocalPosition.y)
+        {
+            _RBTransform.localRotation = _RBLocalRotation;
+            _RBTransform.localPosition = _RBLocalPosition;
+            _RBPrevLocalPosition = _RBLocalPosition;
+        } 
         //Check for bounds and destroy player if he's out of them
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         if ((playerScreenPos.y >= Screen.height || playerScreenPos.y <= 0))
         {
             DestroyPlayer();
         }
-
 
         if (Input.GetKey("d") && onGround)
         {
@@ -125,14 +135,14 @@ public class PlayerController : MonoBehaviour
         bool isFirstTime = true;
         Quaternion fromAngle = _RBTransform.localRotation;
         Quaternion toAngle = Quaternion.Euler(fromAngle.eulerAngles + byAngles);
-        for (float t = 0f; true; t += GameManager.fixedDeltaTime/timeForJump)
+        for (float t = 0f; true; t += GameManager.deltaTime/timeForJump)
         {
             //If player is grounded, then stop falling
             if (onGround || willDie)
             {
                 break;
             }
-            x += speed*GameManager.fixedDeltaTime;
+            x += speed*GameManager.deltaTime;
             y = parabolic(Mathf.Abs(x));
             rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             if (Mathf.Abs(x) > 2f)
@@ -147,19 +157,23 @@ public class PlayerController : MonoBehaviour
                 isFirstTime = false;
                 rotation = toAngle;
                 t = 0;
+                _RBLocalPosition.x = prevPosition.x + x;
+                _RBLocalPosition.y = prevPosition.y + y;
+                _RBLocalRotation = rotation;
+                yield return new WaitForFixedUpdate();
             }
             _RBLocalPosition.x = prevPosition.x + x;
             _RBLocalPosition.y = prevPosition.y + y;
             _RBLocalRotation = rotation;
             //We need to sync it with Physics
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
 
     }
     public void DestroyPlayer()
     {
         alive = false;
-        FindObjectOfType<GameManager>().slowMotion();
+        FindObjectOfType<GameManager>().Kill();
         Shield shield = GetComponentInChildren<Shield>();
         if (shield)
         {
@@ -174,10 +188,7 @@ public class PlayerController : MonoBehaviour
         return alive;
     }
 
-    public float getScore()
-    {
-        return float.Parse(score.text);
-    }
+
 
     void OnCollisionEnter(Collision collision)
     {
@@ -195,9 +206,8 @@ public class PlayerController : MonoBehaviour
             {
                 _RBLocalPosition.x = collider.transform.localPosition.x;
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
-                _RBLocalRotation = new Quaternion();
-                int scoreInt = int.Parse(score.text)+1;
-                score.text = scoreInt.ToString();
+                _RBLocalRotation = Quaternion.identity;
+                GS.AddScore();
                 onGround = true;
             }
             
@@ -214,7 +224,7 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Coin")
         {
             other.GetComponent<Coin>().destroyCoin();
-            countCoins++;
+            GS.AddCoin();
         }
     }
 

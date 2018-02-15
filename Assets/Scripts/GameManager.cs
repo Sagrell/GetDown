@@ -3,24 +3,24 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     public static float deltaTime = 0.0f;
     public static float fixedDeltaTime = 0.0f;
-    public static float difficultyIncrease = 1.0001f;
-    public float gravity = 50f;
+    public static float difficultyIncrease = 0.1f;
+
+    [Header("Settings:")]
     public PlayerController player;
     public Animator pauseAnim;
     public Text playerScore;
     public Button resume;
-    public float difficulty = 0f;
-    bool isPaused;
 
-    void Awake () {
+
+    GameState GS;
+    void Start () {
+        GS = GameState.Instance;
         Time.timeScale = 1f;
-        Physics.gravity = new Vector3(0, -gravity);
-        isPaused = false;
-        //difficultyIncrease = difficulty;
     }
 	
 
@@ -28,31 +28,31 @@ public class GameManager : MonoBehaviour {
 
         deltaTime = Time.deltaTime;
         //Time.timeScale = 0.2f;
-        if(!player.isAlive())
-        {
-            StartCoroutine(Dead());
-        }
        
     }
     private void FixedUpdate()
     {
         fixedDeltaTime = Time.fixedDeltaTime;
-        //Debug.Log(fixedDeltaTime + ":" + deltaTime);
     }
-    public void slowMotion()
+
+    public void Kill()
     {
-        StartCoroutine(slowTimeForSeconds(1.5f));
+        StartCoroutine(KillAnimation(1.5f));
     }
-    IEnumerator slowTimeForSeconds(float time)
+    public IEnumerator KillAnimation(float time)
     {
-        float toTimeSpeed = 0.5f;
-        for (var t = 0f; t < 1; t += Time.deltaTime / time)
+        float toTimeSpeed = 0f;
+        for (var t = 0f; t < 1; t += Time.unscaledDeltaTime / time)
         {
             Time.timeScale = Mathf.Lerp(1f, toTimeSpeed, t);
             yield return null;
         }
-        yield return new WaitForSecondsRealtime(1f);
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
+        resume.interactable = false;
+        player.enabled = false;
+        GS.SetGameOver(true);
+        playerScore.text = GS.getScoreString();
+        pauseAnim.SetBool("isPaused", true);
     }
     public void Quit()
     {
@@ -61,32 +61,23 @@ public class GameManager : MonoBehaviour {
     public void Pause()
     {
         resume.interactable = true;
-        isPaused = true;
+        GS.SetPause(true);
         player.enabled = false;
         Time.timeScale = 0f;
-        playerScore.text = player.score.text;
-        pauseAnim.SetBool("isPaused", isPaused);
+        playerScore.text = GS.getScoreString();
+        pauseAnim.SetBool("isPaused", true);
     }
     public void Resume()
     {
-        isPaused = false;
+        GS.SetPause(false);
+        GS.SetGameOver(false);
         player.enabled = true;
         Time.timeScale = 1f;
-        pauseAnim.SetBool("isPaused", isPaused);
+        pauseAnim.SetBool("isPaused", false);
     }
     public void Restart()
     {
         SceneManager.LoadScene("Level01");
     }
 
-    public IEnumerator Dead()
-    {
-        yield return new WaitForSecondsRealtime(1.5f);
-        resume.interactable = false;
-        isPaused = true;
-        player.enabled = false;
-        Time.timeScale = 0f;
-        playerScore.text = player.score.text;
-        pauseAnim.SetBool("isPaused", isPaused);
-    }
 }

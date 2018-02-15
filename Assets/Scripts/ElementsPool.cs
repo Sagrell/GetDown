@@ -7,10 +7,6 @@ public class ElementsPool : MonoBehaviour {
     //Instance of object
     #region Singleton
     public static ElementsPool Instance;
-    private void Awake()
-    {
-        Instance = this;
-    }
     #endregion
 
     //Max count of objects on the level at once ( 22 lines )
@@ -37,6 +33,7 @@ public class ElementsPool : MonoBehaviour {
 
     // Initialization
     void Start () {
+        Instance = this;
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
         for (int i = 0; i < pools.Length; ++i)
         {
@@ -56,7 +53,6 @@ public class ElementsPool : MonoBehaviour {
     //Pick object from pool with specific type and place it at definite position and apply rotation
     public GameObject pickFromPool(string type, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        Debug.Log(type + ":"+position+":"+rotation+":"+parent);
         // If this type of object doesn't exist then return NULL
         if(!poolDictionary.ContainsKey(type))
         {
