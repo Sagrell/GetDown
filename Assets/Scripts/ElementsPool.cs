@@ -60,8 +60,15 @@ public class ElementsPool : MonoBehaviour {
             return null;
         }
         GameObject obj = poolDictionary[type].Dequeue();
+        if (obj.activeSelf)
+        {
+            
+            poolDictionary[type].Enqueue(obj);
+            return null;
+        }
         Transform _transform = obj.transform;
-        obj.SetActive(true);
+        //SetActive doesn't work on child! Unity should fix this!
+        obj.SetActiveRecursively(true);
         _transform.position = position;
         _transform.rotation = rotation;
         if(parent!=null)
@@ -85,8 +92,14 @@ public class ElementsPool : MonoBehaviour {
             return null;
         }
         GameObject obj = poolDictionary[type].Dequeue();
+        if (obj.activeSelf)
+        {
+            poolDictionary[type].Enqueue(obj);
+            return null;
+        }
         Transform _transform = obj.transform;
-        obj.SetActive(true);
+        //SetActive doesn't work on child! Unity should fix this!
+        obj.SetActiveRecursively(true);
         _transform.position = position;
         if (parent != null)
         {
@@ -108,9 +121,21 @@ public class ElementsPool : MonoBehaviour {
             Debug.LogError("There is no object with specific type in the pool");
             return null;
         }
+        if (poolDictionary[type].Count == 0)
+        {
+            Debug.LogError("Pool is empty");
+            return null;
+        }
         GameObject obj = poolDictionary[type].Dequeue();
+
+        if(obj.activeSelf)
+        {
+            poolDictionary[type].Enqueue(obj);
+            return null;
+        }
         Transform _transform = obj.transform;
-        obj.SetActive(true);
+        //SetActive doesn't work on child! Unity should fix this!
+        obj.SetActiveRecursively(true);
         _transform.position = parent.position;
         _transform.rotation = parent.rotation;
         if (parent != null)
@@ -125,4 +150,5 @@ public class ElementsPool : MonoBehaviour {
         poolDictionary[type].Enqueue(obj);
         return obj;
     }
+
 }

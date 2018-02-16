@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     bool alive;
     bool onGround;
     bool isShield;
+    float countShield;
     //Coroutine
     IEnumerator jumping;
 
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
     Vector3 _RBPrevLocalPosition;
     //GameState
     GameState GS;
+    //ObjectPooler
+    ElementsPool objectPooler;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -44,7 +47,6 @@ public class PlayerController : MonoBehaviour
         willDie = false;
         alive = true;
         onGround = true;
-        Instantiate(shield, transform);
         jumping = Jump(Vector3.back * 90, speed, true);
         timeForJump = 1.5f / speed;
 
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         GS = GameState.Instance;
         startSpeed = speed;
+        objectPooler = ElementsPool.Instance;
     }
 
     private void FixedUpdate()
@@ -67,12 +70,6 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (!willDie && _RBPrevLocalPosition.y != _RBLocalPosition.y)
-        {
-            _RBTransform.localRotation = _RBLocalRotation;
-            _RBTransform.localPosition = _RBLocalPosition;
-            _RBPrevLocalPosition = _RBLocalPosition;
-        } 
         //Check for bounds and destroy player if he's out of them
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         if ((playerScreenPos.y >= Screen.height || playerScreenPos.y <= 0))
@@ -135,14 +132,14 @@ public class PlayerController : MonoBehaviour
         bool isFirstTime = true;
         Quaternion fromAngle = _RBTransform.localRotation;
         Quaternion toAngle = Quaternion.Euler(fromAngle.eulerAngles + byAngles);
-        for (float t = 0f; true; t += GameManager.deltaTime/timeForJump)
+        for (float t = 0f; true; t += GameManager.fixedDeltaTime/timeForJump)
         {
             //If player is grounded, then stop falling
             if (onGround || willDie)
             {
                 break;
             }
-            x += speed*GameManager.deltaTime;
+            x += speed*GameManager.fixedDeltaTime;
             y = parabolic(Mathf.Abs(x));
             rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             if (Mathf.Abs(x) > 2f)
@@ -157,18 +154,13 @@ public class PlayerController : MonoBehaviour
                 isFirstTime = false;
                 rotation = toAngle;
                 t = 0;
-                _RBLocalPosition.x = prevPosition.x + x;
-                _RBLocalPosition.y = prevPosition.y + y;
-                _RBLocalRotation = rotation;
-                yield return new WaitForFixedUpdate();
             }
             _RBLocalPosition.x = prevPosition.x + x;
             _RBLocalPosition.y = prevPosition.y + y;
             _RBLocalRotation = rotation;
             //We need to sync it with Physics
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
-
     }
     public void DestroyPlayer()
     {
@@ -177,12 +169,16 @@ public class PlayerController : MonoBehaviour
         Shield shield = GetComponentInChildren<Shield>();
         if (shield)
         {
-            shield.DestroyShield();
+            shield.DestroyShieldimmediately();
         }
         Instantiate(destroyVersion, _RBTransform.position, _RBTransform.rotation);
         gameObject.SetActive(false);      
     }
 
+    void CreateShield()
+    {
+        objectPooler.pickFromPool("Shield", transform);
+    }
     public bool isAlive()
     {
         return alive;
@@ -195,7 +191,8 @@ public class PlayerController : MonoBehaviour
         Collider collider = collision.collider;
         if(collider.tag == "Enemy")
         {
-           DestroyPlayer();    
+           if(!GS.IsShield())
+             DestroyPlayer();    
         }
         if (collider.tag == "Platform")
         {
@@ -225,6 +222,12 @@ public class PlayerController : MonoBehaviour
         {
             other.GetComponent<Coin>().destroyCoin();
             GS.AddCoin();
+        }
+        if (other.tag == "ShieldCoin")
+        {
+            other.GetComponent<ShieldCoin>().destroyShieldCoin();
+            GS.MakeShield();
+            CreateShield();
         }
     }
 

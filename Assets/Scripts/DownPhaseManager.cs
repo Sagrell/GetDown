@@ -1,13 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum PlatformType
-{
-    Empty,
-    Broken,
-    Normal,
-    WithCoin
-}
+
 public class DownPhaseManager : MonoBehaviour {
 
     public Transform level;
@@ -46,7 +40,7 @@ public class DownPhaseManager : MonoBehaviour {
         mainCamera = Camera.main;
     }
     float stepUp;
-    void Update()
+    void FixedUpdate()
     {
         playerScreenPos = player.playerScreenPos;
         if (playerScreenPos.y <= Screen.height * 0.25f)
@@ -60,7 +54,7 @@ public class DownPhaseManager : MonoBehaviour {
             StartCoroutine(SpeedTo(false, 2f));
         }
         levelSpeed = startLevelSpeed * GS.getSpeedFactor();
-        stepUp = levelSpeed * GameManager.deltaTime;
+        stepUp = levelSpeed * GameManager.fixedDeltaTime;
         levelPosition.y += stepUp;
         level.position = levelPosition;
     }

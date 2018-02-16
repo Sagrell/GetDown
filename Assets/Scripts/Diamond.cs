@@ -19,6 +19,7 @@ public class Diamond : MonoBehaviour, IPooledObject
     Vector3 nextPosition;
 
     GameState GS;
+
     // Use this for initialization
     void Start () {
         rb = GetComponent<Rigidbody>();
@@ -33,7 +34,11 @@ public class Diamond : MonoBehaviour, IPooledObject
 
     public void OnObjectSpawn()
     {
-        //currPosition = _RBTransform.localPosition;
+        rb = GetComponent<Rigidbody>();
+        _RBTransform = rb.transform;
+        currPosition = _RBTransform.localPosition;
+        leftPosition = new Vector3(-5.25f, currPosition.y);
+        rightPosition = new Vector3(5.25f, currPosition.y);
         nextPosition = rightPosition;
     }
 

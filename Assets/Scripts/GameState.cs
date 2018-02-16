@@ -22,6 +22,8 @@ public class GameState : MonoBehaviour {
     int score;
 
     bool isShield;
+    float countShield;
+
     bool isPaused;
     bool isGameOver;
     // Use this for initialization
@@ -29,9 +31,11 @@ public class GameState : MonoBehaviour {
         countCoins = 0;
         score = -1;
         //currentSpeedFactor = 1f;
-        maxSpeedFactor = 2.5f;
+        maxSpeedFactor = 3f;
         isPaused = false;
         isGameOver = false;
+        isShield = false;
+        countShield = 0f;
         StartCoroutine(increaseSpeedFactorEvery(5f));
     }
 	
@@ -59,7 +63,19 @@ public class GameState : MonoBehaviour {
     {
         countCoins++;
     }
-
+    public void MakeShield()
+    {
+        isShield = true;
+        countShield = 1f;
+    }
+    public bool IsShield()
+    {
+        return isShield;
+    }
+    public void TurnOffShield()
+    {
+        isShield = false;
+    }
     public bool IsPaused()
     {
         return isPaused;

@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+public enum PlatformType
+{
+    Empty,
+    Broken,
+    Normal,
+    WithCoin,
+    WithShield
+}
 public class PlatformSpawner : MonoBehaviour {
 
     public Transform[] spawnPoints;
@@ -12,19 +19,21 @@ public class PlatformSpawner : MonoBehaviour {
 
     public float coinChance = 0.1f;
     public float diamondChance = 0.05f;
+    public float shieldCoinChance = 0.05f;
     public float doubleNormalChance = 0.2f;
 
     float addChance = 0.30f;
 
     bool isDiamond;
     bool isCoin;
-
+    bool isShieldCoin;
+    bool canPlaceShieldCoin;
     PlatformType[] prevWave;
     Transform _transform;
     Vector3 _localPosition;
     float playerSpawnerDistance;
 
-
+    GameState GS;
     ElementsPool objectPooler;
     private void Start()
     {
@@ -44,7 +53,7 @@ public class PlatformSpawner : MonoBehaviour {
         isDiamond = true;
 
         objectPooler = ElementsPool.Instance;
-
+        GS = GameState.Instance;
         while (playerSpawnerDistance <= spawnIn)
         {
             SpawnNextWave();
@@ -52,6 +61,9 @@ public class PlatformSpawner : MonoBehaviour {
             _transform.localPosition = _localPosition;
             playerSpawnerDistance = Mathf.Abs(_localPosition.y - player.localPosition.y);
         }
+        canPlaceShieldCoin = true;
+
+        
     }
 
     void Update()
@@ -128,52 +140,45 @@ public class PlatformSpawner : MonoBehaviour {
         }
         for (int i = 0; i < nextWave.Length; i++)
         {
-            if (nextWave[i] == PlatformType.Normal)
-            {
-                bool isCoin = Random.value <= coinChance ? true : false;
-                /*if (i < 4)
-                {
-                    leftCount++;
-                }
-                else
-                {
-                    rightCount++;
-                }*/
-                nextWave[i] = isCoin ? PlatformType.WithCoin : PlatformType.Normal;
-            }
-        }
-        //Debug.Log("left: "+leftCount+" right: "+ rightCount);*/
-        isDiamond = Random.value <= diamondChance && !isDiamond ? true : false;
-        SpawnWave(nextWave, isDiamond);
-        prevWave = nextWave;
-    }
-
-
-    public void SpawnWave(PlatformType[] wave, bool isDiamond)
-    {
-        for (int i = 0; i < wave.Length; i++)
-        {
-            PlatformType type = wave[i];
-            if(type == PlatformType.Empty)
+            PlatformType type = nextWave[i];
+            if (type == PlatformType.Empty)
             {
                 continue;
-            }
-            if(type == PlatformType.Broken)
+            } else if (type == PlatformType.Broken)
             {
                 objectPooler.pickFromPool("Broken", spawnPoints[i].position, transform.parent);
-            } else if(type == PlatformType.WithCoin)
+            }
+            else if (type == PlatformType.Normal)
             {
-                objectPooler.pickFromPool("NormalWithCoin", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
-            } else if(type == PlatformType.Normal)
-            {
+                isCoin = Random.value <= coinChance ? true : false;
+                isShieldCoin = Random.value <= shieldCoinChance ? true : false;
+                if (isCoin)
+                {
+                    if (objectPooler.pickFromPool("NormalWithCoin", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent) != null)
+                    {
+                        continue;
+                    }
+                }
+                if (isShieldCoin)
+                {
+                    if(!GS.IsShield())
+                    {
+                        if(objectPooler.pickFromPool("NormalWithShield", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent)!=null)
+                        {
+                            continue;
+                        }
+                    }
+                        
+                }
                 objectPooler.pickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
             }
-            
         }
-        if(isDiamond)
+        isDiamond = Random.value <= diamondChance && !isDiamond ? true : false;
+        if (isDiamond)
         {
             objectPooler.pickFromPool("Diamond", spawnPoints[8].position, spawnPoints[8].rotation, transform.parent);
         }
-       
+        prevWave = nextWave;
     }
+
 }
