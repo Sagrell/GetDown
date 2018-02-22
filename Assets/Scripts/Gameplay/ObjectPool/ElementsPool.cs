@@ -7,7 +7,11 @@ public class ElementsPool : MonoBehaviour {
     //Instance of object
     #region Singleton
     public static ElementsPool Instance;
-    #endregion
+    void Awake()
+    {
+        Instance = this;
+    }
+     #endregion
 
     //Max count of objects on the level at once ( 22 lines )
     const float MAX_LINES = 22f;
@@ -33,7 +37,6 @@ public class ElementsPool : MonoBehaviour {
 
     // Initialization
     void Start () {
-        Instance = this;
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
         for (int i = 0; i < pools.Length; ++i)
         {

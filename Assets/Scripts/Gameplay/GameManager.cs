@@ -21,13 +21,15 @@ public class GameManager : MonoBehaviour
     public float increaseEvery;
     public float maxSpeedFactor;
 
-
+    //Sounds
+    int mainThemeId;
     DataManager dataManager;
     void Start () {
         Time.timeScale = 1f;
         StartCoroutine(increaseSpeedFactorEvery(5f));
         dataManager = DataManager.Instance;
-        AudioManager.Instance.Play("MainTheme");
+        mainThemeId = AudioCenter.loadSound("Rhinoceros");
+        AudioCenter.playSound(mainThemeId);
     }
 	
 

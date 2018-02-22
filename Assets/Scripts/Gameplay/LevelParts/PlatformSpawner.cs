@@ -13,9 +13,6 @@ public enum PlatformType
 public class PlatformSpawner : MonoBehaviour {
 
     public Transform[] spawnPoints;
-    public Transform player;
-
-    public float spawnIn = 50f;
 
     public float coinChance = 0.1f;
     public float diamondChance = 0.05f;
@@ -30,14 +27,18 @@ public class PlatformSpawner : MonoBehaviour {
     PlatformType[] prevWave;
     Transform _transform;
     Vector3 _localPosition;
-    float playerSpawnerDistance;
+    float spawnerDistance;
 
+    float topCoordY;
+    float spawnIn;
     ElementsPool objectPooler;
     private void Start()
     {
+        topCoordY = 20f;
+        spawnIn = 40f;
         _transform = transform;
         _localPosition = _transform.localPosition;
-        playerSpawnerDistance = Mathf.Abs(_localPosition.y - player.localPosition.y);
+        
         prevWave = new PlatformType[8] {
         PlatformType.Normal,
         PlatformType.Empty,
@@ -54,13 +55,14 @@ public class PlatformSpawner : MonoBehaviour {
 
         objectPooler.pickFromPool("Normal", spawnPoints[0].position, spawnPoints[0].rotation, transform.parent);
         _localPosition.y -= 1.5f;
+        spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         _transform.localPosition = _localPosition;
-        while (playerSpawnerDistance <= spawnIn)
+        while (spawnerDistance <= spawnIn)
         {
             SpawnNextWave();
             _localPosition.y -= 1.5f;
             _transform.localPosition = _localPosition;
-            playerSpawnerDistance = Mathf.Abs(_localPosition.y - player.localPosition.y);
+            spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         }
 
         
@@ -68,8 +70,8 @@ public class PlatformSpawner : MonoBehaviour {
 
     void Update()
     {
-        playerSpawnerDistance = Mathf.Abs(_localPosition.y - player.localPosition.y);
-        if (playerSpawnerDistance <= spawnIn)
+        spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
+        if (spawnerDistance <= spawnIn)
         {         
             SpawnNextWave();
             _localPosition.y -= 1.5f;
@@ -151,7 +153,7 @@ public class PlatformSpawner : MonoBehaviour {
             else if (type == PlatformType.Normal)
             {
                 isCoin = Random.value <= coinChance ? true : false;
-                isShieldCoin = Random.value <= shieldCoinChance ? true : false;
+                isShieldCoin = Random.value <= 1 ? true : false;
                 if (isCoin)
                 {
                     if (objectPooler.pickFromPool("NormalWithCoin", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent) != null)
@@ -161,7 +163,7 @@ public class PlatformSpawner : MonoBehaviour {
                 }
                 if (isShieldCoin)
                 {
-                    if(GameState.isShield)
+                    if(!GameState.isShield)
                     {
                         if(objectPooler.pickFromPool("NormalWithShield", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent)!=null)
                         {

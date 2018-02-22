@@ -18,8 +18,10 @@ public class Diamond : MonoBehaviour, IPooledObject
     Vector3 leftPosition;
     Vector3 nextPosition;
 
+    int diamondSoundId;
     // Use this for initialization
     void Start () {
+        diamondSoundId = AudioCenter.loadSound("DiamondDestroy");
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         currPosition = _RBTransform.localPosition;
@@ -62,7 +64,7 @@ public class Diamond : MonoBehaviour, IPooledObject
 
     public void destroyDiamond()
     {
-        AudioManager.Instance.Play("DiamondDestroy");
+        AudioCenter.playSound(diamondSoundId);
         GameObject destroyV = Instantiate(destroyVersion, transform.position, transform.rotation);
         Destroy(destroyV, 2f);
         gameObject.SetActive(false);

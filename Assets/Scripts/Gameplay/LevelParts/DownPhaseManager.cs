@@ -14,26 +14,29 @@ public class DownPhaseManager : MonoBehaviour {
     float startPlayerSpeed;
     Vector3 levelPosition;
     float startLevelSpeed;
-
+    float stepUp;
     void Start()
     {
         levelPosition = level.position;
         startLevelSpeed = levelSpeed;
         startPlayerSpeed = player.speed;
     }
-    float stepUp;
+    
     void FixedUpdate()
     {
         playerScreenPos = player.playerScreenPos;
         if (playerScreenPos.y <= Screen.height * 0.25f)
         {
             StopAllCoroutines();
-            StartCoroutine(SpeedTo(true, startPlayerSpeed));
+            StartCoroutine(SpeedTo(startPlayerSpeed));
             //startLevelSpeed = player.startSpeed;
-        } else
+        } else if((playerScreenPos.y > Screen.height * 0.25f)&&(playerScreenPos.y < Screen.height * 0.7f))
         {
             StopAllCoroutines();
-            StartCoroutine(SpeedTo(false, 2f));
+            StartCoroutine(SpeedTo(2f));
+        } else
+        {
+            StartCoroutine(SpeedTo(0f));
         }
         levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
         stepUp = levelSpeed * GameManager.fixedDeltaTime;
@@ -41,27 +44,19 @@ public class DownPhaseManager : MonoBehaviour {
         level.position = levelPosition;
     }
 
-    IEnumerator SpeedTo(bool up, float speed)
+    IEnumerator SpeedTo(float speed)
     {
-        if(up)
+        while(startLevelSpeed< speed)
         {
-            while(startLevelSpeed< speed)
-            {
-                startLevelSpeed += .02f;
-                yield return new WaitForSeconds(.1f);
-            }
-            startLevelSpeed = speed;
-        } else
-        {
-            while (startLevelSpeed > speed)
-            {
-                startLevelSpeed -= .02f;
-                yield return new WaitForSeconds(.1f);
-            }
-            startLevelSpeed = speed;
+            startLevelSpeed += .02f;
+            yield return new WaitForSeconds(.1f);
         }
-        
-        
+        while (startLevelSpeed > speed)
+        {
+            startLevelSpeed -= .02f;
+            yield return new WaitForSeconds(.1f);
+        }
+        startLevelSpeed = speed;       
     }
 
 }

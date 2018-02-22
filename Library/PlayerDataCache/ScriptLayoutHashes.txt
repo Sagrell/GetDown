@@ -112,7 +112,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameState
 322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
-e2c42796747ac101c2b89f6c87e4c4f6 Assembly-CSharp.dll:.PlatformSpawner
+1888b7cc06775c73b51aee98585928be Assembly-CSharp.dll:.PlatformSpawner
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
@@ -158,6 +158,8 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 baa852533eb1fbfd73e31cdbe39b07a2 Assembly-CSharp.dll:.AudioManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CameraBehaviour
 703eb9f4ba58f417c60a780fccec40a3 Assembly-CSharp.dll:.CubeModel
-053de8b84b448d8ce706eb143bd231ad Assembly-CSharp.dll:.PlayerController
+2ab57367eb2a29d8097fd81a36fc5fcb Assembly-CSharp.dll:.PlayerController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Platform
 a23d2ca4ffd086523f0c855210c50efc Assembly-CSharp.dll:.Diamond
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.AudioCenter
+099e37e737209d13a4c6a3454bae05b3 Assembly-CSharp.dll:.CameraShaker
