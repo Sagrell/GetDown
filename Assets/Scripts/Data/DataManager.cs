@@ -15,8 +15,8 @@ public class DataManager : MonoBehaviour {
     {
         if (Instance == null)
         {
-            DontDestroyOnLoad(gameObject);
             Instance = this;
+
             savePath = Path.Combine(Application.persistentDataPath, "saves");
             if (!File.Exists(savePath))
             {
@@ -27,15 +27,12 @@ public class DataManager : MonoBehaviour {
             {
                 Load();
             }
-        } else if (Instance != this)
+        }
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
-
-    }
-    private void OnDestroy()
-    {
-        Instance = null;
+        DontDestroyOnLoad(gameObject);
     }
     public void SaveWithGameState()
     {

@@ -9,11 +9,15 @@ public class InGameGUI : MonoBehaviour {
     public Text bestScoreInPause;
     public Text bestScoreInGameOver;
     public Text scoreInGame;
+    public GameObject gameOverPanel;
+    public GameObject pausePanel;
     PlayerController player;
 
     Animator pauseAnimation;
     int bestScore;
     void Start () {
+        gameOverPanel.SetActive(true);
+        pausePanel.SetActive(true);
         player = FindObjectOfType<PlayerController>();
         pauseAnimation = GetComponent<Animator>();
         bestScore = DataManager.Instance.getUserData().HighScore;
@@ -31,6 +35,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void Pause()
     {
+        pausePanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInPause.text = GameState.score.ToString();
         bestScoreInPause.text = bestScore.ToString();
@@ -40,6 +45,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void GameOver()
     {
+        gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInGameOver.text = GameState.score.ToString();
         bestScoreInGameOver.text = bestScore.ToString();
@@ -57,6 +63,6 @@ public class InGameGUI : MonoBehaviour {
     }
     public void Restart()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

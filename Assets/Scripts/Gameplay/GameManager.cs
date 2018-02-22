@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public static float fixedDeltaTime = 0.0f;
 
     [Header("References:")]
-    public PlayerController player;
     public InGameGUI inGameGui;
 
     [Space]
@@ -21,15 +20,12 @@ public class GameManager : MonoBehaviour
     public float increaseEvery;
     public float maxSpeedFactor;
 
-    //Sounds
-    int mainThemeId;
     DataManager dataManager;
     void Start () {
         Time.timeScale = 1f;
         StartCoroutine(increaseSpeedFactorEvery(5f));
         dataManager = DataManager.Instance;
-        mainThemeId = AudioCenter.loadSound("Rhinoceros");
-        AudioCenter.playSound(mainThemeId);
+        AudioManager.Instance.Play("MainTheme");
     }
 	
 
@@ -50,7 +46,7 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator KillAnimation(float time)
     {
-        float toTimeSpeed = 0f;
+        float toTimeSpeed = 0.5f;
         for (var t = 0f; t < 1; t += Time.unscaledDeltaTime / time)
         {
             Time.timeScale = Mathf.Lerp(1f, toTimeSpeed, t);

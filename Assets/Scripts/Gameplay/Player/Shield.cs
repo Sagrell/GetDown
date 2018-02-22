@@ -10,18 +10,12 @@ public class Shield : MonoBehaviour, IPooledObject {
 
     Animator shieldHitAnim;
     float countShield;
-    CameraShakeInstance _shakeInstance;
 
-    int shieldHitSoundId;
     // Use this for initialization
-    void Start () {
-        shieldHitSoundId = AudioCenter.loadSound("ShieldHit");
+    void Awake () {
         shieldHitAnim = GetComponent<Animator>();
         shieldHitAnim.Play("ShieldAppearance");
         countShield = 1f;
-        _shakeInstance = CameraShaker.Instance.StartShake(3, 10, 0, new Vector3(0.4f,0.2f), new Vector3(0, 0, 0));
-        _shakeInstance.StartFadeOut(0);
-        _shakeInstance.DeleteOnInactive = false;
     }
 
     public void OnObjectSpawn()
@@ -35,11 +29,10 @@ public class Shield : MonoBehaviour, IPooledObject {
 
         if (other.CompareTag("Enemy"))
         {
-            AudioCenter.playSound(shieldHitSoundId);
-            _shakeInstance.StartFadeIn(0);
-            _shakeInstance.StartFadeOut(0.5f);
+            AudioCenter.PlaySound(AudioCenter.shieldHitSoundId);
+
             countShield--;
-            other.GetComponent<Diamond>().destroyDiamond();
+            other.GetComponent<Diamond>().DestroyDiamond();
             if (countShield <= 0f)
             {
                 DestroyShield();

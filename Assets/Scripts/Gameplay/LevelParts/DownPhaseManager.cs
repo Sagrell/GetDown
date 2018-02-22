@@ -27,16 +27,13 @@ public class DownPhaseManager : MonoBehaviour {
         playerScreenPos = player.playerScreenPos;
         if (playerScreenPos.y <= Screen.height * 0.25f)
         {
-            StopAllCoroutines();
-            StartCoroutine(SpeedTo(startPlayerSpeed));
-            //startLevelSpeed = player.startSpeed;
+            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .05f);
         } else if((playerScreenPos.y > Screen.height * 0.25f)&&(playerScreenPos.y < Screen.height * 0.7f))
         {
-            StopAllCoroutines();
-            StartCoroutine(SpeedTo(2f));
+            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 2f, .05f);
         } else
         {
-            StartCoroutine(SpeedTo(0f));
+            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 0f, .05f);
         }
         levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
         stepUp = levelSpeed * GameManager.fixedDeltaTime;
@@ -44,19 +41,5 @@ public class DownPhaseManager : MonoBehaviour {
         level.position = levelPosition;
     }
 
-    IEnumerator SpeedTo(float speed)
-    {
-        while(startLevelSpeed< speed)
-        {
-            startLevelSpeed += .02f;
-            yield return new WaitForSeconds(.1f);
-        }
-        while (startLevelSpeed > speed)
-        {
-            startLevelSpeed -= .02f;
-            yield return new WaitForSeconds(.1f);
-        }
-        startLevelSpeed = speed;       
-    }
 
 }

@@ -18,10 +18,8 @@ public class Diamond : MonoBehaviour, IPooledObject
     Vector3 leftPosition;
     Vector3 nextPosition;
 
-    int diamondSoundId;
     // Use this for initialization
     void Start () {
-        diamondSoundId = AudioCenter.loadSound("DiamondDestroy");
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         currPosition = _RBTransform.localPosition;
@@ -52,19 +50,19 @@ public class Diamond : MonoBehaviour, IPooledObject
     {
         if(Vector3.Distance(currPosition, nextPosition) < 0.1f)
         {
-            switchNextPosition();
+            SwitchNextPosition();
         }
         currPosition = Vector3.MoveTowards(currPosition, nextPosition, speed * GameManager.deltaTime);
         _RBTransform.Rotate(Vector3.up, rotationSpeed* GameManager.deltaTime);
     }
-    void switchNextPosition()
+    void SwitchNextPosition()
     {
         nextPosition = nextPosition != leftPosition ? leftPosition : rightPosition;
     }
 
-    public void destroyDiamond()
+    public void DestroyDiamond()
     {
-        AudioCenter.playSound(diamondSoundId);
+        AudioCenter.PlaySound(AudioCenter.diamondSoundId);
         GameObject destroyV = Instantiate(destroyVersion, transform.position, transform.rotation);
         Destroy(destroyV, 2f);
         gameObject.SetActive(false);

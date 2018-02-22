@@ -14,16 +14,8 @@ public class PlayerController : MonoBehaviour
     [Header("Start speed")]
     public float speed = 3f;
 
-    [Space]
-    [Header("Camera shake")]
-    public Vector3 positionInfluence;
-    public float magnitude;
-    public float roughness;
-    public float duration;
-
     //Main camera
     Camera mainCamera;
-    CameraShakeInstance _shakeInstance;
 
     float timeForJump;
     float startSpeed;
@@ -50,19 +42,10 @@ public class PlayerController : MonoBehaviour
     //ObjectPooler
     ElementsPool objectPooler;
 
-    //Sounds
-    int coinSoundId;
-    int jumpSoundId;
-    int destroyPlayerSoundId;
-    int shieldUpSoundId;
     //Cube Model
     public CubeModel currentCubeModel;
     void Start()
     {
-        coinSoundId = AudioCenter.loadSound("CoinCollect");
-        jumpSoundId = AudioCenter.loadSound("Jump");
-        destroyPlayerSoundId = AudioCenter.loadSound("DestroyPlayer");
-        shieldUpSoundId = AudioCenter.loadSound("ShieldUp");
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
@@ -75,9 +58,7 @@ public class PlayerController : MonoBehaviour
         timeForJump = 1.5f / speed;
 
         mainCamera = Camera.main;
-        _shakeInstance = CameraShaker.Instance.StartShake(magnitude, roughness, 0, positionInfluence, new Vector3(0,0,0)); 
-        _shakeInstance.StartFadeOut(0);
-        _shakeInstance.DeleteOnInactive = false;
+ 
 
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         startSpeed = speed;
@@ -116,14 +97,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey("a") && onGround)
         {
             JumpLeft();
-        }
-        if (Input.GetKeyDown("f"))
-        {
-            _shakeInstance.Magnitude = magnitude;
-            _shakeInstance.Roughness = roughness;
-            _shakeInstance.PositionInfluence = positionInfluence;
-            _shakeInstance.StartFadeIn(0);
-            _shakeInstance.StartFadeOut(duration);
         }
         Touch[] touches = Input.touches;
         if (touches.Length == 1 && onGround)
@@ -212,9 +185,8 @@ public class PlayerController : MonoBehaviour
             shield.DestroyShieldimmediately();
         }
         Instantiate(destroyVersion, _RBTransform.position, _RBTransform.rotation);
-        _shakeInstance.StartFadeIn(0);
-        _shakeInstance.StartFadeOut(duration);
-        AudioCenter.playSound(destroyPlayerSoundId);
+
+        AudioCenter.PlaySound(AudioCenter.destroyPlayerSoundId);
         gameObject.SetActive(false);      
     }
 
@@ -244,7 +216,7 @@ public class PlayerController : MonoBehaviour
                DestroyPlayer();
             } else
             {
-                AudioCenter.playSound(jumpSoundId);
+                //AudioCenter.PlaySound(AudioCenter.jumpSoundId);
                 //Correct position if somethink happend 
                 _RBLocalPosition.x = collider.transform.localPosition.x;
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
@@ -267,14 +239,12 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Coin")
         {
             //AudioManager.Instance.Play("Coin");
-            AudioCenter.playSound(coinSoundId);
             other.GetComponent<Coin>().destroyCoin();
             GameState.countCoins++;
         }
         if (other.tag == "ShieldCoin")
         {
-            AudioCenter.playSound(shieldUpSoundId);
-            other.GetComponent<ShieldCoin>().destroyShieldCoin();
+            other.GetComponent<ShieldCoin>().DestroyShieldCoin();
             GameState.isShield = true;
             CreateShield();
         }

@@ -9,8 +9,9 @@ public class Coin : MonoBehaviour, IPooledObject {
 
     Rigidbody rb;
     Transform _RBTransform;
+
     void Start()
-    {
+    {  
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
     }
@@ -23,6 +24,7 @@ public class Coin : MonoBehaviour, IPooledObject {
 	}
     public void destroyCoin()
     {
+        AudioCenter.PlaySound(AudioCenter.coinCollectsoundId);
         GameObject coinEffect = Instantiate(effect, transform.parent);
         Destroy(coinEffect, 2f);
         gameObject.SetActive(false);

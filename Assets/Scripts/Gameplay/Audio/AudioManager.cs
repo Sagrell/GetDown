@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour {
+public class AudioManager : MonoBehaviour
+{
     public Audio[] sounds;
     #region Singleton
     public static AudioManager Instance { get; private set; }
@@ -26,14 +27,12 @@ public class AudioManager : MonoBehaviour {
     }
     #endregion
 
-	
+
     public void Play(string name)
     {
         Audio a = Array.Find(sounds, sound => sound.name == name);
         a.source.Play();
     }
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Update is called once per frame
+
 }
