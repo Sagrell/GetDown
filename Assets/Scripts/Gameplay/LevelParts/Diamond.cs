@@ -63,8 +63,7 @@ public class Diamond : MonoBehaviour, IPooledObject
     public void DestroyDiamond()
     {
         AudioCenter.PlaySound(AudioCenter.diamondSoundId);
-        GameObject destroyV = Instantiate(destroyVersion, transform.position, transform.rotation);
-        Destroy(destroyV, 2f);
+        ElementsPool.Instance.pickFromPool("DestroyedDiamond", transform.position, transform.rotation);
         gameObject.SetActive(false);
     }
 

@@ -5,12 +5,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-
+    public static GameManager Instance;
     public static float deltaTime = 0.0f;
     public static float fixedDeltaTime = 0.0f;
 
-    [Header("References:")]
-    public InGameGUI inGameGui;
 
     [Space]
     [Header("Difficulty:")]
@@ -22,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     DataManager dataManager;
     void Start () {
+        Instance = this;
         Time.timeScale = 1f;
         StartCoroutine(increaseSpeedFactorEvery(5f));
         dataManager = DataManager.Instance;
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         dataManager.SaveWithGameState();
-        inGameGui.GameOver();
+        InGameGUI.Instance.GameOver();
     }
   
 

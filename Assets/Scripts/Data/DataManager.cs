@@ -134,8 +134,13 @@ public class DataManager : MonoBehaviour {
         return Encoding.ASCII.GetString(byteList.ToArray());
     }
 
-    public UserData getUserData()
+    public UserData GetUserData()
     {
         return userData;
+    }
+    public void SaveUserData(UserData data)
+    {
+        data.hashOfContent = GenerateHashFromData(data);
+        BinaryWrite(JsonUtility.ToJson(data));
     }
 }

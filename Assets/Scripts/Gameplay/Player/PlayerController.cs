@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+
+
     [Header("References")]
     public GameObject destroyVersion;
     public GameObject shield;
-    public InGameGUI gui;
 
     [Space]
     [Header("Start speed")]
@@ -42,8 +43,6 @@ public class PlayerController : MonoBehaviour
     //ObjectPooler
     ElementsPool objectPooler;
 
-    //Cube Model
-    public CubeModel currentCubeModel;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -63,11 +62,6 @@ public class PlayerController : MonoBehaviour
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         startSpeed = speed;
         objectPooler = ElementsPool.Instance;
-        GetComponent<Renderer>().material = currentCubeModel.material;
-        foreach(Renderer rend in destroyVersion.GetComponentsInChildren<Renderer>())
-        {
-            rend.material = currentCubeModel.material;
-        }
     }
 
     private void FixedUpdate()
@@ -178,15 +172,15 @@ public class PlayerController : MonoBehaviour
     public void DestroyPlayer()
     {
         alive = false;
-        FindObjectOfType<GameManager>().Kill();
+        GameManager.Instance.Kill();
         Shield shield = GetComponentInChildren<Shield>();
         if (shield)
         {
             shield.DestroyShieldimmediately();
         }
-        Instantiate(destroyVersion, _RBTransform.position, _RBTransform.rotation);
-
+        objectPooler.pickFromPool("DestroyedPlayer", _RBTransform.position, _RBTransform.rotation);
         AudioCenter.PlaySound(AudioCenter.destroyPlayerSoundId);
+        ShakeManager.ShakeAfterDeath();
         gameObject.SetActive(false);      
     }
 
@@ -222,7 +216,7 @@ public class PlayerController : MonoBehaviour
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
                 _RBLocalRotation = Quaternion.identity;
                 GameState.score++;
-                gui.UpdateScore();
+                InGameGUI.Instance.UpdateScore();
                 onGround = true;
             }
             

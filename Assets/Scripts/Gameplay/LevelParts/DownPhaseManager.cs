@@ -5,11 +5,13 @@ using UnityEngine;
 public class DownPhaseManager : MonoBehaviour {
 
     public Transform level;
-    public PlayerController player;
+    public GameObject player;
+    public Transform playerPosition;
 
     public float levelSpeed = 1f;
     public float maxLevelSpeed = 8f;
 
+    PlayerController playerController;
     Vector3 playerScreenPos;
     float startPlayerSpeed;
     Vector3 levelPosition;
@@ -17,14 +19,15 @@ public class DownPhaseManager : MonoBehaviour {
     float stepUp;
     void Start()
     {
+        playerController = Instantiate(player, playerPosition.position, playerPosition.rotation, playerPosition.parent).GetComponent<PlayerController>(); 
         levelPosition = level.position;
         startLevelSpeed = levelSpeed;
-        startPlayerSpeed = player.speed;
+        startPlayerSpeed = playerController.speed;
     }
     
     void FixedUpdate()
     {
-        playerScreenPos = player.playerScreenPos;
+        playerScreenPos = playerController.playerScreenPos;
         if (playerScreenPos.y <= Screen.height * 0.25f)
         {
             startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .05f);

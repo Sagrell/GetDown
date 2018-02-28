@@ -3,7 +3,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Text;
 public class InGameGUI : MonoBehaviour {
-
+    public static InGameGUI Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
     public Text scoreInPause;
     public Text scoreInGameOver;
     public Text bestScoreInPause;
@@ -20,7 +24,7 @@ public class InGameGUI : MonoBehaviour {
         pausePanel.SetActive(true);
         player = FindObjectOfType<PlayerController>();
         pauseAnimation = GetComponent<Animator>();
-        bestScore = DataManager.Instance.getUserData().HighScore;
+        bestScore = DataManager.Instance.GetUserData().HighScore;
     }
 	
     public void UpdateScore()
@@ -29,9 +33,9 @@ public class InGameGUI : MonoBehaviour {
         scoreInGame.text = score;
     }
 
-    public void Quit()
+    public void BackToMenu()
     {
-        Application.Quit();
+        SceneManager.LoadScene("Menu");
     }
     public void Pause()
     {

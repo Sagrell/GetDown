@@ -297,6 +297,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Objects\Scripts\CubeModel.cs" />
+    <Compile Include="Assets\Objects\Scripts\PowerUp.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraBehaviour.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraShakeInstance.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraShakePresets.cs" />
@@ -329,8 +331,13 @@
     <Compile Include="Assets\Scripts\Menu\Menu.cs" />
     <Compile Include="Assets\Scripts\Menu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Menu\ShopMenu.cs" />
-    <Compile Include="Assets\Scripts\Shop\CubeModel.cs" />
-    <Compile Include="Assets\Scripts\Shop\MakeCubeObject.cs" />
+    <Compile Include="Assets\Scripts\Menu\UIManager.cs" />
+    <Compile Include="Assets\Scripts\Shop\CubesManager.cs" />
+    <Compile Include="Assets\Scripts\Shop\GuiManager.cs" />
+    <Compile Include="Assets\Scripts\Shop\RotateWithTouch.cs" />
+    <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
+    <Compile Include="Assets\Scripts\Shop\Skin.cs" />
+    <Compile Include="Assets\Scripts\Shop\Upgrade.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\ShieldFX.shader" />

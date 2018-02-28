@@ -92,7 +92,7 @@ public class AudioCenter : MonoBehaviour
 			unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
 			activityObj = unityActivityClass.GetStatic<AndroidJavaObject>( "currentActivity" );
 			//soundObj = new AndroidJavaObject( "com.catsknead.androidsoundfix.AudioCenter", 1, activityObj, activityObj );
-			soundObj = new AndroidJavaObject( "com.sagrell.soundlatencyfix.AudioCenter", 6, activityObj );
+			soundObj = new AndroidJavaObject( "com.sagrell.soundlatencyfix.AudioCenter", 2, activityObj );
         #endif
         jumpSoundId = AudioCenter.LoadSound("Jump");
         destroyPlayerSoundId = AudioCenter.LoadSound("DestroyPlayer");

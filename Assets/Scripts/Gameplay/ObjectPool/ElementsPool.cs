@@ -63,6 +63,11 @@ public class ElementsPool : MonoBehaviour {
             return null;
         }
         GameObject obj = poolDictionary[type].Dequeue();
+        IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
+        if (pooledObj != null)
+        {
+            pooledObj.OnObjectSpawn();
+        }
         if (obj.activeSelf)
         {
             
@@ -77,12 +82,7 @@ public class ElementsPool : MonoBehaviour {
         if(parent!=null)
         {
             _transform.parent = parent;
-        }
-        IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
-        if(pooledObj!=null)
-        {
-            pooledObj.OnObjectSpawn();
-        }
+        } 
         poolDictionary[type].Enqueue(obj);
         return obj;
     }
@@ -131,7 +131,7 @@ public class ElementsPool : MonoBehaviour {
         }
         GameObject obj = poolDictionary[type].Dequeue();
 
-        if(obj.activeSelf)
+        if (obj.activeSelf)
         {
             poolDictionary[type].Enqueue(obj);
             return null;

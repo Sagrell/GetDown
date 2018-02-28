@@ -30,7 +30,7 @@ public class Shield : MonoBehaviour, IPooledObject {
         if (other.CompareTag("Enemy"))
         {
             AudioCenter.PlaySound(AudioCenter.shieldHitSoundId);
-
+            ShakeManager.ShakeAfterShieldHit();
             countShield--;
             other.GetComponent<Diamond>().DestroyDiamond();
             if (countShield <= 0f)
@@ -61,5 +61,5 @@ public class Shield : MonoBehaviour, IPooledObject {
         Instantiate(shieldEffect, transform.position, transform.rotation, transform.parent.parent);
         GameState.isShield = false;
     }
-    
+
 }

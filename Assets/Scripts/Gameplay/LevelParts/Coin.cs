@@ -11,7 +11,7 @@ public class Coin : MonoBehaviour, IPooledObject {
     Transform _RBTransform;
 
     void Start()
-    {  
+    {
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
     }
@@ -19,9 +19,10 @@ public class Coin : MonoBehaviour, IPooledObject {
     {
     }
 
-    void Update () {
-        _RBTransform.Rotate(Vector3.up, rotationSpeed*GameManager.deltaTime);
-	}
+    void Update()
+    {
+        _RBTransform.Rotate(Vector3.up, rotationSpeed * GameManager.deltaTime);
+    }
     public void destroyCoin()
     {
         AudioCenter.PlaySound(AudioCenter.coinCollectsoundId);
