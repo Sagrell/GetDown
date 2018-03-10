@@ -5,40 +5,54 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    #region Singleton
+        public static GameManager Instance;
+        private void Awake()
+        {
+            Instance = this;
+            player = Instantiate(playerObject, playerPosition.position, playerPosition.rotation, playerPosition.parent).GetComponent<PlayerController>();
+        }
+    #endregion  
     public static float deltaTime = 0.0f;
     public static float fixedDeltaTime = 0.0f;
 
+    public static PlayerController player;
+    
+
+    [Header("Player settings:")]
+    public GameObject playerObject;
+    public Transform playerPosition;
+    public float playerSpeed = 3f;
+    public float maxPlayerSpeed = 7f;
 
     [Space]
-    [Header("Difficulty:")]
-    [Range(0f,1f)]
+    [Header("Difficulty settings:")]
+    [Range(0f, 1f)]
     public float difficultyIncrease;
-    [Tooltip("How often difficulty should increase in seconds")]
     public float increaseEvery;
     public float maxSpeedFactor;
 
+
+
     DataManager dataManager;
+    
+
     void Start () {
-        Instance = this;
+        
         Time.timeScale = 1f;
-        StartCoroutine(increaseSpeedFactorEvery(5f));
+        StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));
         dataManager = DataManager.Instance;
-        AudioManager.Instance.Play("MainTheme");
+        AudioCenter.PlayMusic(1f);
     }
-	
 
-	void Update () {
 
-        deltaTime = Time.deltaTime;
-        //Time.timeScale = 0.2f;
-       
+    void Update () {
+        deltaTime = Time.deltaTime;    
     }
     private void FixedUpdate()
     {
-        fixedDeltaTime = Time.fixedDeltaTime;
+        fixedDeltaTime = Time.fixedDeltaTime;  
     }
-
     public void Kill()
     {
         StartCoroutine(KillAnimation(1.5f));
@@ -56,7 +70,7 @@ public class GameManager : MonoBehaviour
     }
   
 
-    IEnumerator increaseSpeedFactorEvery(float sec)
+    IEnumerator IncreaseSpeedFactorEvery(float sec)
     {
         while (true)
         {

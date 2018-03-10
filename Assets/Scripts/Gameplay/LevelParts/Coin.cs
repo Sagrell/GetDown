@@ -5,29 +5,35 @@ using UnityEngine;
 public class Coin : MonoBehaviour, IPooledObject {
 
     public GameObject effect;
-    public float rotationSpeed = 30f;
+    public float rotationSpeed = 100f;
 
-    Rigidbody rb;
     Transform _RBTransform;
 
-    void Start()
+    [HideInInspector]
+    public static Vector3 startPosition;
+    [HideInInspector]
+    public static Quaternion startRotation;
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        _RBTransform = rb.transform;
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
     public void OnObjectSpawn()
     {
+        _RBTransform = GetComponent<Rigidbody>().transform;
+        GetComponent<MagnetToPlayer>().enabled = false;
     }
 
     void Update()
     {
         _RBTransform.Rotate(Vector3.up, rotationSpeed * GameManager.deltaTime);
     }
-    public void destroyCoin()
+    public void DestroyCoin()
     {
         AudioCenter.PlaySound(AudioCenter.coinCollectsoundId);
-        GameObject coinEffect = Instantiate(effect, transform.parent);
+        GameObject coinEffect = Instantiate(effect, transform.position, Quaternion.identity, transform.parent);
         Destroy(coinEffect, 2f);
+        gameObject.transform.SetParent(null);
         gameObject.SetActive(false);
     }
 }

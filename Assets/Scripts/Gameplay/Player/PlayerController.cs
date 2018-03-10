@@ -6,25 +6,17 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
-
     [Header("References")]
     public GameObject destroyVersion;
-    public GameObject shield;
-
-    [Space]
-    [Header("Start speed")]
-    public float speed = 3f;
 
     //Main camera
     Camera mainCamera;
 
     float timeForJump;
-    float startSpeed;
+    float speed;
     bool willDie;
     bool alive;
     bool onGround;
-    bool isShield;
-    float countShield;
     //Coroutine
     IEnumerator jumping;
 
@@ -42,9 +34,11 @@ public class PlayerController : MonoBehaviour
     GameState GS;
     //ObjectPooler
     ElementsPool objectPooler;
-
+    //PowerUpManager
+    PowerUpManager powerUp;
     void Start()
     {
+        speed = GameManager.Instance.playerSpeed;
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
@@ -60,13 +54,15 @@ public class PlayerController : MonoBehaviour
  
 
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
-        startSpeed = speed;
+
         objectPooler = ElementsPool.Instance;
+        powerUp = PowerUpManager.Instance;
     }
 
     private void FixedUpdate()
     {
-        speed = startSpeed * GameState.currentSpeedFactor;
+        if (speed < GameManager.Instance.maxPlayerSpeed)
+            speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
         //Set position and rotation in fixed update cause its depends on collision!
         if (!willDie && _RBPrevLocalPosition.y != _RBLocalPosition.y)
         {
@@ -84,11 +80,11 @@ public class PlayerController : MonoBehaviour
             DestroyPlayer();
         }
 
-        if (Input.GetKey("d") && onGround)
+        if (Input.GetKey("d") && onGround && GameState.playerPositionX < 7)
         {
             JumpRight();
         }
-        if (Input.GetKey("a") && onGround)
+        if (Input.GetKey("a") && onGround && GameState.playerPositionX > 0)
         {
             JumpLeft();
         }
@@ -131,6 +127,8 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Jump(Vector3 byAngles, float speed, bool dir)
     {
+        GameState.playerPositionY++;
+        GameState.playerPositionX += dir ? 1 : -1;
         timeForJump = Mathf.Abs(1.5f / speed);
         Vector3 prevPosition = _RBLocalPosition;
         float x = 0;
@@ -147,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 break;
             }
             x += speed*GameManager.fixedDeltaTime;
-            y = parabolic(Mathf.Abs(x));
+            y = Parabolic(Mathf.Abs(x));
             rotation = Quaternion.Lerp(fromAngle, toAngle, t);
             if (Mathf.Abs(x) > 2f)
             {
@@ -172,22 +170,15 @@ public class PlayerController : MonoBehaviour
     public void DestroyPlayer()
     {
         alive = false;
+        GameState.isAlive = false;
         GameManager.Instance.Kill();
-        Shield shield = GetComponentInChildren<Shield>();
-        if (shield)
-        {
-            shield.DestroyShieldimmediately();
-        }
-        objectPooler.pickFromPool("DestroyedPlayer", _RBTransform.position, _RBTransform.rotation);
+        powerUp.DeactivateAll();
+        objectPooler.PickFromPool("DestroyedPlayer", _RBTransform.position, _RBTransform.rotation);
         AudioCenter.PlaySound(AudioCenter.destroyPlayerSoundId);
         ShakeManager.ShakeAfterDeath();
         gameObject.SetActive(false);      
     }
 
-    void CreateShield()
-    {
-        objectPooler.pickFromPool("Shield", transform);
-    }
     public bool isAlive()
     {
         return alive;
@@ -200,7 +191,7 @@ public class PlayerController : MonoBehaviour
         Collider collider = collision.collider;
         if(collider.tag == "Enemy")
         {
-           if(!GameState.isShield)
+           if(!PowerUpManager.isShield)
              DestroyPlayer();    
         }
         if (collider.tag == "Platform")
@@ -210,12 +201,14 @@ public class PlayerController : MonoBehaviour
                DestroyPlayer();
             } else
             {
+                
                 //AudioCenter.PlaySound(AudioCenter.jumpSoundId);
                 //Correct position if somethink happend 
                 _RBLocalPosition.x = collider.transform.localPosition.x;
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
                 _RBLocalRotation = Quaternion.identity;
                 GameState.score++;
+                
                 InGameGUI.Instance.UpdateScore();
                 onGround = true;
             }
@@ -230,21 +223,41 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Coin")
+        if (other.CompareTag("Coin"))
         {
-            //AudioManager.Instance.Play("Coin");
-            other.GetComponent<Coin>().destroyCoin();
+            other.GetComponent<Coin>().DestroyCoin();
             GameState.countCoins++;
+            InGameGUI.Instance.UpdateCoins();
         }
-        if (other.tag == "ShieldCoin")
+        if (other.CompareTag("DoubleCoin"))
         {
-            other.GetComponent<ShieldCoin>().DestroyShieldCoin();
-            GameState.isShield = true;
-            CreateShield();
+            other.GetComponent<DoubleCoin>().DestroyCoin();
+            GameState.countCoins+=2;
+            InGameGUI.Instance.UpdateCoins();
+        }
+        if (other.CompareTag("ShieldCoin"))
+        {
+            other.GetComponent<ShieldPowerUp>().DestroyPowerUp();
+            powerUp.Activate("Shield");
+        }
+        if (other.CompareTag("MagnetCoin"))
+        {
+            other.GetComponent<MagnetPowerUp>().DestroyPowerUp();
+            powerUp.Activate("Magnet");
+        }
+        if (other.CompareTag("DoubleCoinPowerUp"))
+        {
+            other.GetComponent<DoubleCoinPowerUp>().DestroyPowerUp();
+            powerUp.Activate("DoubleCoins");
+        }
+        if (other.CompareTag("FastRunPowerUp"))
+        {
+            other.GetComponent<FastRunPowerUp>().DestroyPowerUp();
+            powerUp.Activate("FastRun");
         }
     }
 
-    float parabolic(float x)
+    float Parabolic(float x)
     {
         return -2 * x * x + 2 * x;
     }

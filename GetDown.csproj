@@ -297,8 +297,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Objects\Scripts\CubeModel.cs" />
-    <Compile Include="Assets\Objects\Scripts\PowerUp.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraBehaviour.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraShakeInstance.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraShakePresets.cs" />
@@ -310,7 +308,6 @@
     <Compile Include="Assets\Scripts\Gameplay\Audio\Audio.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Audio\AudioCenter.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Audio\AudioManager.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Audio\LoadingSounds.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameState.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GUI\InGameGUI.cs" />
@@ -318,29 +315,54 @@
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Coin.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\DestroyAfter.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Diamond.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\LevelParts\DownPhaseManager.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\DoubleCoin.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\Laser.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\LevelController.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\MagnetToPlayer.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Platform.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PlatformSpawner.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\LevelParts\ShieldCoin.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\DoubleCoinPowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\FastRunPowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\MagnetPowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\PowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\PowerUpManager.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\ShieldPowerUp.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\SpiralPhaseManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\ElementsPool.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\IPooledObject.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Player\Magnet.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\Shield.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\SpeedController.cs" />
     <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\Menu.cs" />
     <Compile Include="Assets\Scripts\Menu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Menu\ShopMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\UIManager.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\CubeModel.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\PowerUpModel.cs" />
     <Compile Include="Assets\Scripts\Shop\CubesManager.cs" />
     <Compile Include="Assets\Scripts\Shop\GuiManager.cs" />
     <Compile Include="Assets\Scripts\Shop\RotateWithTouch.cs" />
     <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\Shop\Skin.cs" />
+    <Compile Include="Assets\Scripts\Shop\SwipeController.cs" />
     <Compile Include="Assets\Scripts\Shop\Upgrade.cs" />
+    <Compile Include="Assets\VolumetricLines\Scripts\Utils\TransformExtensionMethods.cs" />
+    <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineBehavior.cs" />
+    <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineSettings.cs" />
+    <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineVertexData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\ShieldFX.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\Fast-AlphaBlended.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\Strip-Additive.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\Strip-AlphaBlended.shader" />
+    <None Include="Assets\VolumetricLines\Shaders\_SimpleShader.cginc" />
+    <None Include="Assets\VolumetricLines\Shaders\_StripShader.cginc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

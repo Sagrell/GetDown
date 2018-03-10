@@ -8,11 +8,11 @@ public class GameState : MonoBehaviour {
     public static float currentSpeedFactor;
     public static int countCoins;
     public static int score;
-    public static bool isShield;
-    public static float countShield;
+    public static bool isAlive;
     public static bool isPaused;
     public static bool isGameOver;
-
+    public static int playerPositionX;
+    public static int playerPositionY;
     // Use this for initialization
     void Start () {
         countCoins = 0;
@@ -20,9 +20,10 @@ public class GameState : MonoBehaviour {
         currentSpeedFactor = 1f;
         isPaused = false;
         isGameOver = false;
-        isShield = false;
-        countShield = 0f;
-    }
+        isAlive = true;
+        playerPositionX = 0;
+        playerPositionY = 0;
+}
 	
 
     

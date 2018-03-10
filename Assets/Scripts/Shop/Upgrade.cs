@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Upgrade : MonoBehaviour {
 
-    public PowerUp powerUp;
+    public PowerUpModel powerUp;
 
     public Image image;
     public Text powerUpName;

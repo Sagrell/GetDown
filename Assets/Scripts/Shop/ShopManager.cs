@@ -11,6 +11,7 @@ public class ShopManager : MonoBehaviour {
     [Space]
     [Header("References")]
     public GameObject showCube;
+    public GameObject showCubePrefab;
     public GameObject gameCube;
     public GameObject destroyedVersion;
 
@@ -23,7 +24,6 @@ public class ShopManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-        
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
     }
@@ -36,6 +36,7 @@ public class ShopManager : MonoBehaviour {
         //Apply material to the cube
         gameCube.GetComponent<Renderer>().material = material;
         showCube.GetComponent<Renderer>().material = material;
+        showCubePrefab.GetComponent<Renderer>().material = material;
 
         //Apply material to the destroyed version of cube
         Renderer[] cubeParts = destroyedVersion.GetComponentsInChildren<Renderer>();

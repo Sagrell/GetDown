@@ -10,12 +10,10 @@ public class Skin : MonoBehaviour {
     public GameObject cost;
 
     Image image;
-    Button button;
 
     public void Initialize(CubeModel model)
     {
         image = GetComponent<Image>();
-        button = GetComponent<Button>();
         image.material = model.ShowMaterial;
         selected.SetActive(model.selected);
         locked.SetActive(model.locked);

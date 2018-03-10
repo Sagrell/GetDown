@@ -52,9 +52,42 @@ public class ElementsPool : MonoBehaviour {
             poolDictionary.Add(poolSettings.type, pool);
         }
 	}
-
+    public void ChangeCoins()
+    {
+        foreach (GameObject platform in poolDictionary["Normal"])
+        {
+            Coin coin = platform.GetComponentInChildren<Coin>();
+            DoubleCoin doubleCoin = platform.GetComponentInChildren<DoubleCoin>();
+            if (coin)
+            {
+                coin.gameObject.SetActive(false);
+                PickFromPool("DoubleCoin", platform.transform, Coin.startPosition, Coin.startRotation);
+            }
+            if (doubleCoin)
+            {
+                doubleCoin.gameObject.SetActive(false);
+                PickFromPool("Coin", platform.transform, DoubleCoin.startPosition, DoubleCoin.startRotation);
+            }
+        }
+    }
+    public void RemovePlatformsFromPool()
+    {
+        foreach (GameObject platform in poolDictionary["Normal"])
+        {
+           platform.SetActive(false);
+            for (int i = 0; i < platform.transform.childCount; i++) {
+                Transform child = platform.transform.GetChild(i);
+                child.gameObject.SetActive(false);
+                child.SetParent(null);    
+            }
+        }
+        foreach (GameObject platform in poolDictionary["Broken"])
+        {
+            platform.SetActive(false);
+        }
+    }
     //Pick object from pool with specific type and place it at definite position and apply rotation
-    public GameObject pickFromPool(string type, Vector3 position, Quaternion rotation, Transform parent = null)
+    public GameObject PickFromPool(string type, Vector3 position, Quaternion rotation, Transform parent = null)
     {
         // If this type of object doesn't exist then return NULL
         if(!poolDictionary.ContainsKey(type))
@@ -63,20 +96,19 @@ public class ElementsPool : MonoBehaviour {
             return null;
         }
         GameObject obj = poolDictionary[type].Dequeue();
-        IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
+        IPooledObject pooledObj = obj.GetComponent<IPooledObject>();  
+        if (obj.activeSelf)
+        {
+            poolDictionary[type].Enqueue(obj);
+            return null;
+        }       
+        Transform _transform = obj.transform;
+        //SetActive doesn't work on child! Unity should fix this!
+        obj.SetActive(true);
         if (pooledObj != null)
         {
             pooledObj.OnObjectSpawn();
         }
-        if (obj.activeSelf)
-        {
-            
-            poolDictionary[type].Enqueue(obj);
-            return null;
-        }
-        Transform _transform = obj.transform;
-        //SetActive doesn't work on child! Unity should fix this!
-        obj.SetActiveRecursively(true);
         _transform.position = position;
         _transform.rotation = rotation;
         if(parent!=null)
@@ -86,7 +118,7 @@ public class ElementsPool : MonoBehaviour {
         poolDictionary[type].Enqueue(obj);
         return obj;
     }
-    public GameObject pickFromPool(string type, Vector3 position, Transform parent = null)
+    public GameObject PickFromPool(string type, Vector3 position, Transform parent = null)
     {
         // If this type of object doesn't exist then return NULL
         if (!poolDictionary.ContainsKey(type))
@@ -102,7 +134,7 @@ public class ElementsPool : MonoBehaviour {
         }
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
-        obj.SetActiveRecursively(true);
+        obj.SetActive(true);
         _transform.position = position;
         if (parent != null)
         {
@@ -116,7 +148,7 @@ public class ElementsPool : MonoBehaviour {
         poolDictionary[type].Enqueue(obj);
         return obj;
     }
-    public GameObject pickFromPool(string type, Transform parent)
+    public GameObject PickFromPool(string type, Transform parent, Vector3 localPosition, Quaternion localRotation)
     {
         // If this type of object doesn't exist then return NULL
         if (!poolDictionary.ContainsKey(type))
@@ -138,13 +170,49 @@ public class ElementsPool : MonoBehaviour {
         }
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
-        obj.SetActiveRecursively(true);
+        obj.SetActive(true);
+        
+        _transform.parent = parent;
+        
+        _transform.localPosition = localPosition;
+        _transform.localRotation = localRotation;
+
+        IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
+        if (pooledObj != null)
+        {
+            pooledObj.OnObjectSpawn();
+        }
+        poolDictionary[type].Enqueue(obj);
+        return obj;
+    }
+    public GameObject PickFromPool(string type, Transform parent)
+    {
+        // If this type of object doesn't exist then return NULL
+        if (!poolDictionary.ContainsKey(type))
+        {
+            Debug.LogError("There is no object with specific type in the pool");
+            return null;
+        }
+        if (poolDictionary[type].Count == 0)
+        {
+            Debug.LogError("Pool is empty");
+            return null;
+        }
+        GameObject obj = poolDictionary[type].Dequeue();
+
+        if (obj.activeSelf)
+        {
+            poolDictionary[type].Enqueue(obj);
+            return null;
+        }
+        Transform _transform = obj.transform;
+        //SetActive doesn't work on child! Unity should fix this!
+        obj.SetActive(true);
+
+        _transform.parent = parent;
         _transform.position = parent.position;
         _transform.rotation = parent.rotation;
-        if (parent != null)
-        {
-            _transform.parent = parent;
-        }
+
         IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
         if (pooledObj != null)
         {

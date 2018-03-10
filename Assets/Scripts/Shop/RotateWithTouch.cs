@@ -16,4 +16,5 @@ public class RotateWithTouch : MonoBehaviour {
         float x = Input.GetAxis("Mouse X") * speed;
         _transform.Rotate(Vector3.down, x);
     }
+
 }
