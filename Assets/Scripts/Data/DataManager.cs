@@ -11,6 +11,7 @@ public class DataManager : MonoBehaviour {
 
     UserData userData;
     string savePath;
+
     private void Awake()
     {
         if (Instance == null)

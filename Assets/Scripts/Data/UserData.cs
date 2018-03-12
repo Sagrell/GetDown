@@ -11,6 +11,7 @@ public class UserData
 
     public bool[] CubesUnlocked;
 
+
     public string hashOfContent;
 
 }

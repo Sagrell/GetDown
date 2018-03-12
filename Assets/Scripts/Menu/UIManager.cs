@@ -2,10 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
-
-	public void GoToShop()
+    public Text coins;
+    public GameObject cube;
+    public Transform cubePosition;
+    UserData data;
+    private void Start()
+    {
+        data = DataManager.Instance.GetUserData();
+        coins.text = data.GoldAmount.ToString();
+        Instantiate(cube);
+    }
+    public void GoToShop()
     {
         SceneManager.LoadScene("Shop");
     }

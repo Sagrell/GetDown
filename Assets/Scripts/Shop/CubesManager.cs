@@ -72,6 +72,7 @@ public class CubesManager : MonoBehaviour {
             cubeScale[i].y = scale;
             items[i].transform.localScale = cubeScale[i];
         }
+        
     }
    
     public void Deselect()
@@ -79,13 +80,13 @@ public class CubesManager : MonoBehaviour {
         selected.selected = false;
     }
 
-    private void Update()
+    void Update()
     {
         float minDistance = float.MaxValue;
         for (int i = 0; i < models.Length; i++)
         {
             float distance = Mathf.Abs(contentRect.anchoredPosition.x - itemsPosition[i].x);
-            if(distance < minDistance)
+            if (distance < minDistance)
             {
                 minDistance = distance;
                 selectedCubeId = i;

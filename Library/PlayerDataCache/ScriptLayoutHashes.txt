@@ -122,8 +122,6 @@ c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.MagnetPowerUp
 80199407f489bb3260d8c05631bc509d Assembly-CSharp.dll:.DoubleCoin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameState
 ec29ff9acf57bd10e13a6211ffd544a8 Assembly-CSharp.dll:.GuiManager
-322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
-dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 4b4771ddd721689fd41e3611c0b68437 Assembly-CSharp.dll:.PlatformSpawner
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -139,8 +137,6 @@ dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.RotateWithTouch
 708419d947bde3e224de857b7ea6d2a0 Assembly-CSharp.dll:.Shield
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DataManager
 80199407f489bb3260d8c05631bc509d Assembly-CSharp.dll:.Coin
-05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
-05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 baa852533eb1fbfd73e31cdbe39b07a2 Assembly-CSharp.dll:.AudioManager
 659b71e5c575cae1a207d5ea3a5623e9 Assembly-CSharp.dll:.GameManager
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
@@ -178,7 +174,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 771744eb964bf3d93a2b65ab1e6e421f Assembly-CSharp.dll:.PowerUpModel
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CameraBehaviour
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UIManager
+ec5e52cb04be6f230747a2f7270661c8 Assembly-CSharp.dll:.UIManager
 9347663f7e8e6cfed7e17cf05bbbfd93 Assembly-CSharp.dll:.CubeModel
 de3b1ffcf0860957322969d57b0888d2 Assembly-CSharp.dll:.Upgrade
 a873c5c17779c95786964cd402acac60 Assembly-CSharp.dll:.SpeedController
@@ -186,3 +182,5 @@ e4905655ca37ac286fda698aa632775b Assembly-CSharp.dll:.PlayerController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Platform
 a23d2ca4ffd086523f0c855210c50efc Assembly-CSharp.dll:.Diamond
 a203c070efc953cf42dd3a4ab22d2e90 Assembly-CSharp.dll:.Skin
+05524b8f659e7bfe5756d1335fec24ba UnityStore.dll:UnityEngine.Store.MainThreadDispatcher
+50667894c33b478dc38ae949114bb1e8 Assembly-CSharp.dll:AppStoresSupport.AppStoreSettings

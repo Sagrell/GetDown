@@ -44,7 +44,7 @@ public class GuiManager : MonoBehaviour {
         }
         else if (cube.locked)
         {
-            scoreLimit.GetComponentInChildren<Text>().text = Regex.Replace(scoreLimit.GetComponentInChildren<Text>().text, @"\d+", cube.scoreRequire.ToString()); 
+            scoreLimit.GetComponentInChildren<Text>().text = Regex.Replace(scoreLimit.GetComponentInChildren<Text>().text, @"(>)\d+(<)", "${1}" +cube.scoreRequire.ToString() + "${2}"); 
             scoreLimit.SetActive(true);
         }
         else

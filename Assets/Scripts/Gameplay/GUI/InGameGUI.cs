@@ -48,6 +48,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void BackToMenu()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Menu");
     }
     public void Pause()
