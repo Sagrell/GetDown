@@ -6,14 +6,9 @@ public class ShopManager : MonoBehaviour {
 
     public static ShopManager Instance;
     [Header("Managers")]
-    public CubesManager cubesManager;
-
-    [Space]
-    [Header("References")]
-    public GameObject showCube;
-    public GameObject showCubePrefab;
-    public GameObject gameCube;
-    public GameObject destroyedVersion;
+    public ItemsManager cubesManager;
+    public ItemsManager platformsManager;
+    public ItemsManager backgroundsManager;
 
     DataManager dataManager;
     UserData data;
@@ -29,34 +24,64 @@ public class ShopManager : MonoBehaviour {
     }
 	
 
-    public void Select(CubeModel cube)
+    public void Select(ShopItem item)
     {
-        Material material = cube.CubeMaterial;
-
-        //Apply material to the cube
-        gameCube.GetComponent<Renderer>().material = material;
-        showCube.GetComponent<Renderer>().material = material;
-        showCubePrefab.GetComponent<Renderer>().material = material;
-
-        //Apply material to the destroyed version of cube
-        Renderer[] cubeParts = destroyedVersion.GetComponentsInChildren<Renderer>();
-        for (int i = 0; i < cubeParts.Length; ++i)
+        Material material = item.objectMat;
+        item.selected = true;
+        dataManager.SaveSelectedItem(item);
+        switch (item.itemType)
         {
-            cubeParts[i].material = material;
+            
+            case "Cube":
+                //Apply material to the cube
+                SkinManager.cubeMat = material;
+                cubesManager.Deselect();
+                cubesManager.Initialize();
+                break;
+            case "Platform":
+                //Apply material to the cube
+                SkinManager.platformMat = material;
+                platformsManager.Deselect();
+                platformsManager.Initialize();
+                break;
+            case "Background":
+                SkinManager.backgroundMat = material;
+                backgroundsManager.Deselect();
+                backgroundsManager.Initialize();
+                break;
+            default:
+                break;
         }
-        cubesManager.Deselect();
-        cube.selected = true;
-        cubesManager.Initialize();
-        GuiManager.Instance.Show(cube);
+        GuiManager.Instance.Show(item);
     }
 
-    public void Buy(CubeModel cube)
+    public void Buy(ShopItem item)
     {
-        data.GoldAmount -= cube.cost;
-        data.CubesUnlocked[cube.index] = true;
-        dataManager.SaveUserData(data);
-        cubesManager.Initialize();
+        
+        data.GoldAmount -= item.cost;
+        switch (item.itemType)
+        {
+            case "Cube":
+                data.CubesUnlocked[item.index] = true;
+                dataManager.SaveUserData(data);
+                cubesManager.Initialize();
+                break;
+            case "Platform":
+                data.PlatformsUnlocked[item.index] = true;
+                dataManager.SaveUserData(data);
+                Debug.Log(dataManager.GetUserData().PlatformsUnlocked[1]);
+                platformsManager.Initialize();
+                break;
+            case "Background":
+                data.BackgroundsUnlocked[item.index] = true;
+                dataManager.SaveUserData(data);
+                backgroundsManager.Initialize();
+                break;
+            default:
+                break;
+        }
+
         GuiManager.Instance.UpdateInfo();
-        GuiManager.Instance.Show(cube);
+        GuiManager.Instance.Show(item);
     }
 }

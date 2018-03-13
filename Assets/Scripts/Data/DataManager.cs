@@ -45,10 +45,31 @@ public class DataManager : MonoBehaviour {
        userData.hashOfContent = GenerateHashFromData(userData);
        BinaryWrite(JsonUtility.ToJson(userData));
     }
+    public void SaveSelectedItem(ShopItem item)
+    {
+        switch (item.itemType)
+        {
+            case "Cube":
+                userData.SelectedCube = item.index;
+                break;
+            case "Platform":
+                userData.SelectedPlatform = item.index;
+                break;
+            case "Background":
+                userData.SelectedBackground = item.index;
+                break;
+            default:
+                break;
+        }
+        userData.hashOfContent = GenerateHashFromData(userData);
+        BinaryWrite(JsonUtility.ToJson(userData));
+    }
+
     public void Load()
     {
         string saveData = BinaryRead();
         UserData tempData = JsonUtility.FromJson<UserData>(saveData);
+
         string hash = tempData.hashOfContent;
         if (GenerateHashFromData(tempData).Equals(hash))
         {
@@ -67,8 +88,13 @@ public class DataManager : MonoBehaviour {
             PlayerName = "Sagrell",
             Version = "1.0",
             HighScore = 0,
-            GoldAmount = 0,
-            CubesUnlocked = new bool[] { true, false, false }
+            GoldAmount = 10000000,
+            CubesUnlocked = new bool[] { true, false, false },
+            PlatformsUnlocked = new bool[] { true, false, false },
+            BackgroundsUnlocked = new bool[] { true, false, false },
+            SelectedCube = 0,
+            SelectedPlatform = 0,
+            SelectedBackground = 0
         };
         userData.hashOfContent = GenerateHashFromData(userData);
 
@@ -82,7 +108,9 @@ public class DataManager : MonoBehaviour {
             Version = "1.0",
             HighScore = 0,
             GoldAmount = 0,
-            CubesUnlocked = new bool[] { true, false, false }
+            CubesUnlocked = new bool[] { true, false, false },
+            PlatformsUnlocked = new bool[] { true, false, false },
+            BackgroundsUnlocked = new bool[] { true, false, false },
         };
         userData.hashOfContent = GenerateHashFromData(userData);
 
@@ -141,6 +169,7 @@ public class DataManager : MonoBehaviour {
     }
     public void SaveUserData(UserData data)
     {
+        userData = data;
         data.hashOfContent = GenerateHashFromData(data);
         BinaryWrite(JsonUtility.ToJson(data));
     }

@@ -11,17 +11,17 @@ public class Skin : MonoBehaviour {
 
     Image image;
 
-    public void Initialize(CubeModel model)
+    public void Initialize(ShopItem model)
     {
         image = GetComponent<Image>();
-        image.material = model.ShowMaterial;
+        image.material = model.previewMat;
         selected.SetActive(model.selected);
         locked.SetActive(model.locked);
         //button.interactable = !model.locked && model.bought;
         if (!model.bought && !model.locked)
         {
             cost.SetActive(true);
-            cost.GetComponent<Text>().text = model.cost.ToString();
+            cost.GetComponentInChildren<Text>().text = model.cost.ToString();
 
         }
         else

@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("References")]
-    public GameObject destroyVersion;
+    public GameObject destroyedVersion;
 
     //Main camera
     Camera mainCamera;
@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     ElementsPool objectPooler;
     //PowerUpManager
     PowerUpManager powerUp;
+    //Material
+    Material cubeMat;
     void Start()
     {
         speed = GameManager.Instance.playerSpeed;
@@ -57,6 +59,14 @@ public class PlayerController : MonoBehaviour
 
         objectPooler = ElementsPool.Instance;
         powerUp = PowerUpManager.Instance;
+
+        cubeMat = SkinManager.cubeMat;
+        GetComponent<Renderer>().material = cubeMat;
+        Renderer[] cubeParts = destroyedVersion.GetComponentsInChildren<Renderer>();
+        for (int i = 0; i < cubeParts.Length; ++i)
+        {
+            cubeParts[i].material = cubeMat;
+        }
     }
 
     private void FixedUpdate()

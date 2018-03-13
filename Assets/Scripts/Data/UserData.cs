@@ -10,8 +10,12 @@ public class UserData
     public int GoldAmount;
 
     public bool[] CubesUnlocked;
+    public bool[] PlatformsUnlocked;
+    public bool[] BackgroundsUnlocked;
 
-
+    public int SelectedCube;
+    public int SelectedPlatform;
+    public int SelectedBackground;
     public string hashOfContent;
 
 }

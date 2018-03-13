@@ -32,17 +32,18 @@ public class GameManager : MonoBehaviour
     public float increaseEvery;
     public float maxSpeedFactor;
 
-
+    public Renderer platform;
 
     DataManager dataManager;
     
 
     void Start () {
-        
+        platform.material = SkinManager.platformMat;
         Time.timeScale = 1f;
         StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));
         dataManager = DataManager.Instance;
         AudioCenter.PlayMusic(1f);
+        RenderSettings.skybox = SkinManager.backgroundMat;
     }
 
 

@@ -7,12 +7,19 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
     public Text coins;
     public GameObject cube;
-    public Transform cubePosition;
+    public Renderer shopPlatform;
+    public Renderer creditsPlatform;
+    public Renderer exitPlatform;
     UserData data;
     private void Start()
     {
         data = DataManager.Instance.GetUserData();
         coins.text = data.GoldAmount.ToString();
+        cube.GetComponent<Renderer>().material = SkinManager.cubeMat;
+        shopPlatform.material = SkinManager.platformMat;
+        creditsPlatform.material = SkinManager.platformMat;
+        exitPlatform.material = SkinManager.platformMat;
+        RenderSettings.skybox = SkinManager.backgroundMat;
         Instantiate(cube);
     }
     public void GoToShop()
