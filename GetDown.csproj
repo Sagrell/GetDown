@@ -297,6 +297,7 @@
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\MagnetToPlayer.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Platform.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PlatformSpawner.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\PlatformWithSpike.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\DoubleCoinPowerUp.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\FastRunPowerUp.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\MagnetPowerUp.cs" />
@@ -317,13 +318,18 @@
     <Compile Include="Assets\Scripts\Menu\UIManager.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\PowerUpModel.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\ShopItem.cs" />
+    <Compile Include="Assets\Scripts\Shop\DoubleCoinsUpgrade.cs" />
+    <Compile Include="Assets\Scripts\Shop\FastRunUpgrade.cs" />
     <Compile Include="Assets\Scripts\Shop\GuiManager.cs" />
     <Compile Include="Assets\Scripts\Shop\ItemsManager.cs" />
+    <Compile Include="Assets\Scripts\Shop\MagnetUpgrade.cs" />
     <Compile Include="Assets\Scripts\Shop\RotateWithTouch.cs" />
+    <Compile Include="Assets\Scripts\Shop\ShieldUpgrade.cs" />
     <Compile Include="Assets\Scripts\Shop\ShopManager.cs" />
     <Compile Include="Assets\Scripts\Shop\Skin.cs" />
     <Compile Include="Assets\Scripts\Shop\SwipeController.cs" />
     <Compile Include="Assets\Scripts\Shop\Upgrade.cs" />
+    <Compile Include="Assets\Scripts\Shop\UpgradeManager.cs" />
     <Compile Include="Assets\VolumetricLines\Scripts\Utils\TransformExtensionMethods.cs" />
     <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineBehavior.cs" />
     <Compile Include="Assets\VolumetricLines\Scripts\VolumetricLineSettings.cs" />

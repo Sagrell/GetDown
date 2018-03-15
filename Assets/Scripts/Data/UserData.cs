@@ -16,6 +16,12 @@ public class UserData
     public int SelectedCube;
     public int SelectedPlatform;
     public int SelectedBackground;
+
+    public int[] Shield;
+    public int[] Magnet;
+    public int[] DoubleCoin;
+    public int[] FastRun;
+
     public string hashOfContent;
 
 }

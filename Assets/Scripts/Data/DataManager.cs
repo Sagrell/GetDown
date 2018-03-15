@@ -77,7 +77,7 @@ public class DataManager : MonoBehaviour {
             userData.hashOfContent = hash;
         } else
         {
-            SaveCheaterData();
+            SaveDefaultData();
         }
     }
 
@@ -88,34 +88,23 @@ public class DataManager : MonoBehaviour {
             PlayerName = "Sagrell",
             Version = "1.0",
             HighScore = 0,
-            GoldAmount = 10000000,
+            GoldAmount = 1000000,
             CubesUnlocked = new bool[] { true, false, false },
             PlatformsUnlocked = new bool[] { true, false, false },
             BackgroundsUnlocked = new bool[] { true, false, false },
             SelectedCube = 0,
             SelectedPlatform = 0,
-            SelectedBackground = 0
+            SelectedBackground = 0,
+            Shield = new int[] { 0, 0, 0 },
+            Magnet = new int[] { 0, 0, 0 },
+            DoubleCoin = new int[] { 0, 0, 0 },
+            FastRun = new int[] { 0, 0, 0 }
         };
         userData.hashOfContent = GenerateHashFromData(userData);
 
         BinaryWrite(JsonUtility.ToJson(userData));
     }
-    void SaveCheaterData()
-    {
-        userData = new UserData()
-        {
-            PlayerName = "Cheater",
-            Version = "1.0",
-            HighScore = 0,
-            GoldAmount = 0,
-            CubesUnlocked = new bool[] { true, false, false },
-            PlatformsUnlocked = new bool[] { true, false, false },
-            BackgroundsUnlocked = new bool[] { true, false, false },
-        };
-        userData.hashOfContent = GenerateHashFromData(userData);
 
-        BinaryWrite(JsonUtility.ToJson(userData));
-    }
     string GenerateHashFromData(UserData userData)
     {
         userData.hashOfContent = "0105199627041997VLADIRAUESMYOCUDONTEVENTRY";

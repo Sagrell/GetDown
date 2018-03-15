@@ -1,26 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Upgrade : MonoBehaviour {
+public abstract class Upgrade : MonoBehaviour {
+    public GameObject point;
+    public GameObject emptyPoint;
+    public Transform levelContainer;
+    public Text improvesText;
+    public Button buy;
 
-    public PowerUpModel powerUp;
+    protected int maxLevel;
+    protected int level;  
+    protected DataManager dataManager;
 
-    public Image image;
-    public Text powerUpName;
-    public Text description;
-    public Text cost;
-
-    int level;
-
-    // Use this for initialization
-    void Start () {
-        image.sprite = powerUp.sprite;
-        powerUpName.text = powerUp.powerUpName;
-        description.text = powerUp.description;
-        cost.text = powerUp.cost.ToString();
-        level = powerUp.level;
+    private void Start()
+    {
+        dataManager = DataManager.Instance;
+        Initialize();
     }
-	
+    abstract public void Initialize();
 }

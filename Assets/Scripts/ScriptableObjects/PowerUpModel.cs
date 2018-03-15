@@ -11,6 +11,6 @@ public class PowerUpModel : ScriptableObject
     public string description;
     public int cost;
 
-    [Range(0,5)]
     public int level;
+    public int maxLevel;
 }

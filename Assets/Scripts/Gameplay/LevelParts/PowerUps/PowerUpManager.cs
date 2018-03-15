@@ -17,19 +17,11 @@ public class PowerUpManager : MonoBehaviour {
     public static bool isFastRun;
     [Header("Platform spawner:")]
     public PlatformSpawner spawner;
-    [Space]
-    [Header("Magnet:")]
-    public float magnetTimer = 20f;
-    [Space]
-    [Header("Double coins:")]
-    public float doubleCoinTimer = 20f;
-    [Space]
-    [Header("Shield:")]
-    public float shieldCount = 1f;
-    public float shieldTimer = 50f;
-    [Space]
-    [Header("Fast run:")]
-    public float fastRunTimer = 50f;
+
+    float magnetTimer;
+    float doubleCoinTimer;
+    float shieldTimer;
+    float fastRunTimer;
     PlayerController player;
     //Player transform
     Transform _PTransform;
@@ -38,8 +30,15 @@ public class PowerUpManager : MonoBehaviour {
     ElementsPool objectPooler;
     GameObject magnet;
     GameObject shield;
+    UserData data;
     private void Start()
     {
+        data = DataManager.Instance.GetUserData();
+        magnetTimer = data.Magnet[1];
+        doubleCoinTimer = data.DoubleCoin[1];
+        shieldTimer = data.Shield[1];
+        fastRunTimer = data.FastRun[1];
+
         player = GameManager.player;
         _PTransform = player.transform;
         objectPooler = ElementsPool.Instance;
@@ -90,11 +89,19 @@ public class PowerUpManager : MonoBehaviour {
                 InGameGUI.Instance.StopPowerUp(powerUp);
                 break;
             case "Shield":
+                if(!shield)
+                {
+                    break;
+                }
                 shield.GetComponent<Shield>().DestroyShieldImmediately();
                 isShield = false;
                 InGameGUI.Instance.StopPowerUp(powerUp);
                 break;
             case "Magnet":
+                if(!magnet)
+                {
+                    break;
+                }
                 magnet.GetComponent<Magnet>().DestroyMagnet();
                 isMagnet = false;
                 InGameGUI.Instance.StopPowerUp(powerUp);

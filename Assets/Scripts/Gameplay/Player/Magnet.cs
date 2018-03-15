@@ -7,7 +7,6 @@ public class Magnet : MonoBehaviour, IPooledObject
 {
     Transform player;
 
-    public float durationMagnet;
     public void OnObjectSpawn()
     {
         player = GameManager.player.transform;

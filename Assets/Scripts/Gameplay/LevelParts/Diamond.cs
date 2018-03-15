@@ -23,8 +23,8 @@ public class Diamond : MonoBehaviour, IPooledObject
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
         currPosition = _RBTransform.localPosition;
-        leftPosition = new Vector3(-5.25f, currPosition.y);
-        rightPosition = new Vector3(5.25f, currPosition.y);
+        leftPosition = new Vector3(-4f, currPosition.y);
+        rightPosition = new Vector3(4f, currPosition.y);
         nextPosition = rightPosition;
         startSpeed = speed;
     }

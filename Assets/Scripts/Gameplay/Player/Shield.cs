@@ -9,13 +9,13 @@ public class Shield : MonoBehaviour, IPooledObject {
     public GameObject shieldEffect;
 
     Animator shieldHitAnim;
-    public float countShield;
+    float countShield;
 
     public void OnObjectSpawn()
     {
         shieldHitAnim = GetComponent<Animator>();
         shieldHitAnim.Play("ShieldAppearance");
-        countShield = PowerUpManager.Instance.shieldCount;
+        countShield = DataManager.Instance.GetUserData().Shield[2];
     }
     private void OnTriggerEnter(Collider other)
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour {
     const float startAspect = 0.5625f;
-    const float startSize = 11f;
+    const float startSize = 8.2f;
     const float ratio = 19.5f;
     Camera cam;
     float aspectRatio;

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopManager : MonoBehaviour {
+public class ShopManager : MonoBehaviour
+{
 
     public static ShopManager Instance;
     [Header("Managers")]
@@ -18,11 +19,12 @@ public class ShopManager : MonoBehaviour {
         Instance = this;
     }
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
     }
-	
+
 
     public void Select(ShopItem item)
     {
@@ -31,7 +33,7 @@ public class ShopManager : MonoBehaviour {
         dataManager.SaveSelectedItem(item);
         switch (item.itemType)
         {
-            
+
             case "Cube":
                 //Apply material to the cube
                 SkinManager.cubeMat = material;
@@ -57,7 +59,7 @@ public class ShopManager : MonoBehaviour {
 
     public void Buy(ShopItem item)
     {
-        
+
         data.GoldAmount -= item.cost;
         switch (item.itemType)
         {
@@ -83,5 +85,38 @@ public class ShopManager : MonoBehaviour {
 
         GuiManager.Instance.UpdateInfo();
         GuiManager.Instance.Show(item);
+    }
+    public void Upgrade(string type, int cost, int time, int imp)
+    {
+
+        data.GoldAmount -= cost;
+        switch (type)
+        {
+            case "Shield":
+                data.Shield[0]++;
+                data.Shield[1] += time;
+                data.Shield[2] += imp;
+                break;
+            case "Magnet":
+                data.Magnet[0]++;
+                data.Magnet[1] += time;
+                data.Magnet[2] += imp;
+                break;
+            case "DoubleCoin":
+                data.DoubleCoin[0]++;
+                data.DoubleCoin[1] += time;
+                data.DoubleCoin[2] += imp;
+                break;
+            case "FastRun":
+                data.FastRun[0]++;
+                data.FastRun[1] += time;
+                data.FastRun[2] += imp;
+                break;
+            default:
+                break;
+        }
+        dataManager.SaveUserData(data);
+        UpgradeManager.Instance.Initialize();
+        GuiManager.Instance.UpdateInfo();
     }
 }
