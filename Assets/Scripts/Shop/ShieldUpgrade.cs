@@ -32,10 +32,10 @@ public class ShieldUpgrade : Upgrade {
         switch (level)
         {
             case 0:
-                price = 100; time = 30; imp = 1;     
+                price = 100; time = 25; imp = 1;     
                 break;
             case 1:
-                price = 150; time = 10; imp = 0;
+                price = 150; time = 5; imp = 0;
                 break;
             case 2:
                 price = 300; time = 10; imp = 0;
@@ -44,16 +44,16 @@ public class ShieldUpgrade : Upgrade {
                 price = 600; time = 0;  imp = 1;
                 break;
             case 4:
-                price = 800; time = 20; imp = 0;
+                price = 800; time = 15; imp = 0;
                 break;
             case 5:
                 price = 1000; time = 0; imp = 1;
                 break;
             case 6:
-                price = 1300; time = 20; imp = 0;
+                price = 1300; time = 15; imp = 0;
                 break;
             case 7:
-                price = 2500; time = 30; imp = 1;
+                price = 2500; time = 20; imp = 1;
                 break;
             default:
                 break;

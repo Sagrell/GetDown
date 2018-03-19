@@ -1,36 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class Skins
+{
+    public string type;
+    public ShopItem[] items;
+}
 public class SkinManager : MonoBehaviour {
     public static SkinManager Instance;
 
-    public ShopItem[] items;
+    public Skins[] skins;
 
-    Dictionary<string, List<ShopItem>> itemsDictionary;
+    static Dictionary<string, ShopItem[]> itemsDictionary;
     DataManager dataManager;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            itemsDictionary = new Dictionary<string, List<ShopItem>>();
-            for (int i = 0; i < items.Length; i++)
+            itemsDictionary = new Dictionary<string, ShopItem[]>();
+            for (int i = 0; i < skins.Length; i++)
             {
-                ShopItem item = items[i];
-                if(!itemsDictionary.ContainsKey(item.itemType))
+                Skins skin = skins[i];
+                if(!itemsDictionary.ContainsKey(skin.type))
                 {
-                    List<ShopItem> newList = new List<ShopItem>();
-                    itemsDictionary.Add(item.itemType, newList);
+                    ShopItem[] newList = new ShopItem[skin.items.Length];
+                    itemsDictionary.Add(skin.type, newList);
                 }
-                itemsDictionary[item.itemType].Add(item);
-
+                for (int j = 0; j < skin.items.Length; j++)
+                {
+                    itemsDictionary[skin.type][j] = skin.items[j];
+                }
             }
-
             dataManager = DataManager.Instance;
-            cubeMat = itemsDictionary["Cube"].Find((m) => (m.index == dataManager.GetUserData().SelectedCube)).objectMat;
-            platformMat = itemsDictionary["Platform"].Find((m) => (m.index == dataManager.GetUserData().SelectedPlatform)).objectMat;
-            backgroundMat = itemsDictionary["Background"].Find((m) => (m.index == dataManager.GetUserData().SelectedBackground)).objectMat;
+            cubeMat = itemsDictionary["Cube"][dataManager.GetUserData().SelectedCube].objectMat;
+            platformMat = itemsDictionary["Platform"][dataManager.GetUserData().SelectedPlatform].objectMat;
+            backgroundMat = itemsDictionary["Background"][dataManager.GetUserData().SelectedBackground].objectMat;
         }
         else if (Instance != this)
         {
@@ -42,4 +48,9 @@ public class SkinManager : MonoBehaviour {
     public static Material cubeMat;
     public static Material platformMat;
     public static Material backgroundMat;
+
+    public static ShopItem[] GetSkins(string type)
+    {
+        return itemsDictionary[type];
+    }
 }

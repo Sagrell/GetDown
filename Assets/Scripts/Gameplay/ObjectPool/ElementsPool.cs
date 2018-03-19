@@ -13,13 +13,6 @@ public class ElementsPool : MonoBehaviour {
     }
      #endregion
 
-    //Max count of objects on the level at once ( 22 lines )
-    const float MAX_LINES = 22f;
-    const float MAX_NORMAL = MAX_LINES * 4f;
-    const float MAX_COINS = MAX_LINES * 4f;
-    const float MAX_BROKEN = MAX_LINES * 2f;
-    const float MAX_DIAMOND = MAX_LINES / 2f;
-
     //Create a pool class
     [System.Serializable]
     public class PoolSettings
@@ -30,11 +23,10 @@ public class ElementsPool : MonoBehaviour {
     }
     //Create an array of pools (List is bad choice due to TC and MC)
     public PoolSettings[] pools;
-
     //Create a pool dictionary type=>Queue
     Dictionary<string, Queue<GameObject>> poolDictionary;
 
-
+    public Transform level;
     // Initialization
     void Start () {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -45,7 +37,7 @@ public class ElementsPool : MonoBehaviour {
 
             for(int j = 0; j < poolSettings.size; ++j)
             {
-                GameObject obj = Instantiate(poolSettings.prefab);
+                GameObject obj = Instantiate(poolSettings.prefab, level);
                 obj.SetActive(false);
                 pool.Enqueue(obj);
             }
@@ -74,14 +66,20 @@ public class ElementsPool : MonoBehaviour {
     {
         foreach (GameObject platform in poolDictionary["Normal"])
         {
-           platform.SetActive(false);
+          
             for (int i = 0; i < platform.transform.childCount; i++) {
                 Transform child = platform.transform.GetChild(i);
                 child.gameObject.SetActive(false);
                 child.SetParent(null);    
             }
+            PickFromPool("PlatformBlowEffect", platform.transform);
+            platform.SetActive(false);
         }
         foreach (GameObject platform in poolDictionary["Broken"])
+        {
+            platform.SetActive(false);
+        }
+        foreach (GameObject platform in poolDictionary["NormalWithSpike"])
         {
             platform.SetActive(false);
         }
@@ -135,6 +133,10 @@ public class ElementsPool : MonoBehaviour {
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
         obj.SetActive(true);
+        if(type == "NormalWithSpike")
+        {
+            _transform.GetComponentInChildren<Spike>().gameObject.SetActive(true);
+        }
         _transform.position = position;
         if (parent != null)
         {
@@ -171,7 +173,6 @@ public class ElementsPool : MonoBehaviour {
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
         obj.SetActive(true);
-        
         _transform.parent = parent;
         
         _transform.localPosition = localPosition;

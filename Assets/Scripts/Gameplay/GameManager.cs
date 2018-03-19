@@ -31,22 +31,36 @@ public class GameManager : MonoBehaviour
     public float difficultyIncrease;
     public float increaseEvery;
     public float maxSpeedFactor;
-
+    public Animator fadeAnim;
     public Renderer platform;
-
+    public Renderer platformWithSpike;
+    public Renderer brokenPlatform;
     DataManager dataManager;
     
 
     void Start () {
         platform.material = SkinManager.platformMat;
-        Time.timeScale = 1f;
-        StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));
+        platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
+        brokenPlatform.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         dataManager = DataManager.Instance;
-        AudioCenter.PlayMusic(1f);
         RenderSettings.skybox = SkinManager.backgroundMat;
+        Time.timeScale = 0f;
+        AudioCenter.LoadMusic("MainTheme");
+        StartCoroutine(StartGame());
     }
+    IEnumerator StartGame()
+    {
+        fadeAnim.Play("FadeIn");
+        fadeAnim.Update(0f);  
+        while (fadeAnim.GetCurrentAnimatorStateInfo(0).IsName("Main.FadeIn"))
+        {
+            yield return null;
+        }
+        Time.timeScale = 1f;
+        AudioCenter.PlayMusic(1f);
+        StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));        
 
-
+    }
     void Update () {
         deltaTime = Time.deltaTime;    
     }

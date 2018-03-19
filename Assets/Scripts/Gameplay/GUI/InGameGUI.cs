@@ -21,9 +21,10 @@ public class InGameGUI : MonoBehaviour {
     public GameObject prefab;
     public GameObject gameOverPanel;
     public GameObject pausePanel;
+    public Animator anim;
     PlayerController player;
 
-    Animator pauseAnimation;
+    
     int bestScore;
 
     Dictionary<string, Image> powerUps;
@@ -31,11 +32,23 @@ public class InGameGUI : MonoBehaviour {
         gameOverPanel.SetActive(true);
         pausePanel.SetActive(true);
         player = FindObjectOfType<PlayerController>();
-        pauseAnimation = GetComponent<Animator>();
         bestScore = DataManager.Instance.GetUserData().HighScore;
         powerUps = new Dictionary<string,Image>();
     }
-	
+
+    IEnumerator StartScene(string scene)
+    {
+        anim.Play("FadeOut");
+        AsyncOperation loading = SceneManager.LoadSceneAsync(scene);
+        loading.allowSceneActivation = false;
+        anim.Update(0f);
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName("Main.FadeOut"))
+        {
+            yield return null;
+        }
+        loading.allowSceneActivation = true;
+
+    }
     public void UpdateScore()
     {
         string score = GameState.score.ToString();
@@ -49,48 +62,42 @@ public class InGameGUI : MonoBehaviour {
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Menu");
+        StartCoroutine(StartScene("Menu"));
     }
     public void Pause()
     {
-#if UNITY_ANDROID && !UNITY_EDITOR
         AudioCenter.PauseMusic(0.5f);
-#endif
         pausePanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInPause.text = GameState.score.ToString();
         bestScoreInPause.text = bestScore.ToString();
         GameState.isPaused = true;
         player.enabled = false;
-        pauseAnimation.SetBool("isPaused", true);
+        anim.SetBool("isPaused", true);
     }
     public void GameOver()
     {
-#if UNITY_ANDROID && !UNITY_EDITOR
         AudioCenter.PauseMusic(0.5f);
-#endif
         gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInGameOver.text = GameState.score.ToString();
         bestScoreInGameOver.text = bestScore.ToString();
         player.enabled = false;
         GameState.isGameOver = true;
-        pauseAnimation.SetBool("isGameOver", true);
+        anim.SetBool("isGameOver", true);
     }
 
     public void Resume()
     {
-#if UNITY_ANDROID && !UNITY_EDITOR
         AudioCenter.PlayMusic(0.5f);
-#endif
         GameState.isPaused = false;
         player.enabled = true;
         Time.timeScale = 1f;
-        pauseAnimation.SetBool("isPaused", false);
+        anim.SetBool("isPaused", false);
     }
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        StartCoroutine(StartScene("Game"));
     }
 
     public void StopPowerUp( string powerUp )

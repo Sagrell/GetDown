@@ -2,8 +2,7 @@
 
     public override void DestroyPowerUp()
     {
-        AudioCenter.PlaySound(AudioCenter.shieldUpSoundId);
-        gameObject.transform.SetParent(null);
+        AudioCenter.PlaySound("ShieldUp");
         gameObject.SetActive(false);
     }
 }

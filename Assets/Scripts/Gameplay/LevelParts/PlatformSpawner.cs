@@ -11,7 +11,7 @@ public enum PlatformType
 public class PlatformSpawner : MonoBehaviour {
 
     public Transform[] spawnPoints;
-
+    public Transform content;
     public float coinChance = 0.1f;
     public float doubleCoinChance = 0.1f;
     public float diamondChance = 0.05f;
@@ -168,6 +168,9 @@ public class PlatformSpawner : MonoBehaviour {
         }
         return wave;
     }
+
+    float doubleNormalChance = 0.4f;
+    float addChance = 0.38f;
     PlatformType[]  GenerateNormalWaveFromPrevious(PlatformType[] prevWave)
     {
         //For each previous platform create new "wave"
@@ -189,29 +192,24 @@ public class PlatformSpawner : MonoBehaviour {
                     //If exists only on the left (on the right isnt possible)
                     if (wave[i - 1].Equals(PlatformType.Normal))
                     {
-                        switch (Random.Range(0, 2))
-                        {
-                            case 0:
-                                wave[i + 1] = (PlatformType)Random.Range(0, 3);
-                                break;
-                            case 1:
-                                wave[i + 1] = PlatformType.Normal;
-                                break;
-                        }
+                        wave[i + 1] = (PlatformType)Random.Range(0, 2);
+                        wave[i + 1] = Random.value <= doubleNormalChance ? PlatformType.Normal : wave[i + 1];
                     }  
                     //If doesn't exists, then create 1-2 
                     else
                     {
-                       switch (Random.Range(0,2))
-                       {
-                          case 0:
-                             wave[i - 1] = PlatformType.Normal;
-                             wave[i + 1] = (PlatformType)Random.Range(0, 3);
-                             break;
-                          case 1:
-                             wave[i - 1] = (PlatformType)Random.Range(0, 3);
-                             wave[i + 1] = PlatformType.Normal;
-                             break;
+                        //Random create left platform
+                        wave[i - 1] = (PlatformType)Random.Range(0, 3);
+                        wave[i - 1] = Random.value <= addChance ? PlatformType.Normal : wave[i - 1];
+                        //if left platform is normal
+                        if (wave[i - 1] == PlatformType.Normal)
+                        {
+                            wave[i + 1] = (PlatformType)Random.Range(0, 2);
+                            wave[i + 1] = Random.value <= doubleNormalChance ? PlatformType.Normal : wave[i + 1];
+                        }
+                        else
+                        {
+                           wave[i + 1] = PlatformType.Normal;
                         }
                     }
                 }
@@ -219,18 +217,20 @@ public class PlatformSpawner : MonoBehaviour {
         }
         return wave;
     }
+
     void SpawnWave(PlatformType[] wave, bool isDoubleCoin)
     {
+        
         for (int i = 0; i < wave.Length; i++)
         {
             PlatformType type = wave[i];
-            if (type == PlatformType.Empty)
+            if(type == PlatformType.Empty)
             {
                 continue;
             }
             else if (type == PlatformType.Broken && GameState.score > brokenAfter)
             {
-                objectPooler.PickFromPool("Broken", spawnPoints[i].position, transform.parent);
+                 objectPooler.PickFromPool("Broken", spawnPoints[i].position, transform.parent); 
             }
             else if (type == PlatformType.Normal)
             {
@@ -245,6 +245,7 @@ public class PlatformSpawner : MonoBehaviour {
                 SpawnPowerUp(platform, isDoubleCoin);
             }
         }
+
         SpawnEnemies();
     }
 
@@ -290,6 +291,6 @@ public class PlatformSpawner : MonoBehaviour {
         if (isDiamond && GameState.score > diamondAfter)
             objectPooler.PickFromPool("Diamond", spawnPoints[6].position, spawnPoints[6].rotation, transform.parent);
         if (isLaser && GameState.score > laserAfter)
-            objectPooler.PickFromPool("Laser", new Vector3(spawnPoints[GameState.playerPositionX].position.x, 0), Quaternion.identity);
+            objectPooler.PickFromPool("Laser", new Vector3(spawnPoints[GameState.playerPositionX].position.x, 0), Quaternion.identity, content);
     }
 }

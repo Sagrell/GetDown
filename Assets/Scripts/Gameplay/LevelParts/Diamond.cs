@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Diamond : MonoBehaviour, IPooledObject
+public class Diamond : Enemy, IPooledObject
 {
 
-    public GameObject destroyVersion;
     public float speed = 5f;
     public float rotationSpeed = 10f;
 
     float startSpeed;
-    Rigidbody rb;
     Transform _RBTransform;
     Vector3 currPosition;
     Vector3 rightPosition;
@@ -20,8 +15,7 @@ public class Diamond : MonoBehaviour, IPooledObject
 
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody>();
-        _RBTransform = rb.transform;
+        _RBTransform = GetComponent<Rigidbody>().transform;
         currPosition = _RBTransform.localPosition;
         leftPosition = new Vector3(-4f, currPosition.y);
         rightPosition = new Vector3(4f, currPosition.y);
@@ -31,11 +25,10 @@ public class Diamond : MonoBehaviour, IPooledObject
 
     public void OnObjectSpawn()
     {
-        rb = GetComponent<Rigidbody>();
-        _RBTransform = rb.transform;
+        _RBTransform = GetComponent<Rigidbody>().transform;
         currPosition = _RBTransform.localPosition;
-        leftPosition = new Vector3(-5.25f, currPosition.y);
-        rightPosition = new Vector3(5.25f, currPosition.y);
+        leftPosition = new Vector3(-4f, currPosition.y);
+        rightPosition = new Vector3(4f, currPosition.y);
         nextPosition = rightPosition;
     }
 
@@ -60,9 +53,9 @@ public class Diamond : MonoBehaviour, IPooledObject
         nextPosition = nextPosition != leftPosition ? leftPosition : rightPosition;
     }
 
-    public void DestroyDiamond()
+    public override void Destroy()
     {
-        AudioCenter.PlaySound(AudioCenter.diamondSoundId);
+        AudioCenter.PlaySound("DiamondDestroy");
         ElementsPool.Instance.PickFromPool("DestroyedDiamond", transform.position, transform.rotation);
         gameObject.SetActive(false);
     }

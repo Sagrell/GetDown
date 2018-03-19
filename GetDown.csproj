@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>2017.3.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -281,9 +279,9 @@
     <Compile Include="Assets\Scripts\Data\DataManager.cs" />
     <Compile Include="Assets\Scripts\Data\SkinManager.cs" />
     <Compile Include="Assets\Scripts\Data\UserData.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Audio\Audio.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Audio\AudioCenter.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\Audio\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Audio\Music.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Audio\Sound.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameState.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GUI\InGameGUI.cs" />
@@ -292,6 +290,7 @@
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\DestroyAfter.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Diamond.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\DoubleCoin.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\Enemy.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\Laser.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\LevelController.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\MagnetToPlayer.cs" />
@@ -304,6 +303,7 @@
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\PowerUp.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\PowerUpManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\PowerUps\ShieldPowerUp.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\LevelParts\Spike.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\SpiralPhaseManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\ElementsPool.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\IPooledObject.cs" />
@@ -337,7 +337,10 @@
     <Compile Include="Packages\com.unity.xiaomi@1.0.0\UnityChannel\XiaomiSupport\AppStoreSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\ShieldFX.shader" />
+    <None Include="Assets\Materials\Shaders\ColorFromTexture.shader" />
+    <None Include="Assets\Materials\Shaders\DiffuseDouble.shader" />
+    <None Include="Assets\Materials\Shaders\Gradient.shader" />
+    <None Include="Assets\Materials\Shaders\ShieldFX.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />

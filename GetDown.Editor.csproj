@@ -282,7 +282,10 @@
     <Compile Include="Packages\com.unity.xiaomi@1.0.0\UnityChannel\XiaomiSupport\Editor\XiaomiPackageNameExtension.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\ShieldFX.shader" />
+    <None Include="Assets\Materials\Shaders\ColorFromTexture.shader" />
+    <None Include="Assets\Materials\Shaders\DiffuseDouble.shader" />
+    <None Include="Assets\Materials\Shaders\Gradient.shader" />
+    <None Include="Assets\Materials\Shaders\ShieldFX.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
     <None Include="Assets\VolumetricLines\Shaders\Fast-Additive.shader" />

@@ -14,6 +14,8 @@ public class GuiManager : MonoBehaviour {
     public GameObject scoreLimit;
     public GameObject buy;
     public GameObject select;
+
+    public Animator fadeAnim;
     private void Awake()
     {
         Instance = this;
@@ -26,9 +28,24 @@ public class GuiManager : MonoBehaviour {
         showPlatform.GetComponent<Renderer>().material = SkinManager.platformMat;
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
     }
+
+    IEnumerator StartScene(string scene)
+    {
+        fadeAnim.Play("FadeOut");
+        AsyncOperation loading = SceneManager.LoadSceneAsync(scene);
+        fadeAnim.Update(0f);
+        loading.allowSceneActivation = false;
+        while (fadeAnim.GetCurrentAnimatorStateInfo(0).IsName("Main.FadeOut"))
+        {
+            yield return null;
+        }
+        loading.allowSceneActivation = true;
+
+    }
+
     public void BackToMenu()
     {
-        SceneManager.LoadScene("Menu");
+        StartCoroutine(StartScene("Menu"));
     }
 
     public void Show(ShopItem item)

@@ -66,18 +66,17 @@ public class ShopManager : MonoBehaviour
             case "Cube":
                 data.CubesUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
-                cubesManager.Initialize();
+                Select(item);
                 break;
             case "Platform":
                 data.PlatformsUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
-                Debug.Log(dataManager.GetUserData().PlatformsUnlocked[1]);
-                platformsManager.Initialize();
+                Select(item);
                 break;
             case "Background":
                 data.BackgroundsUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
-                backgroundsManager.Initialize();
+                Select(item);
                 break;
             default:
                 break;

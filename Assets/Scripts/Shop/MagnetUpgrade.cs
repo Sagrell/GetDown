@@ -35,13 +35,13 @@ public class MagnetUpgrade : Upgrade {
                 price = 50; time = 10; imp = 0;
                 break;
             case 1:
-                price = 100; time = 5; imp = 0;
+                price = 100; time = 4; imp = 0;
                 break;
             case 2:
-                price = 200; time = 5; imp = 0;
+                price = 200; time = 4; imp = 0;
                 break;
             case 3:
-                price = 500; time = 10; imp = 0;
+                price = 500; time = 8; imp = 0;
                 break;
             case 4:
                 price = 700; time = 5; imp = 0;
@@ -53,7 +53,7 @@ public class MagnetUpgrade : Upgrade {
                 price = 1200; time = 10; imp = 0;
                 break;
             case 7:
-                price = 2500; time = 20; imp = 0;
+                price = 2500; time = 15; imp = 0;
                 break;
             default:
                 break;

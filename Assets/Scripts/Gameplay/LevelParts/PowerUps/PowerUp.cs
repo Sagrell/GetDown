@@ -28,4 +28,6 @@ public abstract class PowerUp : MonoBehaviour, IPooledObject
     }
 
     public abstract void DestroyPowerUp();
+
+
 }

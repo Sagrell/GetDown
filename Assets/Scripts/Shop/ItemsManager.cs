@@ -5,8 +5,9 @@ using UnityEngine.UI;
 public class ItemsManager : MonoBehaviour {
     public ScrollRect scrollRect;
     public GameObject item;
-    public ShopItem[] models;
     public float cubeSize;
+
+    public string type;
 
     [Range(0,100)]
     public float space;
@@ -20,6 +21,7 @@ public class ItemsManager : MonoBehaviour {
     UserData data;
     ShopItem selected;
     GameObject[] items;
+    ShopItem[] skins;
     Vector2[] itemsPosition;
     Vector2 contentVector;
     Vector2[] cubeScale;
@@ -35,18 +37,19 @@ public class ItemsManager : MonoBehaviour {
 
     public void Initialize()
     {
+        skins = SkinManager.GetSkins(type);
         data = DataManager.Instance.GetUserData();
         contentRect = GetComponent<RectTransform>();
-        cubeScale = new Vector2[models.Length];
-        itemsPosition = new Vector2[models.Length];
-        items = new GameObject[models.Length];
+        cubeScale = new Vector2[skins.Length];
+        itemsPosition = new Vector2[skins.Length];
+        items = new GameObject[skins.Length];
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
-        for (int i = 0; i < models.Length; i++)
+        for (int i = 0; i < skins.Length; i++)
         {
-            ShopItem model = models[i];
+            ShopItem model = skins[i];
             if (model.scoreRequire <= data.HighScore)
             {
                 model.locked = false;
@@ -55,16 +58,29 @@ public class ItemsManager : MonoBehaviour {
             {
                 model.locked = true;
             }
-            switch (model.itemType)
+            model.selected = false;
+            switch (type)
             {
                 case "Cube":
                     model.bought = data.CubesUnlocked[i];
+                    if(data.SelectedCube==i)
+                    {
+                        model.selected = true;
+                    }
                     break;
                 case "Platform":
                     model.bought = data.PlatformsUnlocked[i];
+                    if (data.SelectedPlatform == i)
+                    {
+                        model.selected = true;
+                    }
                     break;
                 case "Background":
                     model.bought = data.BackgroundsUnlocked[i];
+                    if (data.SelectedBackground == i)
+                    {
+                        model.selected = true;
+                    }
                     break;
                 default:
                     break;
@@ -95,14 +111,14 @@ public class ItemsManager : MonoBehaviour {
             items[i] = prefab;
             items[i].transform.localScale = cubeScale[i];
         }
-        /*for (int i = 0; i < models.Length; i++)
+        for (int i = 0; i < skins.Length; i++)
         {
-            if(models[i].selected)
+            if(skins[i].selected)
             {
                 FocusOn(itemsPosition[i]);
                 break;
             }
-        }*/
+        }
         
     }
    
@@ -134,7 +150,7 @@ public class ItemsManager : MonoBehaviour {
     void Update()
     {
         float minDistance = float.MaxValue;
-        for (int i = 0; i < models.Length; i++)
+        for (int i = 0; i < skins.Length; i++)
         {
             float distance = Mathf.Abs(contentRect.anchoredPosition.x - itemsPosition[i].x);
             if (distance < minDistance)

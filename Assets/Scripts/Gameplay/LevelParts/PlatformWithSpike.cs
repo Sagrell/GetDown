@@ -8,7 +8,7 @@ public class PlatformWithSpike : MonoBehaviour, IPooledObject {
     public void OnObjectSpawn()
     {
         anim = GetComponent<Animator>();
-        StartCoroutine(ActivateSpikes(interval));
+        anim.enabled = true;        StartCoroutine(ActivateSpikes(interval));
     }
     private void Start()
     {
@@ -19,7 +19,7 @@ public class PlatformWithSpike : MonoBehaviour, IPooledObject {
 
     IEnumerator ActivateSpikes(float interval)
     {
-        bool isActive = true;
+        bool isActive = false;
         while (true)
         {
             yield return  new WaitForSeconds(interval);
@@ -28,5 +28,14 @@ public class PlatformWithSpike : MonoBehaviour, IPooledObject {
         }
         
     }
-        
+
+    public void DisableCollider()
+    {
+        spikes.GetComponent<MeshCollider>().enabled = false;
+    }
+    public void EnableCollider()
+    {
+        spikes.GetComponent<MeshCollider>().enabled = true;
+    }
+  
 }

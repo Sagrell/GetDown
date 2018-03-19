@@ -22,13 +22,13 @@ public class Shield : MonoBehaviour, IPooledObject {
 
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<Diamond>().DestroyDiamond();
+            other.GetComponent<Enemy>().Destroy();
             HitShield();
         }
     }
     public void HitShield()
     {
-        AudioCenter.PlaySound(AudioCenter.shieldHitSoundId);
+        AudioCenter.PlaySound("ShieldHit");
         ShakeManager.ShakeAfterShieldHit();
         countShield--;
         if (countShield <= 0f)

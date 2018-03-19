@@ -5,11 +5,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
+    public static bool isComplete = true;
     public Text coins;
     public GameObject cube;
+    public Transform cubePosition;
     public Renderer shopPlatform;
     public Renderer creditsPlatform;
     public Renderer exitPlatform;
+
+    public Animator fadeAnim;
     UserData data;
     private void Start()
     {
@@ -20,16 +24,16 @@ public class UIManager : MonoBehaviour {
         creditsPlatform.material = SkinManager.platformMat;
         exitPlatform.material = SkinManager.platformMat;
         RenderSettings.skybox = SkinManager.backgroundMat;
-        Instantiate(cube);
+        Instantiate(cube, cubePosition);
     }
     public void GoToShop()
     {
-        SceneManager.LoadScene("Shop");
+        StartCoroutine(StartScene("Shop"));
     }
 
     public void Play()
     {
-       SceneManager.LoadScene("Game");
+        StartCoroutine(StartScene("Game"));
     }
 
     public void GoToCredits()
@@ -41,4 +45,19 @@ public class UIManager : MonoBehaviour {
     {
         Application.Quit();
     }
+
+    IEnumerator StartScene( string scene )
+    {
+        fadeAnim.Play("FadeOut");
+        AsyncOperation loading = SceneManager.LoadSceneAsync(scene);
+        fadeAnim.Update(0f);
+        loading.allowSceneActivation = false;
+        while (fadeAnim.GetCurrentAnimatorStateInfo(0).IsName("Main.FadeOut"))
+        {
+            yield return null;
+        }
+        loading.allowSceneActivation = true;
+
+    }
+
 }

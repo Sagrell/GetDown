@@ -5,9 +5,15 @@ using UnityEngine;
 public class BrokenPlatform : MonoBehaviour, IPooledObject {
 
     public GameObject partPlatform;
+    Texture tex;
     // Use this for initialization
     void Start() {
-
+        tex = SkinManager.platformMat.GetTexture("_MainTex");
+        Renderer[] platformParts = partPlatform.GetComponentsInChildren<Renderer>();
+        for (int i = 0; i < platformParts.Length; ++i)
+        {
+            platformParts[i].sharedMaterial.SetTexture("_MainTex", tex);
+        }
     }
     public void OnObjectSpawn()
     {

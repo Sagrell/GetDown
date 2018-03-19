@@ -41,19 +41,19 @@ public class FastRunUpgrade : Upgrade {
                 price = 200; time = 3; imp = 0;
                 break;
             case 3:
-                price = 500; time = 5; imp = 0;
+                price = 500; time = 3; imp = 0;
                 break;
             case 4:
                 price = 700; time = 3; imp = 0;
                 break;
             case 5:
-                price = 900; time = 5; imp = 0;
+                price = 900; time = 3; imp = 0;
                 break;
             case 6:
-                price = 1200; time = 10; imp = 0;
+                price = 1200; time = 5; imp = 0;
                 break;
             case 7:
-                price = 2000; time = 15; imp = 0;
+                price = 2000; time = 10; imp = 0;
                 break;
             default:
                 break;
