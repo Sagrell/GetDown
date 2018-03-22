@@ -36,12 +36,12 @@ public class Laser : MonoBehaviour, IPooledObject {
 
     IEnumerator LaserShot()
     {
-        AudioCenter.PlaySound("LaserStart");
+        AudioCenter.Instance.PlaySound("LaserStart");
         yield return new WaitForSeconds(2f);
         laserAnimation.SetBool("LaserOn", true);
         isShooting = true;
 
-        AudioCenter.PlaySound("LaserShot");
+        AudioCenter.Instance.PlaySound("LaserShot");
         yield return new WaitForSeconds(1.7f);
         laserAnimation.SetBool("LaserOn", false);
         isShooting = false;

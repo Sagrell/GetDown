@@ -30,7 +30,7 @@ public class DoubleCoin : MonoBehaviour, IPooledObject {
     }
     public void DestroyCoin()
     {
-        AudioCenter.PlaySound("CoinCollect");
+        AudioCenter.Instance.PlaySound("CoinCollect");
         GameObject coinEffect = Instantiate(effect, transform.position, Quaternion.identity, transform.parent);
         Destroy(coinEffect, 2f);
         gameObject.transform.SetParent(null);

@@ -28,7 +28,7 @@ public class Shield : MonoBehaviour, IPooledObject {
     }
     public void HitShield()
     {
-        AudioCenter.PlaySound("ShieldHit");
+        AudioCenter.Instance.PlaySound("ShieldHit");
         ShakeManager.ShakeAfterShieldHit();
         countShield--;
         if (countShield <= 0f)

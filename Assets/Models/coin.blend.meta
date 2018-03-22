@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 603c726b31f49244f84bf584ae12defe
-timeCreated: 1518030804
+guid: df5a873917e4bb24c91b153f70e9be81
+timeCreated: 1521654228
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -8,12 +8,9 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: unnamed
-    2100002: Material
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cylinder
-    4300002: Cylinder_001
-    4300004: Coin
+    4300000: Coin
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
@@ -51,8 +48,8 @@ ModelImporter:
     addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
@@ -71,7 +68,7 @@ ModelImporter:
     normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

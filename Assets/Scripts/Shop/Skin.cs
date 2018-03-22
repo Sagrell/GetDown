@@ -17,7 +17,7 @@ public class Skin : MonoBehaviour {
         image.material = model.previewMat;
         selected.SetActive(model.selected);
         locked.SetActive(model.locked);
-        //button.interactable = !model.locked && model.bought;
+
         if (!model.bought && !model.locked)
         {
             cost.SetActive(true);

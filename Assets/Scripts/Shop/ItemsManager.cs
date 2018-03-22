@@ -102,7 +102,7 @@ public class ItemsManager : MonoBehaviour {
             }
              
             itemsPosition[i] = -prefab.transform.localPosition;
-            prefab.GetComponent<Button>().onClick.AddListener(delegate { GuiManager.Instance.Show(model); FocusOn(-prefab.transform.localPosition); });
+            prefab.GetComponent<Button>().onClick.AddListener(delegate { GuiManager.Instance.Show(model); FocusOn(-prefab.transform.localPosition); PlaySound(); });
             float distance = Mathf.Abs(contentRect.anchoredPosition.x - itemsPosition[i].x);
             float scale = Mathf.Clamp(1 / (distance / space) * scaleOffset, 0.6f, 1f);
             cubeScale[i].x = scale;
@@ -142,11 +142,16 @@ public class ItemsManager : MonoBehaviour {
 
 
     }
+    public void PlaySound()
+    {
+        AudioCenter.Instance.PlaySound("Button");
+    }
     public void Deselect()
     {
         selected.selected = false;
     }
 
+    int prevCube = -1;
     void Update()
     {
         float minDistance = float.MaxValue;
@@ -156,14 +161,19 @@ public class ItemsManager : MonoBehaviour {
             if (distance < minDistance)
             {
                 minDistance = distance;
-                selectedCubeId = i;
+                selectedCubeId = i;     
             }
             float scale = Mathf.Clamp(1/(distance/space)* scaleOffset, 0.7f, 1f);
             cubeScale[i].x = Mathf.SmoothStep(items[i].transform.localScale.x, scale, scaleSpeed * Time.deltaTime);
             cubeScale[i].y = Mathf.SmoothStep(items[i].transform.localScale.y, scale, scaleSpeed * Time.deltaTime);
             items[i].transform.localScale = cubeScale[i];
         }
-        if(!isScrolling && !isFocusing )
+        if (prevCube != selectedCubeId && isScrolling)
+        {
+            PlaySound();
+        }
+        prevCube = selectedCubeId;
+        if (!isScrolling && !isFocusing )
         {
             contentVector.x = Mathf.SmoothStep(contentRect.anchoredPosition.x, itemsPosition[selectedCubeId].x, snapSpeed * Time.deltaTime);
             contentRect.anchoredPosition = contentVector;

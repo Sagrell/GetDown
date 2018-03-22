@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.Kill();
         powerUp.DeactivateAll();
         objectPooler.PickFromPool("DestroyedPlayer", _RBTransform.position, _RBTransform.rotation);
-        AudioCenter.PlaySound("DestroyPlayer");
+        AudioCenter.Instance.PlaySound("DestroyPlayer");
         ShakeManager.ShakeAfterDeath();
         gameObject.SetActive(false);      
     }

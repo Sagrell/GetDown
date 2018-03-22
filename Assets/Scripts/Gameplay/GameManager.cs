@@ -45,7 +45,8 @@ public class GameManager : MonoBehaviour
         dataManager = DataManager.Instance;
         RenderSettings.skybox = SkinManager.backgroundMat;
         Time.timeScale = 0f;
-        AudioCenter.LoadMusic("MainTheme");
+        SceneController.currentScene = "Game";
+        AudioCenter.Instance.PlayMusic("MainTheme", 1f);
         StartCoroutine(StartGame());
     }
     IEnumerator StartGame()
@@ -57,7 +58,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         Time.timeScale = 1f;
-        AudioCenter.PlayMusic(1f);
         StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));        
 
     }

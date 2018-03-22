@@ -10,7 +10,7 @@ public class ShopManager : MonoBehaviour
     public ItemsManager cubesManager;
     public ItemsManager platformsManager;
     public ItemsManager backgroundsManager;
-
+    public ParticleSystem confetti;
     DataManager dataManager;
     UserData data;
 
@@ -28,6 +28,7 @@ public class ShopManager : MonoBehaviour
 
     public void Select(ShopItem item)
     {
+        AudioCenter.Instance.PlaySound("Button");
         Material material = item.objectMat;
         item.selected = true;
         dataManager.SaveSelectedItem(item);
@@ -59,7 +60,7 @@ public class ShopManager : MonoBehaviour
 
     public void Buy(ShopItem item)
     {
-
+        AudioCenter.Instance.PlaySound("Purchase");
         data.GoldAmount -= item.cost;
         switch (item.itemType)
         {
@@ -83,11 +84,12 @@ public class ShopManager : MonoBehaviour
         }
 
         GuiManager.Instance.UpdateInfo();
+        confetti.Play();
         GuiManager.Instance.Show(item);
     }
     public void Upgrade(string type, int cost, int time, int imp)
     {
-
+        AudioCenter.Instance.PlaySound("Purchase");
         data.GoldAmount -= cost;
         switch (type)
         {

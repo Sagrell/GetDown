@@ -25,24 +25,37 @@ public class UIManager : MonoBehaviour {
         exitPlatform.material = SkinManager.platformMat;
         RenderSettings.skybox = SkinManager.backgroundMat;
         Instantiate(cube, cubePosition);
+        if(SceneController.previousScene != "Shop")
+        {
+            AudioCenter.Instance.PlayMusic("MenuTheme",1f);
+        }
+            
     }
     public void GoToShop()
     {
+        AudioCenter.Instance.PlaySound("Button");
         StartCoroutine(StartScene("Shop"));
     }
 
     public void Play()
     {
+        AudioCenter.Instance.PlaySound("Button");
+        AudioCenter.Instance.PauseMusic("MenuTheme",1f);
         StartCoroutine(StartScene("Game"));
+    }
+    public void CoinsClick()
+    {
+        AudioCenter.Instance.PlaySound("CoinCollect");
     }
 
     public void GoToCredits()
     {
-
+        AudioCenter.Instance.PlaySound("Button");
     }
 
     public void Quit()
     {
+        AudioCenter.Instance.PlaySound("Button");
         Application.Quit();
     }
 
@@ -57,7 +70,7 @@ public class UIManager : MonoBehaviour {
             yield return null;
         }
         loading.allowSceneActivation = true;
-
+        SceneController.previousScene = "Menu";
     }
 
 }

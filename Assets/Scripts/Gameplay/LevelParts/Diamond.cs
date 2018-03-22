@@ -55,7 +55,7 @@ public class Diamond : Enemy, IPooledObject
 
     public override void Destroy()
     {
-        AudioCenter.PlaySound("DiamondDestroy");
+        AudioCenter.Instance.PlaySound("DiamondDestroy");
         ElementsPool.Instance.PickFromPool("DestroyedDiamond", transform.position, transform.rotation);
         gameObject.SetActive(false);
     }

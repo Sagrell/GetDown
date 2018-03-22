@@ -27,6 +27,7 @@ public class GuiManager : MonoBehaviour {
         showCube.GetComponent<Renderer>().material = SkinManager.cubeMat;
         showPlatform.GetComponent<Renderer>().material = SkinManager.platformMat;
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
+        SceneController.currentScene = "Shop";
     }
 
     IEnumerator StartScene(string scene)
@@ -40,14 +41,19 @@ public class GuiManager : MonoBehaviour {
             yield return null;
         }
         loading.allowSceneActivation = true;
-
+        SceneController.previousScene = "Shop";
     }
 
     public void BackToMenu()
     {
+        AudioCenter.Instance.PlaySound("Button");
         StartCoroutine(StartScene("Menu"));
     }
 
+    public void PlaySound()
+    {
+        AudioCenter.Instance.PlaySound("Button");
+    }
     public void Show(ShopItem item)
     {
         buy.SetActive(false);
@@ -103,8 +109,4 @@ public class GuiManager : MonoBehaviour {
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
     }
 
-    public void ChangeType( string type )
-    {
-
-    }
 }

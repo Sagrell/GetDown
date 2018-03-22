@@ -46,8 +46,9 @@ public class InGameGUI : MonoBehaviour {
         {
             yield return null;
         }
+        AudioCenter.Instance.StopMusic("MainTheme");
         loading.allowSceneActivation = true;
-
+        SceneController.previousScene = "Game";
     }
     public void UpdateScore()
     {
@@ -62,11 +63,11 @@ public class InGameGUI : MonoBehaviour {
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        StartCoroutine(StartScene("Menu"));
+        SceneManager.LoadScene("Menu");
     }
     public void Pause()
     {
-        AudioCenter.PauseMusic(0.5f);
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
         pausePanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInPause.text = GameState.score.ToString();
@@ -77,7 +78,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void GameOver()
     {
-        AudioCenter.PauseMusic(0.5f);
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
         gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
         scoreInGameOver.text = GameState.score.ToString();
@@ -89,7 +90,7 @@ public class InGameGUI : MonoBehaviour {
 
     public void Resume()
     {
-        AudioCenter.PlayMusic(0.5f);
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
         GameState.isPaused = false;
         player.enabled = true;
         Time.timeScale = 1f;
@@ -97,7 +98,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void Restart()
     {
-        StartCoroutine(StartScene("Game"));
+        SceneManager.LoadScene("Game");
     }
 
     public void StopPowerUp( string powerUp )

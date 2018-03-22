@@ -316,6 +316,7 @@
     <Compile Include="Assets\Scripts\Menu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Menu\ShopMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\UIManager.cs" />
+    <Compile Include="Assets\Scripts\SceneController.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\PowerUpModel.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\ShopItem.cs" />
     <Compile Include="Assets\Scripts\Shop\DoubleCoinsUpgrade.cs" />

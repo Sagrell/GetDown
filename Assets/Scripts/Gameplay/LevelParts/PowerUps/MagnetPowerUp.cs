@@ -4,7 +4,7 @@ public class MagnetPowerUp : PowerUp
 
     public override void DestroyPowerUp()
     {
-        AudioCenter.PlaySound("ShieldUp");
+        AudioCenter.Instance.PlaySound("PowerUp");
         gameObject.SetActive(false);
     }
 }

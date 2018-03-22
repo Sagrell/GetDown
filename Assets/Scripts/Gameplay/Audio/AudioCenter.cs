@@ -3,105 +3,114 @@ using System.Collections.Generic;
 
 public class AudioCenter : MonoBehaviour
 {
-    private static AudioCenter instance;
+    public static AudioCenter Instance;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-		public static AndroidJavaClass unityActivityClass;
-		public static AndroidJavaObject activityObj;
-		private static AndroidJavaObject soundObj;
-		private static AndroidJavaObject musicObj;
+		public AndroidJavaClass unityActivityClass;
+		public AndroidJavaObject activityObj;
+		private AndroidJavaObject soundObj;
+        Dictionary<string, AndroidJavaObject> musicObjects;
 
         //SOUNDS
-		public static void PlaySound( string soundName ) {
-            int soundId = AudioCenter.instance.soundDic[soundName].id;
-            float volume = AudioCenter.instance.soundDic[soundName].volume;
+		public void PlaySound( string soundName ) {
+            int soundId = soundDic[soundName].id;
+            float volume = soundDic[soundName].volume;
             soundObj.Call( "PlaySound", new object[] { soundId, volume } );
 		}			
-		public static int LoadSound( string soundName ) {
+		public int LoadSound( string soundName ) {
 			return soundObj.Call<int>( "LoadSound", new object[] { "Resources/Sounds/" +  soundName + ".mp3" } );
 		}
-		public static void UnloadSound(string soundName) {
-            int soundId = AudioCenter.instance.soundDic[soundName].id;
+		public void UnloadSound(string soundName) {
+            int soundId = soundDic[soundName].id;
             soundObj.Call( "UnloadSound", new object[] { soundId } );
 		}
-        public static void UnloadAll() {
+        public void UnloadAll() {
             soundObj.Call("unloadAll");
         }
 
         //MUSIC
-        public static void LoadMusic(string musicName) {
-            float volume = AudioCenter.instance.musicDic[musicName].volume;
-            bool isLooping = AudioCenter.instance.musicDic[musicName].isLooping;
-            musicObj.Call("Load", new object[] { musicName + ".mp3", volume, isLooping });
+        public void SeekToMusic(string musicName, int pos ) {
+            musicObjects[musicName].Call("SeekTo", new object[] { pos });
         }
-        public static void SeekToMusic( int pos ) {
-            musicObj.Call("SeekTo", new object[] { pos });
+        public void StopMusic(string musicName) {
+
+            musicObjects[musicName].Call("Stop");
         }
-        public static void StopMusic() {
-            musicObj.Call("Stop");
+        public void SetVolumeMusic(string musicName, float volume ) {
+            musicObjects[musicName].Call("SetVolume", new object[] { volume });
         }
-        public static void SetVolumeMusic( float volume ) {
-            musicObj.Call("SetVolume", new object[] { volume });
+        public int GetDurationMusic(string musicName) {
+            return musicObjects[musicName].Call<int>("GetDuration");
         }
-        public static int GetDurationMusic() {
-            return musicObj.Call<int>("GetDuration");
+        public void PlayMusic( string musicName, float fadeDuration ) {
+            musicObjects[musicName].Call("stop");
+            musicObjects[musicName].Call("prepare");
+            musicObjects[musicName].Call("Play", new object[] { fadeDuration });
         }
-        public static void PlayMusic( float fadeDuration ) {
-            musicObj.Call("Play", new object[] { fadeDuration });
+        public void ResumeMusic( string musicName, float fadeDuration ) {
+            musicObjects[musicName].Call("Play", new object[] { fadeDuration });
         }
-        public static void PauseMusic( float fadeDuration) {
-            musicObj.Call("Pause", new object[] { fadeDuration });
+        public void PauseMusic(string musicName, float fadeDuration) {
+            musicObjects[musicName].Call("Pause", new object[] { fadeDuration });
         }
 #else
 
-    public static void PlaySound(string soundName)
+    public void PlaySound(string soundName)
     {
-        Sound sound = AudioCenter.instance.soundDic[soundName];
+        Sound sound = soundDic[soundName];
        
         sound.source.volume = sound.volume;
         sound.source.loop = false;
         sound.source.Play();
     }
 
-    public static int LoadSound(string soundName)
+    public int LoadSound(string soundName)
     {
         var soundID = soundName.GetHashCode();
         var audioClip = Resources.Load<AudioClip>("Sounds/" + soundName);
-        AudioCenter.instance.soundDic[soundName].source.clip = audioClip;
+        soundDic[soundName].source.clip = audioClip;
         return soundID;
     }
 
-    public static void UnloadSound(string soundName)
+    public void UnloadSound(string soundName)
     {
-        var audioClip = AudioCenter.instance.soundDic[soundName].clip;
+        var audioClip = soundDic[soundName].clip;
         Resources.UnloadAsset(audioClip);
-        AudioCenter.instance.soundDic.Remove(soundName);
+        soundDic.Remove(soundName);
     }
 
     //MUSIC
-    public static void LoadMusic(string musicName)
+    public void LoadMusic(string musicName)
     {
-        Music music = AudioCenter.instance.musicDic[musicName];
-        AudioCenter.instance.musicSource.clip = Resources.Load<AudioClip>("Music/" + musicName);
-        AudioCenter.instance.musicSource.volume = music.volume;
-        AudioCenter.instance.musicSource.loop = music.isLooping;
+        Music music = musicDic[musicName];
+        musicSources[musicName].clip = Resources.Load<AudioClip>("Music/" + musicName);
+        musicSources[musicName].volume = music.volume;
+        musicSources[musicName].loop = music.isLooping;
         
     }
-    public static void StopMusic()
+    public void StopMusic(string musicName)
     {
-        AudioCenter.instance.musicSource.Stop();
+        musicSources[musicName].Stop();
     }
-    public static int GetDurationMusic()
+    public int GetDurationMusic(string musicName)
     {
-        return (int)(AudioCenter.instance.musicSource.clip.length*1000);
+        return (int)(musicSources[musicName].clip.length*1000);
     }
-    public static void PlayMusic(float fadeDuration)
+    public void PlayMusic(string musicName, float fadeDuration)
     {
-        AudioCenter.instance.musicSource.Play();
+        musicSources[musicName].Play();
     }
-    public static void PauseMusic(float fadeDuration)
+    public void ResumeMusic(string musicName, float fadeDuration)
     {
-        AudioCenter.instance.musicSource.Pause();
+        musicSources[musicName].Play();
+    }
+    public void PauseMusic(string musicName, float fadeDuration)
+    {
+        musicSources[musicName].Pause();
+    }
+    public void ResetMusic(string musicName)
+    {
+        
     }
 #endif
 
@@ -117,51 +126,70 @@ public class AudioCenter : MonoBehaviour
     private Dictionary<string, Sound> soundDic = new Dictionary<string, Sound>();
     private Dictionary<string, Music> musicDic = new Dictionary<string, Music>();
 
-    private AudioSource musicSource;
+    private Dictionary<string, AudioSource> musicSources;
     private void Awake()
     {
-        instance = this;
+        
+        if(Instance == null)
+        {
+            Instance = this;
 #if UNITY_ANDROID && !UNITY_EDITOR
-			unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
-			activityObj = unityActivityClass.GetStatic<AndroidJavaObject>( "currentActivity" );
-			soundObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Sound", 4, activityObj );
-            musicObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Music", activityObj ); 
+			        unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
+			        activityObj = unityActivityClass.GetStatic<AndroidJavaObject>( "currentActivity" );
+			        soundObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Sound", 4, activityObj );
 
-            for (int i = 0; i < musics.Length; i++)
-            {
-                Music music = musics[i];
-                musicDic[music.name] = music;
-            }
-            for (int i = 0; i < sounds.Length; i++)
-            {
-                Sound sound = sounds[i];
-                sound.id = AudioCenter.LoadSound(sound.name);
-                soundDic[sound.name] = sound;
-            }
+                    musicObjects = new Dictionary<string, AndroidJavaObject>();
+                    for (int i = 0; i < musics.Length; i++)
+                    {
+                        Music music = musics[i];
+                        musicDic[music.name] = music;
+                        AndroidJavaObject musicObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Music", activityObj ); 
+                        musicObj.Call("Load", new object[] { music.name + ".mp3", music.volume, music.isLooping });
+                        musicObjects[music.name] = musicObj;
+                    }
+                    for (int i = 0; i < sounds.Length; i++)
+                    {
+                        Sound sound = sounds[i];
+                        sound.id = LoadSound(sound.name);
+                        soundDic[sound.name] = sound;
+                    }
 #else
+                    musicSources = new Dictionary<string, AudioSource>();
+                    for (int i = 0; i < musics.Length; i++)
+                    {
+                        AudioSource musicSource = gameObject.AddComponent<AudioSource>();
+                        Music music = musics[i];
+                        musicDic[music.name] = music;
+                        musicSources[music.name] = musicSource;
+                        LoadMusic(music.name);
+                    }
+                    for (int i = 0; i < sounds.Length; i++)
+                    {
+                        Sound sound = sounds[i];
+                        sound.source = gameObject.AddComponent<AudioSource>();
+                        soundDic[sound.name] = sound;
+                        sound.id = LoadSound(sound.name);
+                    }
 
-        musicSource = gameObject.AddComponent<AudioSource>();
-        for (int i = 0; i < musics.Length; i++)
-        {
-            Music music = musics[i];
-            musicDic[music.name] = music;
+        #endif
         }
-        for (int i = 0; i < sounds.Length; i++)
+        else if (Instance != this)
         {
-            Sound sound = sounds[i];
-            sound.source = gameObject.AddComponent<AudioSource>();
-            soundDic[sound.name] = sound;
-            sound.id = AudioCenter.LoadSound(sound.name);
+            Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
 
-#endif
 
     }
 #if UNITY_ANDROID && !UNITY_EDITOR
     private void OnDestroy()
     {
         UnloadAll();
-        musicObj.Call("release");
+        foreach (var musicObj in musicObjects.Values)
+        {
+            musicObj.Call("release");
+        }
+        
     }
 #endif
 
