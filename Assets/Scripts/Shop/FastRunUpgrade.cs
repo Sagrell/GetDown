@@ -35,10 +35,10 @@ public class FastRunUpgrade : Upgrade {
                 price = 50; time = 5; imp = 0;
                 break;
             case 1:
-                price = 100; time = 3; imp = 0;
+                price = 100; time = 2; imp = 0;
                 break;
             case 2:
-                price = 200; time = 3; imp = 0;
+                price = 200; time = 2; imp = 0;
                 break;
             case 3:
                 price = 500; time = 3; imp = 0;
@@ -47,7 +47,7 @@ public class FastRunUpgrade : Upgrade {
                 price = 700; time = 3; imp = 0;
                 break;
             case 5:
-                price = 900; time = 3; imp = 0;
+                price = 900; time = 2; imp = 0;
                 break;
             case 6:
                 price = 1200; time = 5; imp = 0;
@@ -78,6 +78,14 @@ public class FastRunUpgrade : Upgrade {
         buy.GetComponentInChildren<Text>().text = price.ToString();
         buy.onClick.RemoveAllListeners();
         buy.onClick.AddListener(delegate { ShopManager.Instance.Upgrade("FastRun", price, time, imp); });
+        if (DataManager.Instance.GetUserData().GoldAmount < price)
+        {
+            buy.interactable = false;
+        }
+        else
+        {
+            buy.interactable = true;
+        }
     }
 
 }

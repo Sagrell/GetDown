@@ -64,7 +64,7 @@ public class DoubleCoinsUpgrade : Upgrade {
         }
         else if (imp > 0)
         {
-            improvesText.text = "+" + time + "x3";
+            improvesText.text = "+" + time + " x3";
         }
         else if (time > 0)
         {
@@ -78,6 +78,14 @@ public class DoubleCoinsUpgrade : Upgrade {
         buy.GetComponentInChildren<Text>().text = price.ToString();
         buy.onClick.RemoveAllListeners();
         buy.onClick.AddListener(delegate { ShopManager.Instance.Upgrade("DoubleCoin", price, time, imp); });
+        if (DataManager.Instance.GetUserData().GoldAmount < price)
+        {
+            buy.interactable = false;
+        }
+        else
+        {
+            buy.interactable = true;
+        }
     }
 
 }

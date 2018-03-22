@@ -32,25 +32,25 @@ public class ShieldUpgrade : Upgrade {
         switch (level)
         {
             case 0:
-                price = 100; time = 25; imp = 1;     
+                price = 100; time = 20; imp = 1;     
                 break;
             case 1:
                 price = 150; time = 5; imp = 0;
                 break;
             case 2:
-                price = 300; time = 10; imp = 0;
+                price = 300; time = 8; imp = 0;
                 break;
             case 3:
                 price = 600; time = 0;  imp = 1;
                 break;
             case 4:
-                price = 800; time = 15; imp = 0;
+                price = 800; time = 10; imp = 0;
                 break;
             case 5:
                 price = 1000; time = 0; imp = 1;
                 break;
             case 6:
-                price = 1300; time = 15; imp = 0;
+                price = 1300; time = 10; imp = 0;
                 break;
             case 7:
                 price = 2500; time = 20; imp = 1;
@@ -79,6 +79,14 @@ public class ShieldUpgrade : Upgrade {
         buy.GetComponentInChildren<Text>().text = price.ToString();
         buy.onClick.RemoveAllListeners();
         buy.onClick.AddListener(delegate { ShopManager.Instance.Upgrade("Shield", price, time, imp); });
+        if (DataManager.Instance.GetUserData().GoldAmount < price)
+        {
+            buy.interactable = false;
+        }
+        else
+        {
+            buy.interactable = true;
+        }
     }
 
 }

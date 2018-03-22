@@ -11,11 +11,11 @@ public abstract class Upgrade : MonoBehaviour {
     protected int maxLevel;
     protected int level;  
     protected DataManager dataManager;
-
     private void Start()
     {
         dataManager = DataManager.Instance;
         Initialize();
+        
     }
     abstract public void Initialize();
 }

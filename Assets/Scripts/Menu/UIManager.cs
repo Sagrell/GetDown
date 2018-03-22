@@ -46,11 +46,21 @@ public class UIManager : MonoBehaviour {
     public void CoinsClick()
     {
         AudioCenter.Instance.PlaySound("CoinCollect");
+        DataManager.Instance.SaveFullData();
+        data = DataManager.Instance.GetUserData();
+        coins.text = data.GoldAmount.ToString();
     }
-
+    public void DiamondClick()
+    {
+        AudioCenter.Instance.PlaySound("DiamondDestroy");
+        DataManager.Instance.SaveDefaultData();
+        data = DataManager.Instance.GetUserData();
+        coins.text = data.GoldAmount.ToString();
+    }
     public void GoToCredits()
     {
         AudioCenter.Instance.PlaySound("Button");
+        coins.text = data.GoldAmount.ToString();
     }
 
     public void Quit()
