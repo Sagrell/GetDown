@@ -36,8 +36,9 @@ public class GameManager : MonoBehaviour
     public Renderer platformWithSpike;
     public Renderer brokenPlatform;
     DataManager dataManager;
-    
 
+    bool isMute;
+    float musicVolume;
     void Start () {
         platform.material = SkinManager.platformMat;
         platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
@@ -47,6 +48,17 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         SceneController.currentScene = "Game";
         AudioCenter.Instance.PlayMusic("MainTheme", 1f);
+        UserData data = dataManager.GetUserData();
+        isMute = data.isMute;
+        musicVolume = data.musicVolume;
+        if (!isMute)
+        {
+            AudioCenter.Instance.SetVolumeAllMusic(musicVolume);
+        }
+        else
+        {
+            AudioCenter.Instance.SetVolumeAllMusic(0f);
+        }
         StartCoroutine(StartGame());
     }
     IEnumerator StartGame()

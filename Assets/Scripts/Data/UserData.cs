@@ -22,6 +22,9 @@ public class UserData
     public int[] DoubleCoin;
     public int[] FastRun;
 
+    public float musicVolume;
+    public float soundVolume;
+    public bool isMute;
     public string hashOfContent;
 
 }

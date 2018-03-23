@@ -81,6 +81,12 @@ public class ElementsPool : MonoBehaviour {
         }
         foreach (GameObject platform in poolDictionary["NormalWithSpike"])
         {
+            
+            for (int i = 0; i < platform.transform.childCount; i++)
+            {
+                Transform child = platform.transform.GetChild(i);
+                child.gameObject.SetActive(false);
+            }
             platform.SetActive(false);
         }
     }
@@ -132,7 +138,7 @@ public class ElementsPool : MonoBehaviour {
         }
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
-        obj.SetActive(true);
+        obj.SetActiveRecursively(true);
         if(type == "NormalWithSpike")
         {
             _transform.GetComponentInChildren<Spike>().gameObject.SetActive(true);

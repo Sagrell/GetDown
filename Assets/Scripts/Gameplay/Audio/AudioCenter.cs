@@ -14,7 +14,7 @@ public class AudioCenter : MonoBehaviour
         //SOUNDS
 		public void PlaySound( string soundName ) {
             int soundId = soundDic[soundName].id;
-            float volume = soundDic[soundName].volume;
+            float volume = soundDic[soundName].volume* soundDic[soundName].maxVolume;
             soundObj.Call( "PlaySound", new object[] { soundId, volume } );
 		}			
 		public int LoadSound( string soundName ) {
@@ -27,7 +27,7 @@ public class AudioCenter : MonoBehaviour
         public void UnloadAll() {
             soundObj.Call("unloadAll");
         }
-
+        
         //MUSIC
         public void SeekToMusic(string musicName, int pos ) {
             musicObjects[musicName].Call("SeekTo", new object[] { pos });
@@ -38,6 +38,13 @@ public class AudioCenter : MonoBehaviour
         }
         public void SetVolumeMusic(string musicName, float volume ) {
             musicObjects[musicName].Call("SetVolume", new object[] { volume });
+        }
+        public void SetVolumeAllMusic(float volume) {
+            foreach (var musicObj in musicObjects.Values)
+            {
+                float newVolume = musicObj.Call<float>("GetVolume") * volume;
+                musicObj.Call("SetVolume", new object[] { newVolume });
+            }
         }
         public int GetDurationMusic(string musicName) {
             return musicObjects[musicName].Call<int>("GetDuration");
@@ -53,13 +60,15 @@ public class AudioCenter : MonoBehaviour
         public void PauseMusic(string musicName, float fadeDuration) {
             musicObjects[musicName].Call("Pause", new object[] { fadeDuration });
         }
+
+        
 #else
 
     public void PlaySound(string soundName)
     {
         Sound sound = soundDic[soundName];
        
-        sound.source.volume = sound.volume;
+        sound.source.volume = sound.volume * sound.maxVolume;
         sound.source.loop = false;
         sound.source.Play();
     }
@@ -84,10 +93,18 @@ public class AudioCenter : MonoBehaviour
     {
         Music music = musicDic[musicName];
         musicSources[musicName].clip = Resources.Load<AudioClip>("Music/" + musicName);
-        musicSources[musicName].volume = music.volume;
+        musicSources[musicName].volume = music.volume* music.maxVolume;
         musicSources[musicName].loop = music.isLooping;
         
     }
+    public void SetVolumeAllMusic(float volume)
+    {
+        foreach (var source in musicSources.Values)
+        {
+            source.volume = volume;
+        }
+    }
+
     public void StopMusic(string musicName)
     {
         musicSources[musicName].Stop();
@@ -112,7 +129,15 @@ public class AudioCenter : MonoBehaviour
     {
         
     }
+    
 #endif
+    public void SetVolumeToSounds(float newVolume)
+    {
+        foreach (var sound in soundDic.Values)
+        {
+            sound.volume = newVolume* sound.maxVolume;
+        }
+    }
 
     //Sounds
     [Header("Sounds:")]
@@ -123,15 +148,18 @@ public class AudioCenter : MonoBehaviour
     [Header("Music:")]
     public Music[] musics;
 
-    private Dictionary<string, Sound> soundDic = new Dictionary<string, Sound>();
-    private Dictionary<string, Music> musicDic = new Dictionary<string, Music>();
+    Dictionary<string, Sound> soundDic = new Dictionary<string, Sound>();
+    Dictionary<string, Music> musicDic = new Dictionary<string, Music>();
 
-    private Dictionary<string, AudioSource> musicSources;
+    Dictionary<string, AudioSource> musicSources;
+
+    UserData data;
     private void Awake()
     {
         
         if(Instance == null)
         {
+            data = DataManager.Instance.GetUserData();
             Instance = this;
 #if UNITY_ANDROID && !UNITY_EDITOR
 			        unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
@@ -142,14 +170,16 @@ public class AudioCenter : MonoBehaviour
                     for (int i = 0; i < musics.Length; i++)
                     {
                         Music music = musics[i];
+                        music.volume = data.musicVolume;
                         musicDic[music.name] = music;
                         AndroidJavaObject musicObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Music", activityObj ); 
-                        musicObj.Call("Load", new object[] { music.name + ".mp3", music.volume, music.isLooping });
+                        musicObj.Call("Load", new object[] { music.name + ".mp3", music.maxVolume, music.isLooping });
                         musicObjects[music.name] = musicObj;
                     }
                     for (int i = 0; i < sounds.Length; i++)
                     {
                         Sound sound = sounds[i];
+                        sound.volume = data.soundVolume;
                         sound.id = LoadSound(sound.name);
                         soundDic[sound.name] = sound;
                     }
@@ -159,6 +189,7 @@ public class AudioCenter : MonoBehaviour
                     {
                         AudioSource musicSource = gameObject.AddComponent<AudioSource>();
                         Music music = musics[i];
+                        music.volume = data.musicVolume;
                         musicDic[music.name] = music;
                         musicSources[music.name] = musicSource;
                         LoadMusic(music.name);
@@ -166,6 +197,7 @@ public class AudioCenter : MonoBehaviour
                     for (int i = 0; i < sounds.Length; i++)
                     {
                         Sound sound = sounds[i];
+                        sound.volume = data.soundVolume;
                         sound.source = gameObject.AddComponent<AudioSource>();
                         soundDic[sound.name] = sound;
                         sound.id = LoadSound(sound.name);

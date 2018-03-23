@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
                 {
                     JumpRight();
                 }
-                else if (GameState.playerPositionX > 0)
+                else if (GameState.playerPositionX > 0 && GameState.playerPositionX > 0)
                 {
                     JumpLeft();
                 }

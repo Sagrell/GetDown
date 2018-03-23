@@ -10,25 +10,37 @@ public enum PlatformType
 }
 public class PlatformSpawner : MonoBehaviour {
 
+    
+    [Header("Power Ups:")]
+    public float shieldPowerUpChance;
+    public float magnetPowerUpChance;
+    public float doubleCoinPowerUpChance;
+    public float fastRunPowerUpChance;
+    [Header("Coins:")]
+    public float coinChance;
+    public float doubleCoinChance;
+
+    [Space]
+    [Header("Spike:")]
+    public float spikeAfter;
+    public float startSpikeChance;
+    [Header("Laser:")]
+    public float laserAfter;
+    public float startLaserChance;
+    [Header("Broken:")]
+    public float brokenAfter;
+    [Header("Diamond:")]
+    public float diamondAfter;
+    public float startDiamondChance;
+   
+
+    [Space]
+    [Header("Spawn points:")]
     public Transform[] spawnPoints;
     public Transform content;
-    public float coinChance = 0.1f;
-    public float doubleCoinChance = 0.1f;
-    public float diamondChance = 0.05f;
-    public float shieldPowerUpChance = 0.05f;
-    public float magnetPowerUpChance = 0.05f;
-    public float doubleCoinPowerUpChance = 0.05f;
-    public float fastRunPowerUpChance = 0.05f;
-    public float spikeChance = 0.08f;
-    public float laserChance = 0.05f;
-    public float brokenAfter = 20f;
-    public float spikeAfter = 40f;
-    public float diamondAfter = 80f;
-    public float laserAfter= 100f;
-
+    //PRIVATE
     bool isDoubleCoin;
     bool isFastRun;
-
     bool isDiamond;
     bool isCoin;
     bool isShieldPowerUp;
@@ -38,6 +50,9 @@ public class PlatformSpawner : MonoBehaviour {
     bool isLaser;
     bool isSpike;
 
+    float diamondChance;
+    float spikeChance;
+    float laserChance;
     PlatformType[] currentWave;
     Transform _transform;
     Vector3 _localPosition;
@@ -47,6 +62,7 @@ public class PlatformSpawner : MonoBehaviour {
     float spawnIn;
     ElementsPool objectPooler;
     UserData data;
+
     private void Start()
     {
         data = DataManager.Instance.GetUserData();
@@ -91,6 +107,9 @@ public class PlatformSpawner : MonoBehaviour {
 
     void Update()
     {
+        spikeChance = startSpikeChance * GameState.currentSpeedFactor;
+        diamondChance = startDiamondChance * GameState.currentSpeedFactor;
+        laserChance = startLaserChance * GameState.currentSpeedFactor;
         spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         if (spawnerDistance <= spawnIn)
         {
@@ -236,10 +255,12 @@ public class PlatformSpawner : MonoBehaviour {
             {
                 GameObject platform = null;
                 
-                isSpike = Random.value <= spikeChance ? true : false;
+                isSpike = Random.value <= spikeChance ? true : false;  
                 if (isSpike && GameState.score > spikeAfter)
+                {
                     platform = objectPooler.PickFromPool("NormalWithSpike", spawnPoints[i].position, transform.parent);
-                else
+                }
+                if(!platform)
                     platform = objectPooler.PickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
 
                 SpawnPowerUp(platform, isDoubleCoin);

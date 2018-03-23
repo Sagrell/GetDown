@@ -98,7 +98,10 @@ public class DataManager : MonoBehaviour {
             Shield = new int[] { 0, 0, 0 },
             Magnet = new int[] { 0, 0, 0 },
             DoubleCoin = new int[] { 0, 0, 0 },
-            FastRun = new int[] { 0, 0, 0 }
+            FastRun = new int[] { 0, 0, 0 },
+            musicVolume = 1f,
+            soundVolume = 1f,
+            isMute = false
         };
         userData.hashOfContent = GenerateHashFromData(userData);
 
@@ -121,7 +124,10 @@ public class DataManager : MonoBehaviour {
             Shield = new int[] { 0, 0, 0 },
             Magnet = new int[] { 0, 0, 0 },
             DoubleCoin = new int[] { 0, 0, 0 },
-            FastRun = new int[] { 0, 0, 0 }
+            FastRun = new int[] { 0, 0, 0 },
+            musicVolume = 1f,
+            soundVolume = 1f,
+            isMute = false
         };
         userData.hashOfContent = GenerateHashFromData(userData);
 
