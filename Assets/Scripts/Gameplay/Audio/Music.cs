@@ -11,7 +11,7 @@ public class Music
     [Range(0f, 1f)]
     public float maxVolume;
     public bool isLooping;
-
+    
     [HideInInspector]
     public AudioClip clip;
 

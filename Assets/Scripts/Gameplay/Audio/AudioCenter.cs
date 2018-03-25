@@ -101,7 +101,7 @@ public class AudioCenter : MonoBehaviour
     {
         foreach (var source in musicSources.Values)
         {
-            source.volume = volume;
+            source.volume = volume*0.2f;
         }
     }
 

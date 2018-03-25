@@ -10,7 +10,7 @@ public class GuiManager : MonoBehaviour {
     public Text currency;
     public GameObject showCube;
     public GameObject showPlatform;
-
+    public Texture hideTex;
     public GameObject scoreLimit;
     public GameObject buy;
     public GameObject select;
@@ -24,8 +24,8 @@ public class GuiManager : MonoBehaviour {
     private void Start()
     {
         RenderSettings.skybox = SkinManager.backgroundMat;
-        showCube.GetComponent<Renderer>().material = SkinManager.cubeMat;
-        showPlatform.GetComponent<Renderer>().material = SkinManager.platformMat;
+        showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.cubeMat.GetTexture("_MainTex"));
+        showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
         SceneController.currentScene = "Shop";
     }
@@ -86,14 +86,24 @@ public class GuiManager : MonoBehaviour {
                 buy.GetComponent<Button>().interactable = true;
             }
             buy.SetActive(true);
+
         }
         switch (item.itemType)
         {
             case "Cube":
-                showCube.GetComponent<Renderer>().material = item.objectMat;
+                if(!item.bought)
+                    showCube.GetComponent<Renderer>().material.SetFloat("_Alpha", 0.6f);
+                else
+                    showCube.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
+                showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
                 break;
             case "Platform":
-                showPlatform.GetComponent<Renderer>().material = item.objectMat;
+                if (!item.bought)
+                    showPlatform.GetComponent<Renderer>().material.SetFloat("_Alpha", 0.6f);
+                else
+                    showPlatform.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
+
+                showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
                 break;
             case "Background":
                 RenderSettings.skybox = item.objectMat;

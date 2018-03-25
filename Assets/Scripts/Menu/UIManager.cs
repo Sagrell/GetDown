@@ -19,12 +19,16 @@ public class UIManager : MonoBehaviour {
     [Header("Settings:")]
     public Scrollbar music;
     public Scrollbar sound;
-    public GameObject disableSound;
+    public Image disableSound;
+    public Image enableSound;
     UserData data;
     float musicVolume;
     float soundVolume;
     bool isMute;
-    bool isSettings;
+    public bool isSettings;
+    public bool isCoins;
+    [HideInInspector]
+    public bool isLeaderboard;
     private void Start()
     {
         isSettings = false;
@@ -32,8 +36,8 @@ public class UIManager : MonoBehaviour {
         musicVolume = data.musicVolume;
         soundVolume = data.soundVolume;      
         isMute = data.isMute;
-        disableSound.SetActive(isMute);
-        
+        disableSound.enabled = isMute;
+        enableSound.enabled = !isMute;
         music.value = musicVolume;
         sound.value = soundVolume;
         coins.text = data.GoldAmount.ToString();
@@ -92,6 +96,7 @@ public class UIManager : MonoBehaviour {
     }
     public void ShowSettings()
     {
+        SwipeController.isAnimating = true;
         isSettings = true;
         contentAnim.Play("SettingsFadeIn");
     }
@@ -99,8 +104,40 @@ public class UIManager : MonoBehaviour {
     {
         if(isSettings)
         {
+            SwipeController.isAnimating = true;
             contentAnim.Play("SettingsFadeOut");
+            isSettings = false;
         }            
+    }
+    public void ShowLeaderboard()
+    {
+        isLeaderboard = true;
+        SwipeController.isAnimating = true;
+        contentAnim.Play("LeaderboardFadeIn");
+    }
+    public void HideLeaderboard()
+    {
+        if (isLeaderboard)
+        {
+            SwipeController.isAnimating = true;
+            contentAnim.Play("LeaderboardFadeOut");
+            isLeaderboard = false;
+        }
+    }
+    public void ShowCoins()
+    {
+        isCoins = true;
+        SwipeController.isAnimating = true;
+        contentAnim.Play("CoinsFadeIn");
+    }
+    public void HideCoins()
+    {
+        if (isCoins)
+        {
+            SwipeController.isAnimating = true;
+            contentAnim.Play("CoinsFadeOut");
+            isCoins = false;
+        }
     }
     public void Mute()
     {
@@ -117,7 +154,8 @@ public class UIManager : MonoBehaviour {
         isMute = !isMute;
         data.isMute = isMute;
         DataManager.Instance.SaveUserData(data);
-        disableSound.SetActive(isMute);
+        enableSound.enabled = !isMute;
+        disableSound.enabled = isMute;
     }
     public void ChangeMusicVolume()
     {
@@ -137,21 +175,38 @@ public class UIManager : MonoBehaviour {
     }
     public void ApplyVolume()
     {
-        if(!isMute)
+        if(isSettings)
         {
-            data = DataManager.Instance.GetUserData();
-            data.musicVolume = musicVolume;
-            data.soundVolume = soundVolume;
-            DataManager.Instance.SaveUserData(data);
-        } 
-        HideSettings();
+            if (!isMute)
+            {
+                data = DataManager.Instance.GetUserData();
+                data.musicVolume = musicVolume;
+                data.soundVolume = soundVolume;
+                DataManager.Instance.SaveUserData(data);
+
+            }
+            HideSettings();
+        }      
     }
     public void Quit()
     {
         AudioCenter.Instance.PlaySound("Button");
         Application.Quit();
     }
-
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            AudioCenter.Instance.PauseMusic("MenuTheme", 1f);
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            AudioCenter.Instance.PlayMusic("MenuTheme", 1f);
+        }
+    }
+    
     IEnumerator StartScene( string scene )
     {
         contentAnim.Play("FadeOut");

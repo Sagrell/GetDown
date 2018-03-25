@@ -168,9 +168,11 @@ public class ItemsManager : MonoBehaviour {
             cubeScale[i].y = Mathf.SmoothStep(items[i].transform.localScale.y, scale, scaleSpeed * Time.deltaTime);
             items[i].transform.localScale = cubeScale[i];
         }
-        if (prevCube != selectedCubeId && isScrolling)
+        if (prevCube != selectedCubeId)
         {
-            PlaySound();
+            GuiManager.Instance.Show(skins[selectedCubeId]);
+            if(isScrolling)
+             PlaySound();
         }
         prevCube = selectedCubeId;
         if (!isScrolling && !isFocusing )

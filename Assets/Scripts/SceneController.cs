@@ -9,6 +9,7 @@ public class SceneController : MonoBehaviour {
     public static string previousScene;
     private void Awake()
     {
+
         if (Instance == null)
         {
             Instance = this;

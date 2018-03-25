@@ -25,9 +25,10 @@ df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.T
 5958172b79d44c060f2241a38a5ae4dc Assembly-CSharp.dll:.PlatformWithSpike
 5ec0eef9533b87b7afa67730f166aba8 Assembly-CSharp.dll:.InGameGUI
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainMenu
+b840a21afb9b935acdd5132874721d64 Assembly-CSharp.dll:.PlusControlller
 ea7ebf69aaaf7e60af89f01e536a2dbc Assembly-CSharp.dll:.AudioCenter
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.MagnetToPlayer
-756be043da8090f611346f68c7312482 Assembly-CSharp.dll:.SwipeController
+bdb5bc07b5ef57c896069e3ec809aa2e Assembly-CSharp.dll:.SwipeController
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -124,7 +125,7 @@ c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.MagnetPowerUp
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 80199407f489bb3260d8c05631bc509d Assembly-CSharp.dll:.DoubleCoin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameState
-c41e0fbd03b4c6428a4ce9b0a19820b6 Assembly-CSharp.dll:.GuiManager
+4abea90e6dcdcbbca0ab9de99ce131e7 Assembly-CSharp.dll:.GuiManager
 322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.FastRunUpgrade
@@ -194,7 +195,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.MagnetUpgrade
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CameraBehaviour
-d5adbc2a75c96ef96ca467eb9fde6283 Assembly-CSharp.dll:.UIManager
+ba244d085c487235865af0ce8f30c721 Assembly-CSharp.dll:.UIManager
 225e269685dbd4c183ecfabe6717333f Assembly-CSharp.dll:.ShopItem
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.ShieldUpgrade
 a873c5c17779c95786964cd402acac60 Assembly-CSharp.dll:.SpeedController
@@ -203,4 +204,4 @@ a873c5c17779c95786964cd402acac60 Assembly-CSharp.dll:.SpeedController
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.DoubleCoinsUpgrade
 606018aefe64abed79f3ca41de7576b8 Assembly-CSharp.dll:.Diamond
 a203c070efc953cf42dd3a4ab22d2e90 Assembly-CSharp.dll:.Skin
-96756fcd487479475430d946412fb3f6 Assembly-CSharp.dll:.PlusControlller
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LaserInMenu

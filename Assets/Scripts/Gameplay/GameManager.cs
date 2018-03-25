@@ -95,8 +95,20 @@ public class GameManager : MonoBehaviour
         dataManager.SaveWithGameState();
         InGameGUI.Instance.GameOver();
     }
-  
 
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            AudioCenter.Instance.PauseMusic("MainTheme", 1f);
+            InGameGUI.Instance.Pause();
+        }
+        else
+        {
+            AudioCenter.Instance.PlayMusic("MainTheme", 1f);
+            InGameGUI.Instance.Resume();
+        }
+    }
     IEnumerator IncreaseSpeedFactorEvery(float sec)
     {
         while (true)
