@@ -1,12 +1,27 @@
-﻿using System.Collections;
+﻿using Facebook.Unity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlusControlller : MonoBehaviour {
+    public static PlusControlller Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
     public Button plusButton;
     public float dropSpeed = 10f;
     public Canvas canvas;
+
+    public GameObject signInGoogle;
+    public GameObject signOutGoogle;
+    public GameObject signInFacebook;
+    public GameObject signOutFacebook;
+    public GameObject inviteFriendsFacebook;
+
+
     bool isDragging;
     bool isOpened;
     RectTransform _transform;
@@ -19,10 +34,37 @@ public class PlusControlller : MonoBehaviour {
         _transform = GetComponent<RectTransform>();
         isDragging = false;
         isOpened = false;
+        if(!FB.IsLoggedIn)
+        {
+            SignOutStateFacebook();
+        } else
+        {
+            SignInStateFacebook();
+        }
     }
 	
-	// Update is called once per frame
-	void Update () {
+    public void SignInStateFacebook()
+    {
+        signOutFacebook.SetActive(true);
+        inviteFriendsFacebook.SetActive(true);
+        signInFacebook.SetActive(false);
+    }
+    public void SignOutStateFacebook()
+    {
+        signInFacebook.SetActive(true);
+        inviteFriendsFacebook.SetActive(false);
+        signOutFacebook.SetActive(false);
+    }
+    public void SignInStateGoogle()
+    {
+
+    }
+    public void SignOutStateGoogle()
+    {
+
+    }
+    // Update is called once per frame
+    void Update () {
 		if(isDragging)
         {
             Vector2 newOffset = ((Vector2)Input.mousePosition - startCursor2D)/ canvas.scaleFactor;
@@ -56,6 +98,14 @@ public class PlusControlller : MonoBehaviour {
     }
     public void DropDownContent()
     {
+        if (!FB.IsLoggedIn)
+        {
+            SignOutStateFacebook();
+        }
+        else
+        {
+            SignInStateFacebook();
+        }
         StopAllCoroutines();
         StartCoroutine(MoveFromTo(_transform.offsetMin, openOffset));
     }

@@ -107,6 +107,7 @@ public class PlatformSpawner : MonoBehaviour {
 
     void Update()
     {
+
         spikeChance = startSpikeChance * GameState.currentSpeedFactor;
         diamondChance = startDiamondChance * GameState.currentSpeedFactor;
         laserChance = startLaserChance * GameState.currentSpeedFactor;
@@ -122,6 +123,23 @@ public class PlatformSpawner : MonoBehaviour {
             _transform.localPosition = _localPosition;
         }
     }
+    public void Restart()
+    {
+        objectPooler.RemovePlatformsFromPool();
+        objectPooler.RemoveEnemyiesFromPool();
+        MoveSpawnerTo(GameState.playerPositionY);
+        currentWave = new PlatformType[6];
+        currentWave[GameState.playerPositionX] = PlatformType.Normal;
+        spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
+        while (spawnerDistance <= spawnIn)
+        {
+            currentWave = GenerateNormalWaveFromPrevious(currentWave);
+            SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
+            _localPosition.y -= 1.5f;
+            _transform.localPosition = _localPosition;
+            spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
+        }
+    }
     public void ActivateDoubleCoins()
     {
         objectPooler.ChangeCoins();
@@ -131,6 +149,7 @@ public class PlatformSpawner : MonoBehaviour {
     {
         isFastRun = true;
         objectPooler.RemovePlatformsFromPool();
+        objectPooler.RemoveEnemyiesFromPool();
         MoveSpawnerTo(GameState.playerPositionY);
     }
     public void DeactivateFastRun()
@@ -253,6 +272,7 @@ public class PlatformSpawner : MonoBehaviour {
             }
             else if (type == PlatformType.Normal)
             {
+                
                 GameObject platform = null;
                 
                 isSpike = Random.value <= spikeChance ? true : false;  
@@ -263,13 +283,41 @@ public class PlatformSpawner : MonoBehaviour {
                 if(!platform)
                     platform = objectPooler.PickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
 
+                if (isFastRun)
+                {
+                    objectPooler.PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
+                }
                 SpawnPowerUp(platform, isDoubleCoin);
             }
         }
 
         SpawnEnemies();
     }
+    void SpawnWaveWithoutEnemy(PlatformType[] wave, bool isDoubleCoin)
+    { 
+        for (int i = 0; i < wave.Length; i++)
+        {
+            PlatformType type = wave[i];
+            if (type == PlatformType.Empty)
+            {
+                continue;
+            }
+            else if (type == PlatformType.Broken && GameState.score > brokenAfter)
+            {
+                objectPooler.PickFromPool("Broken", spawnPoints[i].position, transform.parent);
+            }
+            else if (type == PlatformType.Normal)
+            {
 
+                GameObject platform = objectPooler.PickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
+                if (isFastRun)
+                {
+                    objectPooler.PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
+                }
+                SpawnPowerUp(platform, isDoubleCoin);
+            }
+        }
+    }
     void SpawnPowerUp(GameObject platform, bool isDoubleCoin)
     {
         if(isDoubleCoin)

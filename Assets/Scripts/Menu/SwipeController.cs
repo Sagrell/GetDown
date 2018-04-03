@@ -52,13 +52,6 @@ public class SwipeController : MonoBehaviour {
                             manager.ShowLeaderboard();
                         }
                     }
-                    else if (manager.isLeaderboard)
-                    {
-                        if (Mathf.Abs(x) < Mathf.Abs(y) && y < 0)
-                        {
-                            manager.HideLeaderboard();
-                        }
-                    }
                 }
                 if (!manager.isLeaderboard && !manager.isSettings && !isAnimating)
                 {

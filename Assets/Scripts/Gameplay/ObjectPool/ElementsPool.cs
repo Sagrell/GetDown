@@ -53,11 +53,13 @@ public class ElementsPool : MonoBehaviour {
             if (coin)
             {
                 coin.gameObject.SetActive(false);
+                coin.transform.SetParent(null);
                 PickFromPool("DoubleCoin", platform.transform, Coin.startPosition, Coin.startRotation);
             }
             if (doubleCoin)
             {
                 doubleCoin.gameObject.SetActive(false);
+                doubleCoin.transform.SetParent(null);
                 PickFromPool("Coin", platform.transform, DoubleCoin.startPosition, DoubleCoin.startRotation);
             }
         }
@@ -66,14 +68,17 @@ public class ElementsPool : MonoBehaviour {
     {
         foreach (GameObject platform in poolDictionary["Normal"])
         {
-          
-            for (int i = 0; i < platform.transform.childCount; i++) {
-                Transform child = platform.transform.GetChild(i);
-                child.gameObject.SetActive(false);
-                child.SetParent(null);    
-            }
-            PickFromPool("PlatformBlowEffect", platform.transform);
-            platform.SetActive(false);
+            if(platform.activeSelf)
+            {
+                for (int i = 0; i < platform.transform.childCount; i++)
+                {
+                    Transform child = platform.transform.GetChild(i);
+                    child.gameObject.SetActive(false);
+                    child.SetParent(null);
+                }
+                PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
+                platform.SetActive(false);
+            } 
         }
         foreach (GameObject platform in poolDictionary["Broken"])
         {
@@ -90,6 +95,19 @@ public class ElementsPool : MonoBehaviour {
             platform.SetActive(false);
         }
     }
+    public void RemoveEnemyiesFromPool()
+    {
+        foreach (GameObject laser in poolDictionary["Laser"])
+        {
+            laser.SetActive(false);
+        }
+        foreach (GameObject diamond in poolDictionary["Diamond"])
+        {
+            diamond.SetActive(false);
+        }
+
+    }
+
     //Pick object from pool with specific type and place it at definite position and apply rotation
     public GameObject PickFromPool(string type, Vector3 position, Quaternion rotation, Transform parent = null)
     {

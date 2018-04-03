@@ -6,24 +6,28 @@
  {
      _TopColor ("Top Color", Color) = (1, 1, 1, 1)
      _BottomColor ("Bottom Color", Color) = (1, 1, 1, 1)
-     _RampTex ("Ramp Texture", 2D) = "white" {}
  }
  SubShader
  {
-	Tags { 
-			"RenderType"="Opaque" 
+		Tags
+		{ 
 			"Queue"="Transparent" 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
+			"PreviewType"="Plane"
+			"CanUseSpriteAtlas"="True"
 		}
 
 		Cull Off
 		Lighting Off
 		ZWrite Off
+		Blend One OneMinusSrcAlpha
      Pass
      {
-         Blend SrcAlpha OneMinusSrcAlpha
          CGPROGRAM
          #pragma vertex vert
          #pragma fragment frag
+		 #include "UnityCG.cginc"
          struct vertexIn {
              float4 pos : POSITION;
              float2 uv : TEXCOORD0;
@@ -40,7 +44,7 @@
              return output;
          }
          fixed4 _TopColor, _BottomColor;
-         sampler2D _RampTex;
+
          fixed4 frag(v2f input) : COLOR
          {
              return lerp(_BottomColor, _TopColor, input.uv.y);

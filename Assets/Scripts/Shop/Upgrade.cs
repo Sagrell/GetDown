@@ -2,7 +2,9 @@
 using UnityEngine.UI;
 
 public abstract class Upgrade : MonoBehaviour {
+    [HideInInspector]
     public GameObject point;
+    [HideInInspector]
     public GameObject emptyPoint;
     public Transform levelContainer;
     public Text improvesText;

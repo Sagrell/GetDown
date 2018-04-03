@@ -23,7 +23,7 @@ public class GameState : MonoBehaviour {
         isAlive = true;
         playerPositionX = 0;
         playerPositionY = 0;
-}
+    }
 	
 
     

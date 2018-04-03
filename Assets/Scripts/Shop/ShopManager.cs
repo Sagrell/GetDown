@@ -10,10 +10,14 @@ public class ShopManager : MonoBehaviour
     public ItemsManager cubesManager;
     public ItemsManager platformsManager;
     public ItemsManager backgroundsManager;
-    public ParticleSystem confetti;
+    public ParticleSystem playerConfetti;
+    public ParticleSystem platformConfetti;
+    public ParticleSystem backgroundConfetti;
+    public Animator cubeAnim;
+    public Animator platformAnim;
     DataManager dataManager;
     UserData data;
-
+    
     private void Awake()
     {
         Instance = this;
@@ -61,6 +65,7 @@ public class ShopManager : MonoBehaviour
     public void Buy(ShopItem item)
     {
         AudioCenter.Instance.PlaySound("Purchase");
+        
         data.GoldAmount -= item.cost;
         switch (item.itemType)
         {
@@ -68,24 +73,45 @@ public class ShopManager : MonoBehaviour
                 data.CubesUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
                 Select(item);
+                cubeAnim.Play("BuyCube");
+                playerConfetti.gameObject.SetActive(true);
+                playerConfetti.Play();
                 break;
             case "Platform":
                 data.PlatformsUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
                 Select(item);
+                platformAnim.Play("BuyPlatform");
+                platformConfetti.gameObject.SetActive(true);
+                platformConfetti.Play();
                 break;
             case "Background":
                 data.BackgroundsUnlocked[item.index] = true;
                 dataManager.SaveUserData(data);
                 Select(item);
+                backgroundConfetti.gameObject.SetActive(true);
+                backgroundConfetti.Play();
                 break;
             default:
                 break;
         }
 
         GuiManager.Instance.UpdateInfo();
-        confetti.Play();
+        
         GuiManager.Instance.Show(item);
+    }
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            AudioCenter.Instance.PauseMusic("MenuTheme", .1f);
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            AudioCenter.Instance.ResumeMusic("MenuTheme", .1f);
+        }
     }
     public void Upgrade(string type, int cost, int time, int imp)
     {

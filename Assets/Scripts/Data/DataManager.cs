@@ -40,6 +40,7 @@ public class DataManager : MonoBehaviour {
        if(GameState.score> userData.HighScore)
        {
          userData.HighScore = GameState.score;
+         GooglePlayManager.Instance.SetNewRecord(GameState.score);
        }
        userData.GoldAmount += GameState.countCoins;
        userData.hashOfContent = GenerateHashFromData(userData);
@@ -89,9 +90,9 @@ public class DataManager : MonoBehaviour {
             Version = "1.0",
             HighScore = 0,
             GoldAmount = 0,
-            CubesUnlocked = new bool[9] { true, false, false, false, false, false, false, false, false },
+            CubesUnlocked = new bool[10] { true, false, false, false, false, false, false, false, false, false },
             PlatformsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
-            BackgroundsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
+            BackgroundsUnlocked = new bool[7] { true, false, false, false, false, false, false },
             SelectedCube = 0,
             SelectedPlatform = 0,
             SelectedBackground = 0,
@@ -115,9 +116,9 @@ public class DataManager : MonoBehaviour {
             Version = "1.0",
             HighScore = 1000,
             GoldAmount = 1000000,
-            CubesUnlocked = new bool[9] { true, false, false, false, false, false, false, false, false },
+            CubesUnlocked = new bool[10] { true, false, false, false, false, false, false, false, false,false  },
             PlatformsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
-            BackgroundsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
+            BackgroundsUnlocked = new bool[7] { true, false, false, false, false, false, false },
             SelectedCube = 0,
             SelectedPlatform = 0,
             SelectedBackground = 0,

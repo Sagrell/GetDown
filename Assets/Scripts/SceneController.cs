@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class SceneController : MonoBehaviour {
         if (Instance == null)
         {
             Instance = this;
+       
             currentScene = "Menu";
             previousScene = "";
         }

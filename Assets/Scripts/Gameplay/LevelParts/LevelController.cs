@@ -15,7 +15,7 @@ public class LevelController : MonoBehaviour {
     float startPlayerSpeed;
     float startLevelSpeed;
     float stepUp;
-    Vector3 levelPosition;
+    public static Vector3 levelPosition;
     // Use this for initialization
 
     void Start()
@@ -24,13 +24,13 @@ public class LevelController : MonoBehaviour {
         startLevelSpeed = levelSpeed;
         startPlayerSpeed = GameManager.Instance.playerSpeed;
     }
-	// Update is called once per frame
-	void FixedUpdate () {
+    // Update is called once per frame
+    void Update () {
         playerScreenPos = GameManager.player.playerScreenPos;
         if (playerScreenPos.y <= Screen.height * 0.35f)
         {
             if (startLevelSpeed < maxLevelSpeed)
-                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .04f);
+                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed*0.9f, .04f);
         }
         else if ((playerScreenPos.y > Screen.height * 0.25f) && (playerScreenPos.y < Screen.height * 0.65f))
         {
@@ -40,9 +40,10 @@ public class LevelController : MonoBehaviour {
         {
             startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 1f, .04f);
         }
-        levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
         if (levelSpeed < maxLevelSpeed)
-            stepUp = levelSpeed * GameManager.fixedDeltaTime;
+            levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
+        
+        stepUp = levelSpeed * GameManager.deltaTime;
         levelPosition.y += stepUp;
         transform.position = levelPosition;
     }

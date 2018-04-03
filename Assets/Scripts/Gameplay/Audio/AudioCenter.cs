@@ -20,6 +20,11 @@ public class AudioCenter : MonoBehaviour
 		public int LoadSound( string soundName ) {
 			return soundObj.Call<int>( "LoadSound", new object[] { "Resources/Sounds/" +  soundName + ".mp3" } );
 		}
+        public float GetSoundDuration(string soundName)
+        {
+            int soundId = soundDic[soundName].id;
+            return soundObj.Call<float>( "GetDuration", new object[] { soundId } );
+        }
 		public void UnloadSound(string soundName) {
             int soundId = soundDic[soundName].id;
             soundObj.Call( "UnloadSound", new object[] { soundId } );
@@ -46,8 +51,8 @@ public class AudioCenter : MonoBehaviour
                 musicObj.Call("SetVolume", new object[] { newVolume });
             }
         }
-        public int GetDurationMusic(string musicName) {
-            return musicObjects[musicName].Call<int>("GetDuration");
+        public float GetDurationMusic(string musicName) {
+            return (float)musicObjects[musicName].Call<int>("GetDuration")/1000f;
         }
         public void PlayMusic( string musicName, float fadeDuration ) {
             musicObjects[musicName].Call("stop");
@@ -80,7 +85,10 @@ public class AudioCenter : MonoBehaviour
         soundDic[soundName].source.clip = audioClip;
         return soundID;
     }
-
+    public float GetSoundDuration(string soundName)
+    {
+        return soundDic[soundName].source.clip.length;
+    }
     public void UnloadSound(string soundName)
     {
         var audioClip = soundDic[soundName].clip;
@@ -109,9 +117,9 @@ public class AudioCenter : MonoBehaviour
     {
         musicSources[musicName].Stop();
     }
-    public int GetDurationMusic(string musicName)
+    public float GetDurationMusic(string musicName)
     {
-        return (int)(musicSources[musicName].clip.length*1000);
+        return musicSources[musicName].clip.length;
     }
     public void PlayMusic(string musicName, float fadeDuration)
     {

@@ -14,7 +14,6 @@ public class GuiManager : MonoBehaviour {
     public GameObject scoreLimit;
     public GameObject buy;
     public GameObject select;
-
     public Animator fadeAnim;
     private void Awake()
     {
@@ -44,6 +43,14 @@ public class GuiManager : MonoBehaviour {
         SceneController.previousScene = "Shop";
     }
 
+    public void ShowBuyCoins()
+    {
+        fadeAnim.Play("ShowBuyCoins");
+    }
+    public void HideBuyCoins()
+    {
+        fadeAnim.Play("HideBuyCoins");
+    }
     public void BackToMenu()
     {
         AudioCenter.Instance.PlaySound("Button");
@@ -77,13 +84,12 @@ public class GuiManager : MonoBehaviour {
         {
             buy.GetComponentInChildren<Text>().text = Regex.Replace(buy.GetComponentInChildren<Text>().text, @"\d+", item.cost.ToString());
             buy.GetComponent<Button>().onClick.RemoveAllListeners();
-            buy.GetComponent<Button>().onClick.AddListener(delegate { ShopManager.Instance.Buy(item); });
             if(DataManager.Instance.GetUserData().GoldAmount < item.cost)
             {
-                buy.GetComponent<Button>().interactable = false;
+                buy.GetComponent<Button>().onClick.AddListener(delegate { ShowBuyCoins(); });
             } else
             {
-                buy.GetComponent<Button>().interactable = true;
+                buy.GetComponent<Button>().onClick.AddListener(delegate { ShopManager.Instance.Buy(item); });
             }
             buy.SetActive(true);
 
@@ -96,6 +102,7 @@ public class GuiManager : MonoBehaviour {
                 else
                     showCube.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
                 showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
+                showCube.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
                 break;
             case "Platform":
                 if (!item.bought)
@@ -104,6 +111,7 @@ public class GuiManager : MonoBehaviour {
                     showPlatform.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
 
                 showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
+                showPlatform.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
                 break;
             case "Background":
                 RenderSettings.skybox = item.objectMat;

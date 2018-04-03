@@ -11,7 +11,9 @@ public class CameraBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         cam = GetComponentInChildren<Camera>();
+        #if UNITY_ANDROID || UNITY_EDITOR
         aspectRatio = cam.aspect;
         cam.orthographicSize = startAspect*startSize/ aspectRatio;
+        #endif
     }
 }

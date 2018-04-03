@@ -34,10 +34,10 @@ public class LaserInMenu : MonoBehaviour {
             yield return new WaitForSeconds(Random.Range(0f, 5f));
             rend.enabled = true;
             AudioCenter.Instance.PlaySound("LaserStartMenu");
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserStartMenu"));
             laserAnimation.SetBool("LaserOn", true);
             AudioCenter.Instance.PlaySound("LaserShotMenu");
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserShotMenu"));
             laserAnimation.SetBool("LaserOn", false);
             yield return new WaitForSeconds(.25f);
             rend.enabled = false;

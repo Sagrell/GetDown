@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("References")]
-    public GameObject destroyedVersion;
+    public GameObject[] destroyedVersions;
 
     //Main camera
     Camera mainCamera;
@@ -29,17 +29,15 @@ public class PlayerController : MonoBehaviour
     Vector3 _RBLocalPosition;
     Quaternion _RBLocalRotation;
 
-    Vector3 _RBPrevLocalPosition;
     //GameState
     GameState GS;
-    //ObjectPooler
-    ElementsPool objectPooler;
     //PowerUpManager
     PowerUpManager powerUp;
     //Material
     Material cubeMat;
 
     bool isHit;
+    GameObject DP;
     void Start()
     {
         speed = GameManager.Instance.playerSpeed;
@@ -47,10 +45,9 @@ public class PlayerController : MonoBehaviour
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
         _RBLocalRotation = _RBTransform.localRotation;
-        _RBPrevLocalPosition = _RBLocalPosition;
         willDie = false;
         alive = true;
-        onGround = true;
+        onGround = false;
         jumping = Jump(Vector3.back * 90, speed, true);
         timeForJump = 1.5f / speed;
 
@@ -59,32 +56,42 @@ public class PlayerController : MonoBehaviour
         isHit = false;
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
 
-        objectPooler = ElementsPool.Instance;
         powerUp = PowerUpManager.Instance;
 
         cubeMat = SkinManager.cubeMat;
         GetComponent<Renderer>().material = cubeMat;
-        Renderer[] cubeParts = destroyedVersion.GetComponentsInChildren<Renderer>();
-        for (int i = 0; i < cubeParts.Length; ++i)
-        {
-            cubeParts[i].material = cubeMat;
-        }
-    }
 
+        for (int i = 0; i < destroyedVersions.Length; i++)
+        {
+            Renderer[] cubeParts = destroyedVersions[i].GetComponentsInChildren<Renderer>();
+            for (int j = 0; j < cubeParts.Length; ++j)
+            {
+                cubeParts[j].material = cubeMat;
+            }
+        }
+        GetComponent<Animator>().enabled = false;
+        StartCoroutine(ControllSpeed());
+    }
     private void FixedUpdate()
     {
-        if (speed < GameManager.Instance.maxPlayerSpeed)
-            speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
         //Set position and rotation in fixed update cause its depends on collision!
-        if (!isHit &&  _RBPrevLocalPosition.y != _RBLocalPosition.y)
+        
+    }
+    IEnumerator ControllSpeed()
+    {
+        while(speed < GameManager.Instance.maxPlayerSpeed)
         {
-            _RBTransform.localRotation = _RBLocalRotation;
-            _RBTransform.localPosition = _RBLocalPosition;
-            _RBPrevLocalPosition = _RBLocalPosition;
-        }
+            speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
+            yield return new WaitForSeconds(.1f);
+        }   
     }
     void Update()
     {
+        if (!isHit)
+        {
+            _RBTransform.localRotation = _RBLocalRotation;
+            _RBTransform.localPosition = _RBLocalPosition;
+        }
         //Check for bounds and destroy player if he's out of them
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         if ((playerScreenPos.y >= Screen.height || playerScreenPos.y <= 0))
@@ -110,7 +117,7 @@ public class PlayerController : MonoBehaviour
                 {
                     JumpRight();
                 }
-                else if (GameState.playerPositionX > 0 && GameState.playerPositionX > 0)
+                else if (touch.position.x < Screen.width / 2 && GameState.playerPositionX > 0)
                 {
                     JumpLeft();
                 }
@@ -123,7 +130,6 @@ public class PlayerController : MonoBehaviour
     //Jump on the next platform on the right side
     void JumpRight()
     {
-        onGround = false;
         StopCoroutine(jumping);
         jumping = Jump(Vector3.back * 90, speed, true);        
         StartCoroutine(jumping);
@@ -131,7 +137,7 @@ public class PlayerController : MonoBehaviour
     //Jump on the next platform on the left side
     void JumpLeft()
     {
-        onGround = false;
+       
         StopCoroutine(jumping);
         jumping = Jump(Vector3.forward * 90, -speed, false);
         StartCoroutine(jumping);
@@ -139,6 +145,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Jump(Vector3 byAngles, float speed, bool dir)
     {
+        onGround = false;
         GameState.playerPositionY++;
         GameState.playerPositionX += dir ? 1 : -1;
         timeForJump = Mathf.Abs(1.5f / speed);
@@ -146,17 +153,17 @@ public class PlayerController : MonoBehaviour
         float x = 0;
         float y = 0;
         Quaternion rotation = Quaternion.identity;
-        bool isFirstTime = true;
+        bool isContinue = false;
         Quaternion fromAngle = _RBTransform.localRotation;
         Quaternion toAngle = Quaternion.Euler(fromAngle.eulerAngles + byAngles);
-        for (float t = 0f; true; t += GameManager.fixedDeltaTime/timeForJump)
+        for (float t = 0f; true; t += Time.deltaTime/timeForJump)
         {
             //If player is grounded, then stop falling
             if (onGround)
             {
                 break;
             }
-            x += speed*GameManager.fixedDeltaTime;
+            x += speed*Time.deltaTime;
             y = Parabolic(Mathf.Abs(x));
             if(t>1)
             {
@@ -170,17 +177,29 @@ public class PlayerController : MonoBehaviour
                 willDie = true;
             }
             //Freeze player on the end position to avoid "miss-position" and check for the collision 
-            if(Mathf.Abs(x) > 1.5f && isFirstTime)
+            if (Mathf.Abs(x) > 1.5f && !isContinue)
             {
                 x = dir ? 1.5f : -1.5f;
                 y = -1.5f;
-                isFirstTime = false;
-            }
-            _RBLocalPosition.x = prevPosition.x + x;
-            _RBLocalPosition.y = prevPosition.y + y;
-            _RBLocalRotation = rotation;
-            //We need to sync it with Physics
-            yield return new WaitForFixedUpdate();
+                rotation = toAngle;
+                _RBLocalPosition.x = prevPosition.x + x;
+                _RBLocalPosition.y = prevPosition.y + y;
+                _RBLocalRotation = rotation;
+                _RBTransform.localRotation = _RBLocalRotation;
+                _RBTransform.localPosition = _RBLocalPosition;
+                yield return new WaitForFixedUpdate();
+                if (!onGround)
+                {
+                    isContinue = true;
+                }
+            } else
+            {
+                _RBLocalPosition.x = prevPosition.x + x;
+                _RBLocalPosition.y = prevPosition.y + y;
+                _RBLocalRotation = rotation;
+                //We need to sync it with Physics
+                yield return null;
+            }      
         }
     }
     public void DestroyPlayer()
@@ -189,17 +208,27 @@ public class PlayerController : MonoBehaviour
         GameState.isAlive = false;
         GameManager.Instance.Kill();
         powerUp.DeactivateAll();
-        objectPooler.PickFromPool("DestroyedPlayer", _RBTransform.position, _RBTransform.rotation);
+        DP = Instantiate(destroyedVersions[Random.Range(0,3)], _RBTransform.position, _RBTransform.rotation);
         AudioCenter.Instance.PlaySound("DestroyPlayer");
         ShakeManager.ShakeAfterDeath();
-        gameObject.SetActive(false);      
+        gameObject.SetActive(false);
     }
-
+    public void RespawnPlayer()
+    {
+        Destroy(DP);
+        willDie = false;
+        isHit = false;
+        _RBLocalRotation = Quaternion.identity;
+        _RBLocalPosition.x = (GameState.playerPositionX * 1.5f) - 3.75f;
+        _RBLocalPosition.y = GameState.playerPositionY * -1.5f + 0.5f;
+        _RBTransform.localRotation = _RBLocalRotation;
+        _RBTransform.localPosition = _RBLocalPosition;
+        gameObject.SetActive(true);
+    }
     public bool isAlive()
     {
         return alive;
     }
-
 
 
     void OnCollisionEnter(Collision collision)
@@ -213,7 +242,7 @@ public class PlayerController : MonoBehaviour
         if (collider.tag == "Platform")
         {
             if (willDie)
-            {
+            {  
                DestroyPlayer();
             } else
             {
@@ -223,7 +252,6 @@ public class PlayerController : MonoBehaviour
                 _RBLocalPosition.x = collider.transform.localPosition.x;
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
                 GameState.score++;
-                
                 InGameGUI.Instance.UpdateScore();
                 onGround = true;
             }

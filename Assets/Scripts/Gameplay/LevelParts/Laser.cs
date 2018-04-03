@@ -14,6 +14,7 @@ public class Laser : MonoBehaviour, IPooledObject {
     public void OnObjectSpawn()
     {
         //GetComponentInChildren<ParticleSystem>().Play();
+        isShooting = false;
         laserAnimation = GetComponent<Animator>();
         StartCoroutine(LaserShot());
     }
@@ -37,12 +38,12 @@ public class Laser : MonoBehaviour, IPooledObject {
     IEnumerator LaserShot()
     {
         AudioCenter.Instance.PlaySound("LaserStart");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserStart"));
         laserAnimation.SetBool("LaserOn", true);
         isShooting = true;
 
         AudioCenter.Instance.PlaySound("LaserShot");
-        yield return new WaitForSeconds(1.7f);
+        yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserShot"));
         laserAnimation.SetBool("LaserOn", false);
         isShooting = false;
         yield return new WaitForSeconds(.25f);

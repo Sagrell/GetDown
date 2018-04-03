@@ -9,7 +9,6 @@ public class ShopItem : ScriptableObject {
     public string itemType;
     public int cost;
     public int scoreRequire;
-    public string description;
     public bool bought;
     public bool selected;
     public bool locked;

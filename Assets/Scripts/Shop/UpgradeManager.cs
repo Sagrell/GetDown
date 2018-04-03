@@ -21,8 +21,13 @@ public class UpgradeManager : MonoBehaviour {
     public DoubleCoinsUpgrade doubleCoins;
     public FastRunUpgrade fastRun;
 
+    public GameObject point;
+    public GameObject emptyPoint;
+
     public void Initialize()
     {
+        shield.point = point;
+        shield.emptyPoint = emptyPoint;
         shield.Initialize();
         magnet.Initialize();
         doubleCoins.Initialize();

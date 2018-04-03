@@ -197,13 +197,13 @@ public class UIManager : MonoBehaviour {
     {
         if (pause)
         {
-            AudioCenter.Instance.PauseMusic("MenuTheme", 1f);
+            AudioCenter.Instance.PauseMusic("MenuTheme", .1f);
             Time.timeScale = 0f;
         }
         else
         {
             Time.timeScale = 1f;
-            AudioCenter.Instance.PlayMusic("MenuTheme", 1f);
+            AudioCenter.Instance.ResumeMusic("MenuTheme", .1f);
         }
     }
     

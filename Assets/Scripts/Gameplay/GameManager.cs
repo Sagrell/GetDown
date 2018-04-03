@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using GoogleMobileAds.Api;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,8 +38,10 @@ public class GameManager : MonoBehaviour
     public Renderer brokenPlatform;
     DataManager dataManager;
 
+    IEnumerator respawnProgress;
     bool isMute;
     float musicVolume;
+    //string fullScreenAd = "ca-app-pub-1962167994065434/5399272086";
     void Start () {
         platform.material = SkinManager.platformMat;
         platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
@@ -61,7 +64,8 @@ public class GameManager : MonoBehaviour
         }
         StartCoroutine(StartGame());
     }
-    IEnumerator StartGame()
+   
+   IEnumerator StartGame()
     {
         fadeAnim.Play("FadeIn");
         fadeAnim.Update(0f);  
@@ -70,6 +74,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         Time.timeScale = 1f;
+        //AdManager.Instance.ShowFullscreenAd(fullScreenAd);
         StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));        
 
     }
@@ -100,12 +105,12 @@ public class GameManager : MonoBehaviour
     {
         if (pause)
         {
-            AudioCenter.Instance.PauseMusic("MainTheme", 1f);
+            AudioCenter.Instance.PauseMusic("MainTheme", .2f);
             InGameGUI.Instance.Pause();
         }
         else
         {
-            AudioCenter.Instance.PlayMusic("MainTheme", 1f);
+            AudioCenter.Instance.ResumeMusic("MainTheme", .2f);
             InGameGUI.Instance.Resume();
         }
     }
@@ -113,6 +118,7 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
+            
             if (GameState.currentSpeedFactor > maxSpeedFactor)
             {
                 GameState.currentSpeedFactor = maxSpeedFactor;

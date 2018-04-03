@@ -64,7 +64,7 @@ public class MagnetUpgrade : Upgrade {
         }
         else if (imp > 0)
         {
-            improvesText.text = "+" + time + " sec +" + imp + " distance";
+            improvesText.text = "+" + time + " sec\n+" + imp + " distance";
         }
         else if (time>0)
         {
@@ -72,18 +72,17 @@ public class MagnetUpgrade : Upgrade {
         } else
         {
             improvesText.text = "Maximum";
-            buy.interactable = false;
+            buy.gameObject.SetActive(false);
         }
         buy.GetComponentInChildren<Text>().text = price.ToString();
         buy.onClick.RemoveAllListeners();
-        buy.onClick.AddListener(delegate { ShopManager.Instance.Upgrade("Magnet", price, time, imp); });
         if (DataManager.Instance.GetUserData().GoldAmount < price)
         {
-            buy.interactable = false;
+            buy.onClick.AddListener(delegate { GuiManager.Instance.ShowBuyCoins(); });
         }
         else
         {
-            buy.interactable = true;
+            buy.onClick.AddListener(delegate { ShopManager.Instance.Upgrade("Magnet", price, time, imp); });
         }
     }
 
