@@ -13,6 +13,7 @@ public class ShopItem : ScriptableObject {
     public bool selected;
     public bool locked;
 
+    public Mesh model;
     public Material objectMat;
     public Material previewMat;
 }

@@ -43,6 +43,27 @@ public class DataManager : MonoBehaviour {
          GooglePlayManager.Instance.SetNewRecord(GameState.score);
        }
        userData.GoldAmount += GameState.countCoins;
+       userData.TotalGold += GameState.countCoins;
+        if(userData.TotalGold >= 50)
+        {
+            GooglePlayManager.Instance.Achieve(GooglePlayManager.trtWealthAchieve);
+            if (userData.TotalGold >= 200)
+            {
+                GooglePlayManager.Instance.Achieve(GooglePlayManager.otrtWealthAchieve);
+                if (userData.TotalGold >= 1000)
+                {
+                    GooglePlayManager.Instance.Achieve(GooglePlayManager.richGuyAchieve);
+                    if (userData.TotalGold >= 2000)
+                    {
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.cugmSomeMoneyAchieve);
+                        if(userData.TotalGold >= 10000)
+                        {
+                            GooglePlayManager.Instance.Achieve(GooglePlayManager.whyAchieve);
+                        }
+                    }
+                }
+            }
+        }
        userData.hashOfContent = GenerateHashFromData(userData);
        BinaryWrite(JsonUtility.ToJson(userData));
     }
@@ -90,9 +111,10 @@ public class DataManager : MonoBehaviour {
             Version = "1.0",
             HighScore = 0,
             GoldAmount = 0,
-            CubesUnlocked = new bool[10] { true, false, false, false, false, false, false, false, false, false },
-            PlatformsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
-            BackgroundsUnlocked = new bool[7] { true, false, false, false, false, false, false },
+            TotalGold = 0,
+            CubesUnlocked = new bool[16] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
+            PlatformsUnlocked = new bool[7] { true, false, false, false, false, false, false },
+            BackgroundsUnlocked = new bool[15] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             SelectedCube = 0,
             SelectedPlatform = 0,
             SelectedBackground = 0,
@@ -116,9 +138,10 @@ public class DataManager : MonoBehaviour {
             Version = "1.0",
             HighScore = 1000,
             GoldAmount = 1000000,
-            CubesUnlocked = new bool[10] { true, false, false, false, false, false, false, false, false,false  },
-            PlatformsUnlocked = new bool[8] { true, false, false, false, false, false, false, false },
-            BackgroundsUnlocked = new bool[7] { true, false, false, false, false, false, false },
+            TotalGold = 1000000,
+            CubesUnlocked = new bool[16] { true, false, false, false, false, false, false, false, false, false, false, false, false, false,false, false  },
+            PlatformsUnlocked = new bool[7] { true, false, false, false, false, false, false },
+            BackgroundsUnlocked = new bool[15] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             SelectedCube = 0,
             SelectedPlatform = 0,
             SelectedBackground = 0,

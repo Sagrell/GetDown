@@ -18,13 +18,6 @@ public class FacebookManager : MonoBehaviour {
             },
             isGameShown =>
             {
-                if(!isGameShown)
-                {
-                    Time.timeScale = 0f; 
-                } else
-                {
-                    Time.timeScale = 1f;
-                }
             });
         else
             FB.ActivateApp();

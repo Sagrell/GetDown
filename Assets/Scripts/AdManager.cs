@@ -6,20 +6,37 @@ using UnityEngine;
 
 public class AdManager : MonoBehaviour {
     public static AdManager Instance;
+    public static int countRestart;
+    public static int nextShowAd;
+
+
+    string respawnAdId = "ca-app-pub-1962167994065434/1026527205";
+    string gameOverAdId = "ca-app-pub-1962167994065434/5399272086";
+
+    InterstitialAd gameOverAd;
+    RewardBasedVideoAd rewardAd;
 
     private void Awake()
     {
         if (Instance == null)
         {
+            countRestart = 0;
+            nextShowAd = Random.Range(3,6);
             Instance = this;
+            rewardAd = RewardBasedVideoAd.Instance;
+            LoadRewardAd();
+            //rewardAd.OnAdLoaded += HandleOnRewardAdLoaded;
+
+            gameOverAd = new InterstitialAd(gameOverAdId);
+            LoadGameOverAd();
+            //gameOverAd.OnAdLoaded += HandleOnGameOverAdLoaded;
         }
         DontDestroyOnLoad(gameObject);
     }
-    InterstitialAd view;
-    RewardBasedVideoAd rewardAd;
+    
     private void Start()
     {
-        rewardAd = RewardBasedVideoAd.Instance;
+       
         /*
         rewardAd.OnAdFailedToLoad += HandleOnAdFailedToLoad;
         
@@ -28,32 +45,67 @@ public class AdManager : MonoBehaviour {
         rewardAd.OnAdOpening += HandleOnAdOpening;
         rewardAd.OnAdLeavingApplication += HandleOnAdLeavingApplication;*/
     }
-    public void ShowRewardAd(string adId, System.EventHandler<Reward> HandleOnAdRewarded, System.EventHandler<System.EventArgs> HandleOnAdClosed)
+    public void ShowRewardAd(System.EventHandler<Reward> HandleOnAdRewarded, System.EventHandler<System.EventArgs> HandleOnAdClosed)
     {
-        rewardAd.OnAdClosed += HandleOnAdClosed;
-        rewardAd.OnAdLoaded += HandleOnRewardAdLoaded;
-        rewardAd.OnAdRewarded += HandleOnAdRewarded;
-        //rewardAd.LoadAd(new AdRequest.Builder().AddTestDevice(AdRequest.TestDeviceSimulator).AddTestDevice("4B5697810FA0ACD7").Build(), adId);
-        rewardAd.LoadAd(new AdRequest.Builder().Build(), adId);     
+        if (!PurchaseManager.isDisabledAd)
+        {
+            rewardAd.OnAdClosed += HandleOnAdClosed;
+            rewardAd.OnAdRewarded += HandleOnAdRewarded;
+            StopAllCoroutines();
+            StartCoroutine(ShowRewardAdAfterLoaded());
+        }
     }
-    public void ShowFullscreenAd(string adId)
+    public void ShowGameOverAd(System.EventHandler<System.EventArgs> HandleOnAdClosed)
     {
-        view = new InterstitialAd(adId);
-        //AdRequest req = new AdRequest.Builder().AddTestDevice(AdRequest.TestDeviceSimulator).AddTestDevice("4B5697810FA0ACD7").Build();
-        AdRequest req = new AdRequest.Builder().Build();
-        view.LoadAd(req);
-        view.OnAdLoaded += HandleOnAdLoaded;
+        if(!PurchaseManager.isDisabledAd)
+        {
+            gameOverAd.OnAdClosed += HandleOnAdClosed;
+            StopAllCoroutines();
+            StartCoroutine(ShowGameOverAdAfterLoaded());
+        }
+        
     }
-    void HandleOnAdLoaded(object sender, System.EventArgs args)
+
+    IEnumerator ShowGameOverAdAfterLoaded()
     {
-            view.Show();
+        while (!gameOverAd.IsLoaded())
+        {
+            yield return new WaitForSecondsRealtime(.1f);
+        }
+        gameOverAd.Show();
+    }
+    IEnumerator ShowRewardAdAfterLoaded()
+    {
+        while (!rewardAd.IsLoaded())
+        {
+            yield return new WaitForSecondsRealtime(.1f);
+        }
+        rewardAd.Show();
+    }
+    public void LoadGameOverAd()
+    {
+        if (!PurchaseManager.isDisabledAd)
+        {
+            gameOverAd.LoadAd(new AdRequest.Builder().Build());
+        }  
+    }
+    public void LoadRewardAd()
+    {
+        if (!PurchaseManager.isDisabledAd)
+        {
+            rewardAd.LoadAd(new AdRequest.Builder().Build(), respawnAdId);
+        }   
+    }
+    //Handlers
+    /*
+    void HandleOnGameOverAdLoaded(object sender, System.EventArgs args)
+    {
+        isGameOverAdReady = true;
     }
     void HandleOnRewardAdLoaded(object sender, System.EventArgs args)
     {
-            rewardAd.Show();
+        isRewardAdReady = true;
     }
-    
-    
     void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
 
@@ -70,5 +122,5 @@ public class AdManager : MonoBehaviour {
     void HandleOnAdLeavingApplication(object sender, System.EventArgs args)
     {
 
-    }
+    }*/
 }

@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     public static float fixedDeltaTime = 0.0f;
 
     public static PlayerController player;
-    
 
+    public Renderer background;
     [Header("Player settings:")]
     public GameObject playerObject;
     public Transform playerPosition;
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         brokenPlatform.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         dataManager = DataManager.Instance;
-        RenderSettings.skybox = SkinManager.backgroundMat;
+        background.material = SkinManager.backgroundMat;
         Time.timeScale = 0f;
         SceneController.currentScene = "Game";
         AudioCenter.Instance.PlayMusic("MainTheme", 1f);
@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         Time.timeScale = 1f;
+        GooglePlayManager.Instance.Achieve(GooglePlayManager.beginnerAchieve);
         //AdManager.Instance.ShowFullscreenAd(fullScreenAd);
         StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));        
 
@@ -103,15 +104,19 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause)
+        if (!GameState.isGameOver)
         {
-            AudioCenter.Instance.PauseMusic("MainTheme", .2f);
-            InGameGUI.Instance.Pause();
-        }
-        else
-        {
-            AudioCenter.Instance.ResumeMusic("MainTheme", .2f);
-            InGameGUI.Instance.Resume();
+            if (pause)
+            {
+
+                AudioCenter.Instance.PauseMusic("MainTheme", .2f);
+                InGameGUI.Instance.Pause();
+            }
+            else
+            {
+                AudioCenter.Instance.ResumeMusic("MainTheme", .2f);
+                InGameGUI.Instance.Resume();
+            }
         }
     }
     IEnumerator IncreaseSpeedFactorEvery(float sec)

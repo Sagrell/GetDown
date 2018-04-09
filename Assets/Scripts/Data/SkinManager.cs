@@ -34,9 +34,12 @@ public class SkinManager : MonoBehaviour {
                 }
             }
             dataManager = DataManager.Instance;
+            cubeMesh = itemsDictionary["Cube"][dataManager.GetUserData().SelectedCube].model;
             cubeMat = itemsDictionary["Cube"][dataManager.GetUserData().SelectedCube].objectMat;
             platformMat = itemsDictionary["Platform"][dataManager.GetUserData().SelectedPlatform].objectMat;
+            platformMesh = itemsDictionary["Platform"][dataManager.GetUserData().SelectedPlatform].model;
             backgroundMat = itemsDictionary["Background"][dataManager.GetUserData().SelectedBackground].objectMat;
+            
         }
         else if (Instance != this)
         {
@@ -48,7 +51,8 @@ public class SkinManager : MonoBehaviour {
     public static Material cubeMat;
     public static Material platformMat;
     public static Material backgroundMat;
-
+    public static Mesh cubeMesh;
+    public static Mesh platformMesh;
     public static ShopItem[] GetSkins(string type)
     {
         return itemsDictionary[type];

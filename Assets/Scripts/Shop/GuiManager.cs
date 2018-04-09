@@ -15,6 +15,9 @@ public class GuiManager : MonoBehaviour {
     public GameObject buy;
     public GameObject select;
     public Animator fadeAnim;
+    public Material transparent;
+    public Material diffuse;
+    public Renderer background;
     private void Awake()
     {
         Instance = this;
@@ -22,7 +25,7 @@ public class GuiManager : MonoBehaviour {
 
     private void Start()
     {
-        RenderSettings.skybox = SkinManager.backgroundMat;
+        background.material = SkinManager.backgroundMat;
         showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.cubeMat.GetTexture("_MainTex"));
         showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
@@ -98,23 +101,35 @@ public class GuiManager : MonoBehaviour {
         {
             case "Cube":
                 if(!item.bought)
+                {
+                    showCube.GetComponent<Renderer>().material = transparent;
                     showCube.GetComponent<Renderer>().material.SetFloat("_Alpha", 0.6f);
+                }           
                 else
-                    showCube.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
+                {
+                    showCube.GetComponent<Renderer>().material = diffuse;
+                }
+                    
+                showCube.GetComponent<MeshFilter>().mesh = item.model;
                 showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
                 showCube.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
                 break;
             case "Platform":
                 if (!item.bought)
+                {
+                    showPlatform.GetComponent<Renderer>().material = transparent;
                     showPlatform.GetComponent<Renderer>().material.SetFloat("_Alpha", 0.6f);
+                }   
                 else
-                    showPlatform.GetComponent<Renderer>().material.SetFloat("_Alpha", 1f);
-
+                {
+                    showPlatform.GetComponent<Renderer>().material = diffuse;
+                }   
+                showPlatform.GetComponent<MeshFilter>().mesh = item.model;
                 showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
                 showPlatform.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
                 break;
             case "Background":
-                RenderSettings.skybox = item.objectMat;
+                background.material = item.objectMat;
                 break;
             default:
                 break;

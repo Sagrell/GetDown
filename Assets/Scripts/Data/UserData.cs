@@ -8,6 +8,7 @@ public class UserData
 
     public int HighScore;
     public int GoldAmount;
+    public int TotalGold;
 
     public bool[] CubesUnlocked;
     public bool[] PlatformsUnlocked;

@@ -45,7 +45,14 @@ public class SwipeController : MonoBehaviour {
 
                 if(!manager.isCoins && !manager.isSettings && !isAnimating)
                 {
-                    if (!manager.isLeaderboard && Input.mousePosition.y < Screen.height / 4)
+                    if(manager.isLeaderboard && Input.mousePosition.y > Screen.height * 0.75f)
+                    {
+                        if (Mathf.Abs(x) < Mathf.Abs(y) && y < 0)
+                        {
+                            manager.HideLeaderboard();
+                        }
+                    }
+                    else if (!manager.isLeaderboard && Input.mousePosition.y < Screen.height / 4)
                     {
                         if (Mathf.Abs(x) < Mathf.Abs(y) && y > 0)
                         {

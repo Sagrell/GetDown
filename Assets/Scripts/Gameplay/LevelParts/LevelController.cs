@@ -30,19 +30,20 @@ public class LevelController : MonoBehaviour {
         if (playerScreenPos.y <= Screen.height * 0.35f)
         {
             if (startLevelSpeed < maxLevelSpeed)
-                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed*0.9f, .04f);
+                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .03f);
         }
         else if ((playerScreenPos.y > Screen.height * 0.25f) && (playerScreenPos.y < Screen.height * 0.65f))
         {
-            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 2f, .04f);
+            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 2f, .03f);
         }
         else
         {
-            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 1f, .04f);
+            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 1f, .03f);
         }
-        if (levelSpeed < maxLevelSpeed)
-            levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
-        
+        levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
+        if (levelSpeed > maxLevelSpeed)
+            levelSpeed = maxLevelSpeed;
+
         stepUp = levelSpeed * GameManager.deltaTime;
         levelPosition.y += stepUp;
         transform.position = levelPosition;

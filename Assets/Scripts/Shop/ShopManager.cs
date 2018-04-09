@@ -34,6 +34,7 @@ public class ShopManager : MonoBehaviour
     {
         AudioCenter.Instance.PlaySound("Button");
         Material material = item.objectMat;
+        Mesh mesh = item.model;
         item.selected = true;
         dataManager.SaveSelectedItem(item);
         switch (item.itemType)
@@ -42,6 +43,7 @@ public class ShopManager : MonoBehaviour
             case "Cube":
                 //Apply material to the cube
                 SkinManager.cubeMat = material;
+                SkinManager.cubeMesh = mesh;
                 cubesManager.Deselect();
                 cubesManager.Initialize();
                 break;
@@ -120,22 +122,34 @@ public class ShopManager : MonoBehaviour
         switch (type)
         {
             case "Shield":
-                data.Shield[0]++;
+                if(data.Shield[0]++ == 0)
+                {
+                    GooglePlayManager.Instance.Achieve(GooglePlayManager.shieldAchieve);
+                }
                 data.Shield[1] += time;
                 data.Shield[2] += imp;
                 break;
             case "Magnet":
-                data.Magnet[0]++;
+                if (data.Magnet[0]++ == 0)
+                {
+                    GooglePlayManager.Instance.Achieve(GooglePlayManager.magnetAchieve);
+                }
                 data.Magnet[1] += time;
                 data.Magnet[2] += imp;
                 break;
             case "DoubleCoin":
-                data.DoubleCoin[0]++;
+                if (data.DoubleCoin[0]++ == 0)
+                {
+                    GooglePlayManager.Instance.Achieve(GooglePlayManager.doubleCoinsAchieve);
+                }
                 data.DoubleCoin[1] += time;
                 data.DoubleCoin[2] += imp;
                 break;
             case "FastRun":
-                data.FastRun[0]++;
+                if (data.FastRun[0]++ == 0)
+                {
+                    GooglePlayManager.Instance.Achieve(GooglePlayManager.fastRunAchieve);
+                }
                 data.FastRun[1] += time;
                 data.FastRun[2] += imp;
                 break;

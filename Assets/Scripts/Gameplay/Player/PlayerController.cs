@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour
     PowerUpManager powerUp;
     //Material
     Material cubeMat;
-
     bool isHit;
     GameObject DP;
     void Start()
@@ -57,7 +56,7 @@ public class PlayerController : MonoBehaviour
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
 
         powerUp = PowerUpManager.Instance;
-
+        GetComponent<MeshFilter>().mesh = SkinManager.cubeMesh;
         cubeMat = SkinManager.cubeMat;
         GetComponent<Renderer>().material = cubeMat;
 
@@ -230,7 +229,7 @@ public class PlayerController : MonoBehaviour
         return alive;
     }
 
-
+    int score = 0;
     void OnCollisionEnter(Collision collision)
     {
         Collider collider = collision.collider;
@@ -251,7 +250,25 @@ public class PlayerController : MonoBehaviour
                 //Correct position if somethink happend 
                 _RBLocalPosition.x = collider.transform.localPosition.x;
                 _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
-                GameState.score++;
+                score = ++GameState.score;
+                switch(score)
+                {
+                    case 50:
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.firstJumpsAchieve);
+                        break;
+                    case 100:
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.ugbprofessionalAchieve);
+                        break;
+                    case 200:
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.murProfessionalAchieve);
+                        break;
+                    case 500:
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.urdProfessionalAchieve);
+                        break;
+                    case 1000:
+                        GooglePlayManager.Instance.Achieve(GooglePlayManager.impossibleAchieve);
+                        break;
+                }
                 InGameGUI.Instance.UpdateScore();
                 onGround = true;
             }

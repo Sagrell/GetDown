@@ -21,7 +21,7 @@ public class LaserInMenu : MonoBehaviour {
         rend = GetComponent<MeshRenderer>();
         //GetComponentInChildren<ParticleSystem>().Play();
         laserAnimation = GetComponent<Animator>();
-        newPosition = new Vector3(Random.Range(minX,maxX),0f, 5f);
+        newPosition = new Vector3(Random.Range(minX,maxX),0f, 1f);
         _transform.position = newPosition;
         StartCoroutine(LaserShot());
         

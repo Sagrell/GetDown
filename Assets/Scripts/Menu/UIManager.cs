@@ -5,7 +5,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
-
+    static public UIManager Instance;
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
     public Text coins;
     public GameObject cube;
     public Transform cubePosition;
@@ -15,12 +22,16 @@ public class UIManager : MonoBehaviour {
     public Renderer shopPlatform;
     public Renderer creditsPlatform;
     public Renderer exitPlatform;
+    public Renderer background;
     [Space]
     [Header("Settings:")]
     public Scrollbar music;
     public Scrollbar sound;
     public Image disableSound;
     public Image enableSound;
+    public GameObject disabledAd;
+    public GameObject disableAd;
+    
     UserData data;
     float musicVolume;
     float soundVolume;
@@ -41,11 +52,13 @@ public class UIManager : MonoBehaviour {
         music.value = musicVolume;
         sound.value = soundVolume;
         coins.text = data.GoldAmount.ToString();
+        cube.GetComponent<MeshFilter>().mesh = SkinManager.cubeMesh;
         cube.GetComponent<Renderer>().material = SkinManager.cubeMat;
         shopPlatform.material = SkinManager.platformMat;
         creditsPlatform.material = SkinManager.platformMat;
         exitPlatform.material = SkinManager.platformMat;
-        RenderSettings.skybox = SkinManager.backgroundMat;
+
+        background.material = SkinManager.backgroundMat;
         Instantiate(cube, cubePosition);
         if(SceneController.previousScene != "Shop")
         {
@@ -99,6 +112,10 @@ public class UIManager : MonoBehaviour {
         SwipeController.isAnimating = true;
         isSettings = true;
         contentAnim.Play("SettingsFadeIn");
+        bool isDisabled = PurchaseManager.isDisabledAd;
+        disableAd.SetActive(!isDisabled);
+        disabledAd.SetActive(isDisabled);
+        disabledAd.transform.parent.GetComponent<Animator>().enabled = !isDisabled;
     }
     public void HideSettings()
     {

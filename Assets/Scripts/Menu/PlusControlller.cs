@@ -57,11 +57,13 @@ public class PlusControlller : MonoBehaviour {
     }
     public void SignInStateGoogle()
     {
-
+        signInGoogle.SetActive(false);
+        signOutGoogle.SetActive(true);
     }
     public void SignOutStateGoogle()
     {
-
+        signInGoogle.SetActive(true);
+        signOutGoogle.SetActive(false);
     }
     // Update is called once per frame
     void Update () {

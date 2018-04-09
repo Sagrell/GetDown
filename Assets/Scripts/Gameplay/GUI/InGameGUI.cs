@@ -20,27 +20,35 @@ public class InGameGUI : MonoBehaviour {
     public Text scoreInGame;
     public Text coinsInGame;
     public RectTransform powerUpContainer;
-    public GameObject prefab;
+    public GameObject shieldUpgrade;
+    public GameObject magnetUpgrade;
+    public GameObject doubleCoinsUpgrade;
+    public GameObject fastRunUpgrade;
     public GameObject gameOverPanel;
     public GameObject pausePanel;
     public PlatformSpawner spawner;
     public Animator anim;
     public Animator respawnAnim;
+    public Animator buyCoinsAnim;
     public Image progressRespawn;
     public Button respawn;
     public Button buyRespawn;
+    public Button freeRespawn;
     public Button watchAdRespawn;
     PlayerController player;
     bool isRespawnWindow;
-    string respawnAd = "ca-app-pub-1962167994065434/1026527205";
-    //string Ad = "ca-app-pub-1962167994065434/5399272086";
+    
     int bestScore;
+    int respawnCost;
     DataManager dataManager;
     UserData data;
     Dictionary<string, Image> powerUps;
 
     bool isStartRespawn;
+    bool isStartRespawnTimer;
     bool isRewarded;
+    bool isStopTime;
+    bool isDisabledAd;
     void Start () {
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
@@ -51,14 +59,31 @@ public class InGameGUI : MonoBehaviour {
         isRespawnWindow = false;
         isStartRespawn = false;
         isRewarded = false;
+        isStartRespawnTimer = false;
+        isDisabledAd = PurchaseManager.isDisabledAd;
+        freeRespawn.gameObject.SetActive(isDisabledAd);
+        watchAdRespawn.gameObject.SetActive(!isDisabledAd);
+        respawnCost = 50;
     }
     private void Update()
     {
-        if(isStartRespawn)
+        if (isStartRespawn)
         {
             isStartRespawn = false;
             Respawn();
-        }   
+        }
+        if (isStartRespawnTimer)
+        {
+            isStartRespawnTimer = false;
+            Time.timeScale = 0f;
+            StopAllCoroutines();
+            StartCoroutine(RespawnProgress(5f, progressRespawn));
+        }
+        if (isStopTime)
+        {
+            isStopTime = false;
+            Time.timeScale = 0f;
+        }
     }
     IEnumerator StartScene(string scene)
     {
@@ -109,9 +134,23 @@ public class InGameGUI : MonoBehaviour {
         bestScoreInGameOver.text = bestScore.ToString();
         player.enabled = false;
         GameState.isGameOver = true;
-        anim.SetBool("isGameOver", true);
-        StopAllCoroutines();
-        StartCoroutine(RespawnProgress(5f, progressRespawn));
+        anim.SetBool("isGameOver", true);  
+        if (++AdManager.countRestart >= AdManager.nextShowAd)
+        {
+            AdManager.nextShowAd = Random.Range(3, 6);
+            AdManager.Instance.ShowGameOverAd(HandleOnGameOverAdClosed);
+            AdManager.countRestart = 0;
+            
+        } else
+        {
+            StopAllCoroutines();
+            StartCoroutine(RespawnProgress(5f, progressRespawn));
+        }
+    }
+    void HandleOnGameOverAdClosed(object sender, System.EventArgs args)
+    {
+        AdManager.Instance.LoadGameOverAd();
+        isStartRespawnTimer = true;
     }
     public IEnumerator ResumeAnimation(float time)
     {
@@ -156,14 +195,19 @@ public class InGameGUI : MonoBehaviour {
         respawnAnim.Play("HideRespawnType");
         StartCoroutine(RespawnAnimation());
     }
+    public void FreeRespawn()
+    {
+        Respawn();
+        freeRespawn.interactable = false;
+    }
     public void Restart()
     {
-        //AdManager.Instance.ShowFullscreenAd(Ad);
         SceneManager.LoadScene("Game");
     }
     public void ShowRespawnType()
     {
         isRespawnWindow = true;
+        buyRespawn.GetComponentInChildren<Text>().text = respawnCost.ToString();
         respawnAnim.Play("ShowRespawnType");
     }
     public void HideRespawnType()
@@ -173,19 +217,30 @@ public class InGameGUI : MonoBehaviour {
             isRespawnWindow = false;
             respawnAnim.Play("HideRespawnType");
         }
-        
-       
+      
     }
     public void ShowAdRespawn()
     {
-        AdManager.Instance.ShowRewardAd(respawnAd, HandleOnAdRewarded, HandleOnAdClosed);
+        AdManager.Instance.ShowRewardAd(HandleOnAdRewarded, HandleOnRewardAdClosed);
     }
     public void BuyRespawn()
     {
-        int cost = int.Parse(buyRespawn.GetComponentInChildren<Text>().text);
-        data.GoldAmount -= cost;
-        Respawn();
+        if (data.GoldAmount < respawnCost)
+        {
+            buyCoinsAnim.Play("ShowBuyCoins");
+        } else
+        {
+            data.GoldAmount -= respawnCost;
+            DataManager.Instance.SaveUserData(data);
+            Respawn();
+            respawnCost *= 2;
+        }
     }
+    public void HideBuyCoins()
+    {
+        buyCoinsAnim.Play("HideBuyCoins");
+    }
+    
     public void StopPowerUp( string powerUp )
     {
         if(powerUps.ContainsKey(powerUp)) {
@@ -200,16 +255,37 @@ public class InGameGUI : MonoBehaviour {
         isRewarded = true;
     }
 
-    void HandleOnAdClosed(object sender, System.EventArgs args)
+    void HandleOnRewardAdClosed(object sender, System.EventArgs args)
     {
+        AdManager.Instance.LoadRewardAd();
         if(isRewarded)
         {
+            watchAdRespawn.interactable = false;
             isStartRespawn = true;
+        } else
+        {
+            isStopTime = true;
         }
     }
     public void StartPowerUp(string powerUp, float time)
     {
-        Image powerUpImage = Instantiate(prefab, powerUpContainer).GetComponent<Image>();
+        Image powerUpImage = null;
+        switch (powerUp)
+        {
+            case "Shield":
+                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+                break;
+            case "Shield":
+                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+                break;
+            case "Shield":
+                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+                break;
+            case "Shield":
+                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+                break;
+        }
+        
         powerUps[powerUp] = powerUpImage;
         StartCoroutine(PowerUpProgress(powerUp, time, powerUpImage));
     }
