@@ -36,13 +36,19 @@ public class UIManager : MonoBehaviour {
     float musicVolume;
     float soundVolume;
     bool isMute;
+    [HideInInspector]
     public bool isSettings;
+    [HideInInspector]
     public bool isCoins;
+    [HideInInspector]
+    public bool isCredits;
     [HideInInspector]
     public bool isLeaderboard;
     private void Start()
     {
         isSettings = false;
+        isCredits = false;
+        isLeaderboard = false;
         data = DataManager.Instance.GetUserData();
         musicVolume = data.musicVolume;
         soundVolume = data.soundVolume;      
@@ -60,18 +66,20 @@ public class UIManager : MonoBehaviour {
 
         background.material = SkinManager.backgroundMat;
         Instantiate(cube, cubePosition);
-        if(SceneController.previousScene != "Shop")
+        if(isMute && SceneController.previousScene != "Shop")
         {
-            AudioCenter.Instance.PlayMusic("MenuTheme",1f);
+            AudioCenter.Instance.PlayMusic("MenuTheme", 0f, 0f);
+        }
+        else if(SceneController.previousScene != "Shop")
+        {
+            AudioCenter.Instance.PlayMusic("MenuTheme",1f, musicVolume);
         }
         if (!isMute)
         {
-            AudioCenter.Instance.SetVolumeAllMusic(musicVolume);
             AudioCenter.Instance.SetVolumeToSounds(soundVolume);
         }
         else
         {
-            AudioCenter.Instance.SetVolumeAllMusic(0f);
             AudioCenter.Instance.SetVolumeToSounds(0f);
         }
 
@@ -102,13 +110,9 @@ public class UIManager : MonoBehaviour {
         data = DataManager.Instance.GetUserData();
         coins.text = data.GoldAmount.ToString();
     }
-    public void GoToCredits()
-    {
-        AudioCenter.Instance.PlaySound("Button");
-        coins.text = data.GoldAmount.ToString();
-    }
     public void ShowSettings()
     {
+        AudioCenter.Instance.PlaySound("Button");
         SwipeController.isAnimating = true;
         isSettings = true;
         contentAnim.Play("SettingsFadeIn");
@@ -128,6 +132,7 @@ public class UIManager : MonoBehaviour {
     }
     public void ShowLeaderboard()
     {
+        AudioCenter.Instance.PlaySound("Button");
         isLeaderboard = true;
         SwipeController.isAnimating = true;
         contentAnim.Play("LeaderboardFadeIn");
@@ -143,6 +148,7 @@ public class UIManager : MonoBehaviour {
     }
     public void ShowCoins()
     {
+        AudioCenter.Instance.PlaySound("Button");
         isCoins = true;
         SwipeController.isAnimating = true;
         contentAnim.Play("CoinsFadeIn");
@@ -154,6 +160,26 @@ public class UIManager : MonoBehaviour {
             SwipeController.isAnimating = true;
             contentAnim.Play("CoinsFadeOut");
             isCoins = false;
+        }
+    }
+    public void ChangeLanguage(string lang)
+    {
+        LanguageManager.Instance.ChangeLanguage(lang);
+    }
+    public void ShowCredits()
+    {
+        AudioCenter.Instance.PlaySound("Button");
+        isCredits = true;
+        SwipeController.isAnimating = true;
+        contentAnim.Play("CreditsFadeIn");
+    }
+    public void HideCredits()
+    {
+        if (isCredits)
+        {
+            SwipeController.isAnimating = true;
+            contentAnim.Play("CreditsFadeOut");
+            isCredits = false;
         }
     }
     public void Mute()
@@ -188,6 +214,7 @@ public class UIManager : MonoBehaviour {
         if (!isMute)
         {
             AudioCenter.Instance.SetVolumeToSounds(soundVolume);
+            AudioCenter.Instance.PlaySound("CoinCollect");
         }
     }
     public void ApplyVolume()

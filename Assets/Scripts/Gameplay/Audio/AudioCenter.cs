@@ -59,6 +59,12 @@ public class AudioCenter : MonoBehaviour
             musicObjects[musicName].Call("prepare");
             musicObjects[musicName].Call("Play", new object[] { fadeDuration });
         }
+        public void PlayMusic( string musicName, float fadeDuration, float volume ) {
+            musicObjects[musicName].Call("stop");
+            musicObjects[musicName].Call("prepare");
+            SetVolumeMusic(musicName, volume);
+            musicObjects[musicName].Call("Play", new object[] { fadeDuration });
+        }
         public void ResumeMusic( string musicName, float fadeDuration ) {
             musicObjects[musicName].Call("Play", new object[] { fadeDuration });
         }
@@ -123,6 +129,11 @@ public class AudioCenter : MonoBehaviour
     }
     public void PlayMusic(string musicName, float fadeDuration)
     {
+        musicSources[musicName].Play();
+    }
+    public void PlayMusic(string musicName, float fadeDuration, float volume)
+    {
+        musicSources[musicName].volume = volume * 0.2f;
         musicSources[musicName].Play();
     }
     public void ResumeMusic(string musicName, float fadeDuration)

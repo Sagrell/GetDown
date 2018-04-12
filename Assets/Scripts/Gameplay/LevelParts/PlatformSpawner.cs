@@ -92,10 +92,17 @@ public class PlatformSpawner : MonoBehaviour {
         while (spawnerDistance <= spawnIn)
         {
             if (isFastRun)
+            {
                 currentWave = GenerateFastWaveFromPrevious(currentWave);
-            else 
+                SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
+            }  
+            else
+            {
                 currentWave = GenerateNormalWaveFromPrevious(currentWave);
-            SpawnWave(currentWave, isDoubleCoin);
+                SpawnWave(currentWave, isDoubleCoin);
+            }
+               
+            
             //Move to next position
             _localPosition.y -= 1.5f;
             _transform.localPosition = _localPosition;
@@ -115,10 +122,15 @@ public class PlatformSpawner : MonoBehaviour {
         if (spawnerDistance <= spawnIn)
         {
             if (isFastRun)
+            {
                 currentWave = GenerateFastWaveFromPrevious(currentWave);
+                SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
+            }
             else
+            {
                 currentWave = GenerateNormalWaveFromPrevious(currentWave);
-            SpawnWave(currentWave, isDoubleCoin);
+                SpawnWave(currentWave, isDoubleCoin);
+            }
             _localPosition.y -= 1.5f;
             _transform.localPosition = _localPosition;
         }

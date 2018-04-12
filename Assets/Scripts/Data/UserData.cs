@@ -3,7 +3,7 @@
 public class UserData
 { 
 
-    public string PlayerName;
+    public string Lang;
     public string Version;
 
     public int HighScore;

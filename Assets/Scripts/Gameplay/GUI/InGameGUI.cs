@@ -244,7 +244,7 @@ public class InGameGUI : MonoBehaviour {
     public void StopPowerUp( string powerUp )
     {
         if(powerUps.ContainsKey(powerUp)) {
-            Destroy(powerUps[powerUp].gameObject);
+            powerUps[powerUp].gameObject.SetActive(false);
             powerUps.Remove(powerUp);
         }
         
@@ -273,16 +273,20 @@ public class InGameGUI : MonoBehaviour {
         switch (powerUp)
         {
             case "Shield":
-                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+                shieldUpgrade.SetActive(true);
+                powerUpImage = shieldUpgrade.GetComponent<Image>();
                 break;
-            case "Shield":
-                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+            case "Magnet":
+                magnetUpgrade.SetActive(true);
+                powerUpImage = magnetUpgrade.GetComponent<Image>();
                 break;
-            case "Shield":
-                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+            case "FastRun":
+                fastRunUpgrade.SetActive(true);
+                powerUpImage = fastRunUpgrade.GetComponent<Image>();
                 break;
-            case "Shield":
-                powerUpImage = Instantiate(shieldUpgrade, powerUpContainer).GetComponent<Image>();
+            case "DoubleCoins":
+                doubleCoinsUpgrade.SetActive(true);
+                powerUpImage = doubleCoinsUpgrade.GetComponent<Image>();
                 break;
         }
         
@@ -300,7 +304,7 @@ public class InGameGUI : MonoBehaviour {
         }
         if(powerUpImage)
         {
-            Destroy(powerUpImage.gameObject);
+            powerUpImage.gameObject.SetActive(false);
             powerUps.Remove(powerUp);
         }
         PowerUpManager.Instance.Deactivate(powerUp);

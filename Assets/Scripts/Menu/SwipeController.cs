@@ -43,7 +43,7 @@ public class SwipeController : MonoBehaviour {
                 float x = deltaPosition.x;
                 float y = deltaPosition.y;
 
-                if(!manager.isCoins && !manager.isSettings && !isAnimating)
+                if(!manager.isCoins &&!manager.isCredits && !manager.isSettings && !isAnimating)
                 {
                     if(manager.isLeaderboard && Input.mousePosition.y > Screen.height * 0.75f)
                     {
@@ -60,7 +60,24 @@ public class SwipeController : MonoBehaviour {
                         }
                     }
                 }
-                if (!manager.isLeaderboard && !manager.isSettings && !isAnimating)
+                if(!manager.isCoins &&  !manager.isLeaderboard && !manager.isSettings && !isAnimating)
+                {
+                    if (!manager.isCredits && Input.mousePosition.x < Screen.width / 2)
+                    {
+                        if (Mathf.Abs(x) > Mathf.Abs(y) && x > 0)
+                        {
+                            manager.ShowCredits();
+                        }
+                    }
+                    else if (manager.isCredits)
+                    {
+                        if (Mathf.Abs(x) > Mathf.Abs(y) && x < 0)
+                        {
+                            manager.HideCredits();
+                        }
+                    }
+                }
+                if (!manager.isLeaderboard && !manager.isCredits && !manager.isSettings && !isAnimating)
                 {
                     if (!manager.isCoins && Input.mousePosition.x > Screen.width / 2)
                     {

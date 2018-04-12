@@ -276,6 +276,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Plugins\BetterStreamingAssets\BSA_BetterStreamingAssets.cs" />
+    <Compile Include="Assets\Plugins\BetterStreamingAssets\BSA_PathUtil.cs" />
+    <Compile Include="Assets\Plugins\BetterStreamingAssets\BSA_SubReadOnlyStream.cs" />
+    <Compile Include="Assets\Plugins\BetterStreamingAssets\BSA_TestSceneGUI.cs" />
+    <Compile Include="Assets\Plugins\BetterStreamingAssets\BSA_ZipArchive.cs" />
     <Compile Include="Assets\Plugins\UnityChannel\XiaomiSupport\AppStoreSettings.cs" />
     <Compile Include="Assets\Plugins\UnityPurchasing\script\ComboBox.cs" />
     <Compile Include="Assets\Plugins\UnityPurchasing\script\Demo\DemoInventory.cs" />
@@ -305,6 +310,7 @@
     <None Include="Assets\PlayServicesResolver\Editor\play-services-resolver_v1.2.62.0.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\GoogleMobileAdsPlugin\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\BetterStreamingAssets\README.txt" />
     <None Include="Assets\Plugins\UnityPurchasing\script\link.xml" />
     <None Include="Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\VolumetricLines\Shaders\AlphaBlended.shader" />

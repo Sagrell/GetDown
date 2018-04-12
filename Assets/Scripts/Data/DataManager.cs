@@ -107,7 +107,7 @@ public class DataManager : MonoBehaviour {
     {
         userData = new UserData()
         {
-            PlayerName = "Sagrell",
+            Lang = "En-en",
             Version = "1.0",
             HighScore = 0,
             GoldAmount = 0,
@@ -134,7 +134,7 @@ public class DataManager : MonoBehaviour {
     {
         userData = new UserData()
         {
-            PlayerName = "Sagrell",
+            Lang = "En-en",
             Version = "1.0",
             HighScore = 1000,
             GoldAmount = 1000000,

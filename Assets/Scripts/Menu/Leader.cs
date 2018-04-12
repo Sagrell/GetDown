@@ -18,7 +18,5 @@ public class Leader : MonoBehaviour {
         place.text = user.place.ToString();
         if (user.userImg)
             userImg.sprite = Sprite.Create(user.userImg, new Rect(0.0f, 0.0f, user.userImg.width, user.userImg.height), new Vector2(0.5f, 0.5f));
-        else
-            Debug.LogError("No image!");
     }
 }

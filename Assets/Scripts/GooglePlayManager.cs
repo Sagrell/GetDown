@@ -119,8 +119,9 @@ public class GooglePlayManager : MonoBehaviour {
     }
     public void SetNewRecord(int newScore)
     {
-        Social.ReportScore(newScore, leaderboardId, (success) => {
+        Social.ReportScore(newScore, leaderboardId, (success) => { 
         });
+        
     }
     public User[] GetAllUsers()
     {
