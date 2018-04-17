@@ -10,7 +10,8 @@ public enum PlatformType
 }
 public class PlatformSpawner : MonoBehaviour {
 
-    
+    [Header("References")]
+    public Animator anim;
     [Header("Power Ups:")]
     public float shieldPowerUpChance;
     public float magnetPowerUpChance;
@@ -18,26 +19,28 @@ public class PlatformSpawner : MonoBehaviour {
     public float fastRunPowerUpChance;
     [Header("Coins:")]
     public float coinChance;
-    public float doubleCoinChance;
 
     [Space]
     [Header("Spike:")]
     public float spikeAfter;
     public float startSpikeChance;
-    [Header("Laser:")]
-    public float laserAfter;
-    public float startLaserChance;
+
     [Header("Broken:")]
     public float brokenAfter;
     [Header("Diamond:")]
     public float diamondAfter;
     public float startDiamondChance;
-   
-
+    [Space]
+    [Header("Hard:")]
+    public float hardAfter;
+    public float startHardChance;
     [Space]
     [Header("Spawn points:")]
     public Transform[] spawnPoints;
     public Transform content;
+    [Space]
+    [Header("Patterns:")]
+    public Pattern[] patterns;
     //PRIVATE
     bool isDoubleCoin;
     bool isFastRun;
@@ -47,12 +50,13 @@ public class PlatformSpawner : MonoBehaviour {
     bool isMagnetPowerUp;
     bool isDoubleCoinPowerUp;
     bool isFastRunPowerUp;
-    bool isLaser;
     bool isSpike;
-
+    bool isHard;
+    bool isLaserAttack;
     float diamondChance;
     float spikeChance;
-    float laserChance;
+    float hardChance;
+    int laserAttackAfter;
     PlatformType[] currentWave;
     Transform _transform;
     Vector3 _localPosition;
@@ -60,6 +64,8 @@ public class PlatformSpawner : MonoBehaviour {
 
     float topCoordY;
     float spawnIn;
+    int targetPlayerPosition;
+    int spawnerPosition;
     ElementsPool objectPooler;
     UserData data;
 
@@ -67,11 +73,11 @@ public class PlatformSpawner : MonoBehaviour {
     {
         data = DataManager.Instance.GetUserData();
         isDoubleCoin = false;
+        laserAttackAfter = Random.Range(80, 101);
         topCoordY = 20f;
         spawnIn = 40f;
         _transform = transform;
         _localPosition = _transform.localPosition;
-
         currentWave = new PlatformType[6] {
         PlatformType.Normal,
         PlatformType.Empty,
@@ -81,10 +87,9 @@ public class PlatformSpawner : MonoBehaviour {
         PlatformType.Empty};
         isCoin = false;
         isDiamond = true;
-        isLaser = true;
+        isLaserAttack = false;
         isSpike = true;
         objectPooler = ElementsPool.Instance;
-
         objectPooler.PickFromPool("Normal", spawnPoints[0].position, spawnPoints[0].rotation, transform.parent);
         _localPosition.y -= 1.5f;
         spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
@@ -104,11 +109,11 @@ public class PlatformSpawner : MonoBehaviour {
                
             
             //Move to next position
-            _localPosition.y -= 1.5f;
             _transform.localPosition = _localPosition;
             spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         }
 
+       
         
     }
 
@@ -117,11 +122,11 @@ public class PlatformSpawner : MonoBehaviour {
 
         spikeChance = startSpikeChance * GameState.currentSpeedFactor;
         diamondChance = startDiamondChance * GameState.currentSpeedFactor;
-        laserChance = startLaserChance * GameState.currentSpeedFactor;
+        hardChance = startHardChance * GameState.currentSpeedFactor;
         spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         if (spawnerDistance <= spawnIn)
         {
-            if (isFastRun)
+            if (isFastRun || isLaserAttack)
             {
                 currentWave = GenerateFastWaveFromPrevious(currentWave);
                 SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
@@ -131,13 +136,50 @@ public class PlatformSpawner : MonoBehaviour {
                 currentWave = GenerateNormalWaveFromPrevious(currentWave);
                 SpawnWave(currentWave, isDoubleCoin);
             }
-            _localPosition.y -= 1.5f;
+            
             _transform.localPosition = _localPosition;
+            if (GameState.score >= laserAttackAfter && !isLaserAttack)
+            {
+                isLaserAttack = true;
+                spawnerPosition = (int)(_localPosition.y / -1.5f);
+                targetPlayerPosition = spawnerPosition;
+                StartCoroutine(LaserAttack());
+            }
         }
+
+    }
+    IEnumerator LaserAttack()
+    {
+        while(GameState.playerPositionY < targetPlayerPosition-2)
+        {
+            yield return null;
+        }
+        anim.Play("LaserAttack");
+        while (GameState.playerPositionY < targetPlayerPosition)
+        {
+            yield return null;
+        }
+        float laserCount = Random.Range(4, 9);
+        while(laserCount>0)
+        {
+            Laser laser = objectPooler.PickFromPool("Laser", new Vector3(spawnPoints[GameState.playerPositionX].position.x, 0), Quaternion.identity, content).GetComponent<Laser>();
+            while (laser.gameObject.activeSelf && !laser.isOver)
+                yield return new WaitForSeconds(.1f);
+            --laserCount;
+            yield return null;
+        }
+        laserAttackAfter = GameState.score + Random.Range(80, 101);
+        isLaserAttack = false;
     }
     public void Restart()
     {
         objectPooler.RemovePlatformsFromPool();
+        if(isLaserAttack)
+        {
+            StopAllCoroutines();
+            isLaserAttack = false;
+            laserAttackAfter = GameState.score + Random.Range(80, 101);
+        }
         objectPooler.RemoveEnemyiesFromPool();
         MoveSpawnerTo(GameState.playerPositionY);
         currentWave = new PlatformType[6];
@@ -147,14 +189,13 @@ public class PlatformSpawner : MonoBehaviour {
         {
             currentWave = GenerateNormalWaveFromPrevious(currentWave);
             SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
-            _localPosition.y -= 1.5f;
             _transform.localPosition = _localPosition;
             spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         }
     }
     public void ActivateDoubleCoins()
     {
-        objectPooler.ChangeCoins();
+        objectPooler.DoubleCoins();
         isDoubleCoin = true;
     }
     public void ActivateFastRun()
@@ -170,7 +211,7 @@ public class PlatformSpawner : MonoBehaviour {
     }
     public void DeactivateDoubleCoins()
     {
-        objectPooler.ChangeCoins();
+        objectPooler.NormalCoins();
         isDoubleCoin = false;
     }
     public void MoveSpawnerTo(int height)
@@ -287,7 +328,7 @@ public class PlatformSpawner : MonoBehaviour {
                 
                 GameObject platform = null;
                 
-                isSpike = Random.value <= spikeChance ? true : false;  
+                isSpike = Random.value <= spikeChance  && !isSpike ? true : false;  
                 if (isSpike && GameState.score > spikeAfter)
                 {
                     platform = objectPooler.PickFromPool("NormalWithSpike", spawnPoints[i].position, transform.parent);
@@ -295,16 +336,75 @@ public class PlatformSpawner : MonoBehaviour {
                 if(!platform)
                     platform = objectPooler.PickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
 
-                if (isFastRun)
-                {
-                    objectPooler.PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
-                }
                 SpawnPowerUp(platform, isDoubleCoin);
             }
         }
-
         SpawnEnemies();
+        _localPosition.y -= 1.5f;
+        isHard = Random.value <= hardChance ? true : false;
+        if (isHard && GameState.score > hardAfter && (wave[1]==PlatformType.Normal || wave[3] == PlatformType.Normal || wave[5] == PlatformType.Normal ) && !isLaserAttack)
+        {
+            SpawnHardPattern(wave);
+        }
     }
+
+
+    void SpawnHardPattern(PlatformType[] wave)
+    {
+        GameObject platform = null;
+        wave = GenerateFastWaveFromPrevious(wave);
+        _transform.localPosition = _localPosition;
+        SpawnWaveWithoutEnemy(wave, isDoubleCoin);
+        _transform.localPosition = _localPosition;
+        if (wave[0] == PlatformType.Normal && wave[2] != PlatformType.Normal && wave[4] != PlatformType.Normal)
+        {
+            platform = objectPooler.PickFromPool("Normal", spawnPoints[1].position, spawnPoints[1].rotation, transform.parent);
+            SpawnPowerUp(platform, isDoubleCoin);
+        }
+        else if (wave[0] != PlatformType.Normal && wave[2] != PlatformType.Normal && wave[4] == PlatformType.Normal)
+        {
+            platform = objectPooler.PickFromPool("Normal", spawnPoints[3].position, spawnPoints[3].rotation, transform.parent);
+            SpawnPowerUp(platform, isDoubleCoin);
+        }
+        else
+        {
+            platform = objectPooler.PickFromPool("Normal", spawnPoints[1].position, spawnPoints[1].rotation, transform.parent);
+            SpawnPowerUp(platform, isDoubleCoin);
+            platform = objectPooler.PickFromPool("Normal", spawnPoints[3].position, spawnPoints[3].rotation, transform.parent);
+            SpawnPowerUp(platform, isDoubleCoin);
+        }
+        _localPosition.y -= 1.5f;
+
+        Pattern currentPattern = patterns[Random.Range(0, patterns.Length)];
+        PatternItem[] patternItems = currentPattern.GetComponentsInChildren<PatternItem>();
+        for (int i = 0; i < patternItems.Length; i++)
+        {
+            PatternItem item = patternItems[i];
+            Vector3 pos = _localPosition + item.transform.localPosition;
+            switch (item.type)
+            {
+                case "Normal":
+                    platform = objectPooler.PickFromPool("Normal", transform.parent, pos, Quaternion.identity);
+                    SpawnPowerUp(platform, isDoubleCoin);
+                    break;
+                case "Broken":
+                    objectPooler.PickFromPool("Broken", transform.parent, pos, Quaternion.identity);
+                    break;
+                case "WithSpike":
+                    platform = objectPooler.PickFromPool("NormalWithSpike", transform.parent, pos, Quaternion.identity);
+                    SpawnPowerUp(platform, isDoubleCoin);
+                    break;
+                case "Diamond":
+                    objectPooler.PickFromPool("Diamond", transform.parent, pos, Quaternion.identity);
+                    break;
+            }
+        }
+        _localPosition.y -= 1.5f * currentPattern.distance;
+        currentWave = new PlatformType[6];
+        currentWave[2] = PlatformType.Normal;
+    }
+
+
     void SpawnWaveWithoutEnemy(PlatformType[] wave, bool isDoubleCoin)
     { 
         for (int i = 0; i < wave.Length; i++)
@@ -324,27 +424,23 @@ public class PlatformSpawner : MonoBehaviour {
                 GameObject platform = objectPooler.PickFromPool("Normal", spawnPoints[i].position, spawnPoints[i].rotation, transform.parent);
                 if (isFastRun)
                 {
-                    objectPooler.PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
+                    GameObject pc = objectPooler.PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent);
+                    if (pc != null)
+                    {
+                        pc.GetComponent<ParticleSystem>().Play();
+                    }  
                 }
                 SpawnPowerUp(platform, isDoubleCoin);
             }
         }
+        _localPosition.y -= 1.5f;
     }
     void SpawnPowerUp(GameObject platform, bool isDoubleCoin)
     {
-        if(isDoubleCoin)
-        {
-            isCoin = Random.value <= doubleCoinChance ? true : false;
-            if (isCoin)
-                if (objectPooler.PickFromPool("DoubleCoin", platform.transform, DoubleCoin.startPosition, DoubleCoin.startRotation) != null)
-                    return;
-        } else
-        {
-            isCoin = Random.value <= coinChance ? true : false;
-            if (isCoin)
-                if (objectPooler.PickFromPool("Coin", platform.transform, Coin.startPosition, Coin.startRotation) != null)
-                    return;
-        }    
+        isCoin = Random.value <= coinChance ? true : false;
+        if (isCoin)
+           if (objectPooler.PickFromPool("Coin", platform.transform, Coin.startPosition, Coin.startRotation) != null)
+               return;  
         isShieldPowerUp = Random.value <= shieldPowerUpChance ? true : false;
         if (isShieldPowerUp && !PowerUpManager.isShield && data.Shield[0]>0)
             if (objectPooler.PickFromPool("ShieldPowerUp", platform.transform, ShieldPowerUp.startPosition, ShieldPowerUp.startRotation) != null)
@@ -367,11 +463,8 @@ public class PlatformSpawner : MonoBehaviour {
     void SpawnEnemies()
     {
         isDiamond = Random.value <= diamondChance && !isDiamond ? true : false;
-        isLaser = Random.value <= laserChance && !isLaser ? true : false;
 
         if (isDiamond && GameState.score > diamondAfter)
-            objectPooler.PickFromPool("Diamond", spawnPoints[6].position, spawnPoints[6].rotation, transform.parent);
-        if (isLaser && GameState.score > laserAfter)
-            objectPooler.PickFromPool("Laser", new Vector3(spawnPoints[GameState.playerPositionX].position.x, 0), Quaternion.identity, content);
+            objectPooler.PickFromPool("Diamond", spawnPoints[6].position, spawnPoints[6].rotation, transform.parent);  
     }
 }

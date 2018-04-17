@@ -17,10 +17,6 @@
 			"value":"LEADERBOARD"
 		},
 		{
-			"key":"Score_Leaderboard",
-			"value":"Score: <color=#3EFFE7><b>2128</b></color>"
-		},
-		{
 			"key":"Button_SignInWithGoogle",
 			"value":"Sign in with"
 		},
@@ -137,7 +133,7 @@
 		},
 		{
 			"key":"Upgrades_DoubleCoins_Desc",
-			"value":"Double all coins"
+			"value":"Double all coins pickups"
 		},
 		{
 			"key":"Upgrades_FastRun_Title",

@@ -92,7 +92,7 @@ public class ItemsManager : MonoBehaviour {
             }
             GameObject prefab = Instantiate(item, transform, false);
             prefab.GetComponent<RectTransform>().sizeDelta = new Vector2(cubeSize, cubeSize);
-            prefab.name = model.itemName;
+            prefab.name = model.index.ToString();
 
             prefab.GetComponent<Skin>().Initialize(model);
             

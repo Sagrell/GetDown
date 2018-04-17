@@ -1,4 +1,5 @@
-﻿Shader "Sprites/Simple"
+﻿
+Shader "Sprites/Simple"
 {
 	Properties
 	{
@@ -27,7 +28,10 @@
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
-			
+
+			uniform sampler2D _MainTex;
+			uniform float4 _MainTex_ST; 
+
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
@@ -36,26 +40,25 @@
 
 			struct v2f
 			{
-				float4 vertex   : SV_POSITION;
-				float2 texcoord  : TEXCOORD0;
+				float4 pos   : SV_POSITION;
+				half2 uv  : TEXCOORD0;
 			};
+			
 			
 
 			v2f vert(appdata_t IN)
 			{
-				v2f OUT;
-				OUT.vertex = UnityObjectToClipPos(IN.vertex);
-				OUT.texcoord = IN.texcoord;
-				return OUT;
+				v2f o;
+				o.pos = UnityObjectToClipPos( IN.vertex );
+				o.uv = TRANSFORM_TEX( IN.texcoord, _MainTex );
+				return o;
 			}
-
-			sampler2D _MainTex;
-
-			fixed4 frag(v2f IN) : SV_Target
+			
+			half4 frag(v2f IN) : COLOR
 			{
-				fixed4 c =  tex2D (_MainTex, IN.texcoord);
-				return c;
+				return half4( tex2D( _MainTex, IN.uv ).rgb, 1.0);
 			}
+			
 		ENDCG
 		}
 	}

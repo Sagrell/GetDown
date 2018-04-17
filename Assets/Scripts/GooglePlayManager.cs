@@ -48,9 +48,9 @@ public class GooglePlayManager : MonoBehaviour {
 
 
     string leaderboardId = "CgkIuYTB-6YdEAIQAA";
-    ILeaderboard leaderboard;
     Dictionary<string, IAchievement> achievements;
     User[] users;
+    User[] friends;
     bool isAchievesLoaded;
     bool isUsersLoaded;
     bool isScoreLoaded;
@@ -80,11 +80,6 @@ public class GooglePlayManager : MonoBehaviour {
         Social.localUser.Authenticate((success) => {
             if (success)
             {
-                leaderboard = Social.CreateLeaderboard();
-                leaderboard.id = leaderboardId;
-                leaderboard.LoadScores((result) => {
-                    isScoreLoaded = true;
-                });
                 Social.LoadAchievements((achieves) => {
                     achievements = new Dictionary<string, IAchievement>();
                     for (int i = 0; i < achieves.Length; i++)
@@ -119,7 +114,7 @@ public class GooglePlayManager : MonoBehaviour {
     }
     public void SetNewRecord(int newScore)
     {
-        Social.ReportScore(newScore, leaderboardId, (success) => { 
+        Social.ReportScore(newScore, leaderboardId, (success) => {
         });
         
     }
@@ -159,12 +154,20 @@ public class GooglePlayManager : MonoBehaviour {
     IEnumerator WaitForScoreLoading()
     {
         isUsersLoaded = false;
+        int j = 0;
+        IScore[] scores = null;
+        isScoreLoaded = false;
+        Social.LoadScores(leaderboardId, (result)=> {
+            scores = result;
+            isScoreLoaded = true;
+        });
+        
         while (!isScoreLoaded)
         {
             yield return new WaitForSecondsRealtime(.1f);
         }
-        IScore[] scores = leaderboard.scores;
         users = new User[scores.Length];
+        friends = new User[scores.Length];
         string[] userIds = new string[scores.Length];
         for (int i = 0; i < scores.Length; i++)
         {
@@ -173,6 +176,7 @@ public class GooglePlayManager : MonoBehaviour {
         Social.LoadUsers(userIds, (GPSUsers) => {
             for (int i = 0; i < users.Length; i++)
             {
+
                 IUserProfile userProfile = GPSUsers[i];
                 users[i] = new User()
                 {
@@ -181,14 +185,18 @@ public class GooglePlayManager : MonoBehaviour {
                     place = i + 1,
                     userImg = userProfile.image
                 };
+                if(userProfile.isFriend)
+                {
+                    friends[j++] = users[i];
+                }
 
             }
             isUsersLoaded = true;
         });
     }
-    public void GetFriends()
+    public User[] GetFriends()
     {
-        
+        return friends;
     }
 
 }

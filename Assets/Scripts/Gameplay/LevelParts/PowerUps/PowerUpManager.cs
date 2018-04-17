@@ -62,6 +62,7 @@ public class PowerUpManager : MonoBehaviour {
                 shield = objectPooler.PickFromPool("Shield", _PTransform);
                 isShield = true;
                 InGameGUI.Instance.StartPowerUp(powerUp, shieldTimer);
+                Debug.Log("shield: "+shieldTimer);
                 break;
             case "Magnet":
                 magnet = objectPooler.PickFromPool("Magnet", _PTransform.position, Quaternion.identity, _PTransform.parent);

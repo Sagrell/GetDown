@@ -46,7 +46,7 @@ public class Diamond : Enemy, IPooledObject
             SwitchNextPosition();
         }
         currPosition = Vector3.MoveTowards(currPosition, nextPosition, speed * GameManager.deltaTime);
-        _RBTransform.Rotate(Vector3.up, rotationSpeed* GameManager.deltaTime);
+        _RBTransform.Rotate(Vector3.left, rotationSpeed* GameManager.deltaTime);
     }
     void SwitchNextPosition()
     {

@@ -44,24 +44,22 @@ public class ElementsPool : MonoBehaviour {
             poolDictionary.Add(poolSettings.type, pool);
         }
 	}
-    public void ChangeCoins()
+    public void DoubleCoins()
     {
-        foreach (GameObject platform in poolDictionary["Normal"])
+        Queue<GameObject> coinsObj = poolDictionary["Coin"];
+        foreach (GameObject coinObj in coinsObj)
         {
-            Coin coin = platform.GetComponentInChildren<Coin>();
-            DoubleCoin doubleCoin = platform.GetComponentInChildren<DoubleCoin>();
-            if (coin)
-            {
-                coin.gameObject.SetActive(false);
-                coin.transform.SetParent(null);
-                PickFromPool("DoubleCoin", platform.transform, Coin.startPosition, Coin.startRotation);
-            }
-            if (doubleCoin)
-            {
-                doubleCoin.gameObject.SetActive(false);
-                doubleCoin.transform.SetParent(null);
-                PickFromPool("Coin", platform.transform, DoubleCoin.startPosition, DoubleCoin.startRotation);
-            }
+            Coin coin = coinObj.GetComponent<Coin>();
+            coin.Double();
+        }
+    }
+    public void NormalCoins()
+    {
+        Queue<GameObject> coinsObj = poolDictionary["Coin"];
+        foreach (GameObject coinObj in coinsObj)
+        {
+            Coin coin = coinObj.GetComponent<Coin>();
+            coin.Normal();
         }
     }
     public void RemovePlatformsFromPool()
@@ -196,7 +194,7 @@ public class ElementsPool : MonoBehaviour {
         }
         Transform _transform = obj.transform;
         //SetActive doesn't work on child! Unity should fix this!
-        obj.SetActive(true);
+        obj.SetActiveRecursively(true);
         _transform.parent = parent;
         
         _transform.localPosition = localPosition;

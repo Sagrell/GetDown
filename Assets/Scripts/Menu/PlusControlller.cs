@@ -55,6 +55,14 @@ public class PlusControlller : MonoBehaviour {
         inviteFriendsFacebook.SetActive(false);
         signOutFacebook.SetActive(false);
     }
+    public void SignInGoogle()
+    {
+        GooglePlayManager.Instance.LogIn();
+    }
+    public void SignOutGoogle()
+    {
+        GooglePlayManager.Instance.LogOut();
+    }
     public void SignInStateGoogle()
     {
         signInGoogle.SetActive(false);

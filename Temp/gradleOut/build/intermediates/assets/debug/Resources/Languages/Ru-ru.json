@@ -1,0 +1,195 @@
+{
+	"menuItems":[
+		{
+			"key":"Button_Shop",
+			"value":"Магазин"
+		},
+		{
+			"key":"Button_Credits",
+			"value":"Инфо"
+		},
+		{
+			"key":"Button_Exit",
+			"value":"Выйти"
+		},
+		{
+			"key":"Title_Leaderboard",
+			"value":"Лидеры"
+		},
+		{
+			"key":"Button_SignInWithGoogle",
+			"value":"Войти с помощью"
+		},
+		{
+			"key":"Button_SignOutGoogle",
+			"value":"Выйти"
+		},
+		{
+			"key":"Button_SignInWithFacebook",
+			"value":"Войти с помощью"
+		},
+		{
+			"key":"Button_SignOutFacebook",
+			"value":"Выйти"
+		},
+		{
+			"key":"Button_InviteFriends",
+			"value":"Пригласи своих <color=#0CB838>друзей</color>!"
+		},
+		{
+			"key":"Button_Share",
+			"value":"Поделись"
+		},
+		{
+			"key":"Settings_Volume",
+			"value":"Громкость"
+		},
+		{
+			"key":"Settings_Music",
+			"value":"Музыка"
+		},
+		{
+			"key":"Settings_Sounds",
+			"value":"Звуки"
+		},
+		{
+			"key":"Settings_DisableAd",
+			"value":"Отключить рекламу"
+		},
+		{
+			"key":"Settings_DisableAd_Text",
+			"value":"Отключи <color=#DC1A21>Рекламу</color> и получи одно <color=#03CE48>бесплатное возрождение</color> на каждую игру"
+		},
+		{
+			"key":"Credits_Music",
+			"value":"<color=#1EC564>Музыка:</color> <b>www.bensound.com</b>"
+		},
+		{
+			"key":"Credits_Developed",
+			"value":"<color=#1EC564>Разработчик:</color> <b>Владислав Толстых</b>"
+		},
+		{
+			"key":"Credits_Support",
+			"value":"<color=#1EC564>Поддержка:</color> <b>Sagrell159@Gmail.com</b>"
+		},
+		{
+			"key":"Credits_Version",
+			"value":"<color=#1EC564>Версия:</color> <b>1.0</b>"
+		}
+
+	],
+	"shopItems":[
+		{
+			"key":"Button_Cube",
+			"value":"Куб"
+		},
+		{
+			"key":"Button_Platform",
+			"value":"Платформа"
+		},
+		{
+			"key":"Button_Background",
+			"value":"Задний фон"
+		},
+		{
+			"key":"Button_Menu",
+			"value":"МЕНЮ"
+		},
+		{
+			"key":"Button_Skins",
+			"value":"СКИНЫ"
+		},
+		{
+			"key":"Button_Upgrades",
+			"value":"УЛУЧШЕНИЯ"
+		},
+		{
+			"key":"ScoreLimit",
+			"value":"Достигни <b><color=#6CDD1D>200</color></b> очков для разблокирования этого скина"
+		},
+		{
+			"key":"Button_Select",
+			"value":"ВЫБРАТЬ"
+		},
+		{
+			"key":"Upgrades_Shield_Title",
+			"value":"Щит"
+		},
+		{
+			"key":"Upgrades_Shield_Desc",
+			"value":"Защищает тебя от этого ужасного мира"
+		},
+		{
+			"key":"Upgrades_Magnet_Title",
+			"value":"Магнит"
+		},
+		{
+			"key":"Upgrades_Magnet_Desc",
+			"value":"Монеты будут лететь прямо тебе в руки"
+		},
+		{
+			"key":"Upgrades_DoubleCoins_Title",
+			"value":"Двойные монеты"
+		},
+		{
+			"key":"Upgrades_DoubleCoins_Desc",
+			"value":"Удваивает все монеты"
+		},
+		{
+			"key":"Upgrades_FastRun_Title",
+			"value":"Ускорение"
+		},
+		{
+			"key":"Upgrades_FastRun_Desc",
+			"value":"Больше никак не сможешь упасть"
+		},
+		{
+			"key":"Second",
+			"value":" сек"
+		},
+		{
+			"key":"Charge",
+			"value":" заряд"
+		},
+		{
+			"key":"Maximum",
+			"value":"Максимум"
+		}
+
+
+	],
+	"gameItems":[
+		{
+			"key":"Respawn_Free",
+			"value":"Бесплатно"
+		},
+		{
+			"key":"Respawn_Ad",
+			"value":"Посмотри короткую рекламу"
+		},
+		{
+			"key":"Respawn_Or",
+			"value":"ИЛИ КУПИ ЗА"
+		},
+		{
+			"key":"Score_Current",
+			"value":"Твой счет:"
+		},
+		{
+			"key":"Score_Best",
+			"value":"Рекорд:"
+		},
+		{
+			"key":"Button_Back",
+			"value":"МЕНЮ"
+		},
+		{
+			"key":"Button_Respawn",
+			"value":"ВОЗРОДИТЬСЯ"
+		},
+		{
+			"key":"Button_Restart",
+			"value":"ПЕРЕЗАПУСТИТЬ"
+		}
+	]
+}

@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Vector3 playerScreenPos;
     Rigidbody rb;
+    int currentPosition;
     //Cach
     Transform _RBTransform;
     Vector3 _RBLocalPosition;
@@ -37,8 +38,11 @@ public class PlayerController : MonoBehaviour
     Material cubeMat;
     bool isHit;
     GameObject DP;
+    Animator jump;
     void Start()
     {
+        currentPosition = 0;
+        jump = GetComponent<Animator>();
         speed = GameManager.Instance.playerSpeed;
         rb = GetComponent<Rigidbody>();
         _RBTransform = rb.transform;
@@ -70,11 +74,6 @@ public class PlayerController : MonoBehaviour
         }
         GetComponent<Animator>().enabled = false;
         StartCoroutine(ControllSpeed());
-    }
-    private void FixedUpdate()
-    {
-        //Set position and rotation in fixed update cause its depends on collision!
-        
     }
     IEnumerator ControllSpeed()
     {
@@ -129,6 +128,7 @@ public class PlayerController : MonoBehaviour
     //Jump on the next platform on the right side
     void JumpRight()
     {
+        ++currentPosition;
         StopCoroutine(jumping);
         jumping = Jump(Vector3.back * 90, speed, true);        
         StartCoroutine(jumping);
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
     //Jump on the next platform on the left side
     void JumpLeft()
     {
-       
+        --currentPosition;
         StopCoroutine(jumping);
         jumping = Jump(Vector3.forward * 90, -speed, false);
         StartCoroutine(jumping);
@@ -155,6 +155,17 @@ public class PlayerController : MonoBehaviour
         bool isContinue = false;
         Quaternion fromAngle = _RBTransform.localRotation;
         Quaternion toAngle = Quaternion.Euler(fromAngle.eulerAngles + byAngles);
+
+        Vector3 startScale = _RBTransform.localScale;
+        float height = 0.8f;
+        float width = 0.6f;
+        Vector3 readyToJumpScale = new Vector3(height, width, height);
+        Vector3 jumpScale = new Vector3(width, height, width);
+        if (currentPosition%2!=0)
+        {
+            readyToJumpScale = new Vector3(width, height, height);
+            jumpScale = new Vector3(height, width, width);
+        }
         for (float t = 0f; true; t += Time.deltaTime/timeForJump)
         {
             //If player is grounded, then stop falling
@@ -186,6 +197,7 @@ public class PlayerController : MonoBehaviour
                 _RBLocalRotation = rotation;
                 _RBTransform.localRotation = _RBLocalRotation;
                 _RBTransform.localPosition = _RBLocalPosition;
+                _RBTransform.localScale = startScale;
                 yield return new WaitForFixedUpdate();
                 if (!onGround)
                 {
@@ -196,6 +208,17 @@ public class PlayerController : MonoBehaviour
                 _RBLocalPosition.x = prevPosition.x + x;
                 _RBLocalPosition.y = prevPosition.y + y;
                 _RBLocalRotation = rotation;
+                if(t>0.5f)
+                {
+                    _RBTransform.localScale = Vector3.Lerp(jumpScale, startScale, (t - 0.5f)*2f);
+                } else if (t > 0.1f)
+                {
+                    _RBTransform.localScale = Vector3.Lerp(readyToJumpScale, jumpScale, (t - 0.1f) * 2.5f);
+                } else
+                {
+                    _RBTransform.localScale = Vector3.Lerp(startScale, readyToJumpScale, t*10);
+                }
+                
                 //We need to sync it with Physics
                 yield return null;
             }      
@@ -215,6 +238,7 @@ public class PlayerController : MonoBehaviour
     public void RespawnPlayer()
     {
         Destroy(DP);
+        currentPosition = 0;
         willDie = false;
         isHit = false;
         _RBLocalRotation = Quaternion.identity;
@@ -222,9 +246,16 @@ public class PlayerController : MonoBehaviour
         _RBLocalPosition.y = GameState.playerPositionY * -1.5f + 0.5f;
         _RBTransform.localRotation = _RBLocalRotation;
         _RBTransform.localPosition = _RBLocalPosition;
-        gameObject.SetActive(true);
+        if (speed < GameManager.Instance.maxPlayerSpeed)
+        {
+            speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
+        }
+        else
+        {
+            speed = GameManager.Instance.maxPlayerSpeed;
+        }
     }
-    public bool isAlive()
+    public bool IsAlive()
     {
         return alive;
     }
@@ -248,8 +279,8 @@ public class PlayerController : MonoBehaviour
                 
                 //AudioCenter.PlaySound(AudioCenter.jumpSoundId);
                 //Correct position if somethink happend 
-                _RBLocalPosition.x = collider.transform.localPosition.x;
-                _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
+                //_RBLocalPosition.x = collider.transform.localPosition.x;
+                //_RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
                 score = ++GameState.score;
                 switch(score)
                 {
@@ -286,14 +317,9 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Coin"))
         {
+            Coin coin = other.GetComponent<Coin>();
+            GameState.countCoins += coin.currentValue;
             other.GetComponent<Coin>().DestroyCoin();
-            GameState.countCoins++;
-            InGameGUI.Instance.UpdateCoins();
-        }
-        if (other.CompareTag("DoubleCoin"))
-        {
-            other.GetComponent<DoubleCoin>().DestroyCoin();
-            GameState.countCoins+=2;
             InGameGUI.Instance.UpdateCoins();
         }
         if (other.CompareTag("ShieldCoin"))

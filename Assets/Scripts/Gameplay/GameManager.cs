@@ -45,7 +45,13 @@ public class GameManager : MonoBehaviour
     void Start () {
         platform.material = SkinManager.platformMat;
         platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
+        platformWithSpike.sharedMaterial.SetTextureOffset("_MainTex", SkinManager.platformMat.GetTextureOffset("_MainTex"));
+        platformWithSpike.sharedMaterial.SetTextureScale("_MainTex", SkinManager.platformMat.GetTextureScale("_MainTex"));
+
         brokenPlatform.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
+        brokenPlatform.sharedMaterial.SetTextureOffset("_MainTex", SkinManager.platformMat.GetTextureOffset("_MainTex"));
+        brokenPlatform.sharedMaterial.SetTextureScale("_MainTex", SkinManager.platformMat.GetTextureScale("_MainTex"));
+
         dataManager = DataManager.Instance;
         background.material = SkinManager.backgroundMat;
         Time.timeScale = 0f;

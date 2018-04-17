@@ -30,6 +30,7 @@ public class SkinManager : MonoBehaviour {
                 }
                 for (int j = 0; j < skin.items.Length; j++)
                 {
+                    skin.items[j].index = j;
                     itemsDictionary[skin.type][j] = skin.items[j];
                 }
             }

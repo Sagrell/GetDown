@@ -519,7 +519,6 @@
     <Compile Include="Assets\GooglePlayGames\Platforms\TokenClient.cs" />
     <Compile Include="Assets\GooglePlayGames\PluginVersion.cs" />
     <Compile Include="Assets\GPS\GPS.cs" />
-    <Compile Include="Assets\Pattern.cs" />
     <Compile Include="Assets\Scripts\AdManager.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraBehaviour.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraShakeInstance.cs" />
@@ -561,6 +560,8 @@
     <Compile Include="Assets\Scripts\Gameplay\LevelParts\SpiralPhaseManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\ElementsPool.cs" />
     <Compile Include="Assets\Scripts\Gameplay\ObjectPool\IPooledObject.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\ObjectPool\Pattern.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\ObjectPool\PatternItem.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\Magnet.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\Shield.cs" />
@@ -572,12 +573,12 @@
     <Compile Include="Assets\Scripts\Menu\LaserInMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\Leader.cs" />
     <Compile Include="Assets\Scripts\Menu\LeaderboardManager.cs" />
-    <Compile Include="Assets\Scripts\Menu\MainMenu.cs" />
-    <Compile Include="Assets\Scripts\Menu\Menu.cs" />
-    <Compile Include="Assets\Scripts\Menu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Menu\PlusControlller.cs" />
-    <Compile Include="Assets\Scripts\Menu\ShopMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\SwipeController.cs" />
+    <Compile Include="Assets\Scripts\Menu\Temp\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\Menu\Temp\Menu.cs" />
+    <Compile Include="Assets\Scripts\Menu\Temp\MenuManager.cs" />
+    <Compile Include="Assets\Scripts\Menu\Temp\ShopMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\UIManager.cs" />
     <Compile Include="Assets\Scripts\Menu\User.cs" />
     <Compile Include="Assets\Scripts\PurchaseManager.cs" />

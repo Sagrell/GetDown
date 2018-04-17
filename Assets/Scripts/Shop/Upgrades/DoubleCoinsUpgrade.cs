@@ -32,28 +32,28 @@ public class DoubleCoinsUpgrade : Upgrade {
         switch (level)
         {
             case 0:
-                price = 50; time = 10; imp = 0;
+                price = 200; time = 10; imp = 0;
                 break;
             case 1:
-                price = 100; time = 2; imp = 0;
+                price = 400; time = 2; imp = 0;
                 break;
             case 2:
-                price = 200; time = 3; imp = 0;
+                price = 800; time = 3; imp = 0;
                 break;
             case 3:
-                price = 500; time = 3; imp = 0;
+                price = 1300; time = 3; imp = 0;
                 break;
             case 4:
-                price = 700; time = 3; imp = 0;
+                price = 1800; time = 3; imp = 0;
                 break;
             case 5:
-                price = 900; time = 3; imp = 0;
+                price = 2500; time = 3; imp = 0;
                 break;
             case 6:
-                price = 1200; time = 5; imp = 0;
+                price = 4000; time = 5; imp = 0;
                 break;
             case 7:
-                price = 2500; time = 10; imp = 1;
+                price = 8000; time = 10; imp = 0;
                 break;
             default:
                 break;
@@ -61,10 +61,6 @@ public class DoubleCoinsUpgrade : Upgrade {
         if (level == 0)
         {
             improvesText.text = time + secStr;
-        }
-        else if (imp > 0)
-        {
-            improvesText.text = "+" + time + " x3";
         }
         else if (time > 0)
         {

@@ -30,8 +30,12 @@ public class AdManager : MonoBehaviour {
             gameOverAd = new InterstitialAd(gameOverAdId);
             LoadGameOverAd();
             //gameOverAd.OnAdLoaded += HandleOnGameOverAdLoaded;
+            DontDestroyOnLoad(gameObject);
+        } else
+        {
+            Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        
     }
     
     private void Start()

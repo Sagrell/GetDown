@@ -49,7 +49,11 @@ public class InGameGUI : MonoBehaviour {
     bool isRewarded;
     bool isStopTime;
     bool isDisabledAd;
+    bool isRespawnPaused;
+
+    IEnumerator respawnProgress;
     void Start () {
+        isRespawnPaused = false;
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
         gameOverPanel.SetActive(true);
@@ -64,11 +68,13 @@ public class InGameGUI : MonoBehaviour {
         freeRespawn.gameObject.SetActive(isDisabledAd);
         watchAdRespawn.gameObject.SetActive(!isDisabledAd);
         respawnCost = 50;
+        respawnProgress = RespawnProgress(0, null);
     }
-    private void Update()
+    void Update()
     {
         if (isStartRespawn)
         {
+            watchAdRespawn.interactable = false;
             isStartRespawn = false;
             Respawn();
         }
@@ -76,8 +82,9 @@ public class InGameGUI : MonoBehaviour {
         {
             isStartRespawnTimer = false;
             Time.timeScale = 0f;
-            StopAllCoroutines();
-            StartCoroutine(RespawnProgress(5f, progressRespawn));
+            StopCoroutine(respawnProgress);
+            respawnProgress = RespawnProgress(5f, progressRespawn);
+            StartCoroutine(respawnProgress);
         }
         if (isStopTime)
         {
@@ -127,6 +134,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void GameOver()
     {
+        isRespawnPaused = false;
         AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
         gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
@@ -143,8 +151,9 @@ public class InGameGUI : MonoBehaviour {
             
         } else
         {
-            StopAllCoroutines();
-            StartCoroutine(RespawnProgress(5f, progressRespawn));
+            StopCoroutine(respawnProgress);
+            respawnProgress = RespawnProgress(5f, progressRespawn);
+            StartCoroutine(respawnProgress);
         }
     }
     void HandleOnGameOverAdClosed(object sender, System.EventArgs args)
@@ -162,6 +171,9 @@ public class InGameGUI : MonoBehaviour {
         yield return new WaitForSecondsRealtime(0.8f);
         GameState.playerPositionY += (Mathf.RoundToInt(LevelController.levelPosition.y/1.5f)) - GameState.playerPositionY;
         spawner.Restart();
+        player.gameObject.SetActive(true);
+        player.enabled = true;
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         player.RespawnPlayer();
         Animator respawn = player.GetComponent<Animator>();
         respawn.enabled = true;
@@ -172,8 +184,8 @@ public class InGameGUI : MonoBehaviour {
             yield return null;
         }
         respawn.enabled = false;
-        player.enabled = true;
-        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        
+        
         Time.timeScale = 1f;
     }
     public void Resume()
@@ -209,11 +221,13 @@ public class InGameGUI : MonoBehaviour {
         isRespawnWindow = true;
         buyRespawn.GetComponentInChildren<Text>().text = respawnCost.ToString();
         respawnAnim.Play("ShowRespawnType");
+        isRespawnPaused = true;
     }
     public void HideRespawnType()
     {
         if (isRespawnWindow)
         {
+            isRespawnPaused = false;
             isRespawnWindow = false;
             respawnAnim.Play("HideRespawnType");
         }
@@ -221,6 +235,7 @@ public class InGameGUI : MonoBehaviour {
     }
     public void ShowAdRespawn()
     {
+        isRespawnPaused = true;
         AdManager.Instance.ShowRewardAd(HandleOnAdRewarded, HandleOnRewardAdClosed);
     }
     public void BuyRespawn()
@@ -258,15 +273,19 @@ public class InGameGUI : MonoBehaviour {
     void HandleOnRewardAdClosed(object sender, System.EventArgs args)
     {
         AdManager.Instance.LoadRewardAd();
-        if(isRewarded)
-        {
-            watchAdRespawn.interactable = false;
+        isRespawnPaused = false;
+        if (isRewarded)
+        {      
             isStartRespawn = true;
         } else
         {
             isStopTime = true;
         }
     }
+    IEnumerator startShield;
+    IEnumerator startMagnet;
+    IEnumerator startDoubleCoins;
+    IEnumerator startFastRun;
     public void StartPowerUp(string powerUp, float time)
     {
         Image powerUpImage = null;
@@ -275,31 +294,47 @@ public class InGameGUI : MonoBehaviour {
             case "Shield":
                 shieldUpgrade.SetActive(true);
                 powerUpImage = shieldUpgrade.GetComponent<Image>();
+                if(startShield!=null)
+                    StopCoroutine(startShield);
+                startShield = PowerUpProgress(powerUp, time, powerUpImage);
+                StartCoroutine(startShield);
                 break;
             case "Magnet":
                 magnetUpgrade.SetActive(true);
                 powerUpImage = magnetUpgrade.GetComponent<Image>();
+                if (startMagnet != null)
+                    StopCoroutine(startMagnet);
+                startMagnet = PowerUpProgress(powerUp, time, powerUpImage);   
+                StartCoroutine(startMagnet);
                 break;
             case "FastRun":
                 fastRunUpgrade.SetActive(true);
                 powerUpImage = fastRunUpgrade.GetComponent<Image>();
+                if (startFastRun != null)
+                    StopCoroutine(startFastRun);
+                startFastRun = PowerUpProgress(powerUp, time, powerUpImage);               
+                StartCoroutine(startFastRun);
                 break;
             case "DoubleCoins":
                 doubleCoinsUpgrade.SetActive(true);
                 powerUpImage = doubleCoinsUpgrade.GetComponent<Image>();
+                if (startDoubleCoins != null)
+                    StopCoroutine(startDoubleCoins);
+                startDoubleCoins = PowerUpProgress(powerUp, time, powerUpImage);           
+                StartCoroutine(startDoubleCoins);
                 break;
         }
         
         powerUps[powerUp] = powerUpImage;
-        StartCoroutine(PowerUpProgress(powerUp, time, powerUpImage));
     }
+
     IEnumerator PowerUpProgress(string powerUp, float time, Image powerUpImage)
     {
         float currentProgress = 1f;
         while (currentProgress>0 && powerUpImage)
         {
            currentProgress -= GameManager.deltaTime / time;
-           powerUpImage.fillAmount = currentProgress; 
+           powerUpImage.fillAmount = currentProgress;
            yield return null;
         }
         if(powerUpImage)
@@ -315,10 +350,11 @@ public class InGameGUI : MonoBehaviour {
         progressImage.transform.parent.gameObject.SetActive(true);
         float currentProgress = 1f;
         while (currentProgress > 0)
-        {
+        { 
             currentProgress -= Time.unscaledDeltaTime / time;
             progressImage.fillAmount = currentProgress;
             yield return null;
+            while (isRespawnPaused) { yield return null; }
         }
         respawn.interactable = false;
         progressImage.transform.parent.gameObject.SetActive(false);

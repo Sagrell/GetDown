@@ -68,11 +68,11 @@ public class UIManager : MonoBehaviour {
         Instantiate(cube, cubePosition);
         if(isMute && SceneController.previousScene != "Shop")
         {
-            AudioCenter.Instance.PlayMusic("MenuTheme", 0f, 0f);
+            AudioCenter.Instance.StartMute("MenuTheme");
         }
         else if(SceneController.previousScene != "Shop")
         {
-            AudioCenter.Instance.PlayMusic("MenuTheme",1f, musicVolume);
+            AudioCenter.Instance.PlayMusic("MenuTheme",1f);
         }
         if (!isMute)
         {
@@ -93,7 +93,15 @@ public class UIManager : MonoBehaviour {
     public void Play()
     {
         AudioCenter.Instance.PlaySound("Button");
-        AudioCenter.Instance.PauseMusic("MenuTheme",1f);
+        if(isMute)
+        {
+            AudioCenter.Instance.PauseMusic("MenuTheme", 0);
+        } else
+        {
+            AudioCenter.Instance.PauseMusic("MenuTheme", 1f);
+        }
+        
+
         StartCoroutine(StartScene("Game"));
     }
     public void CoinsClick()
@@ -135,6 +143,7 @@ public class UIManager : MonoBehaviour {
         AudioCenter.Instance.PlaySound("Button");
         isLeaderboard = true;
         SwipeController.isAnimating = true;
+        LeaderboardManager.Instance.ShowLeaders();
         contentAnim.Play("LeaderboardFadeIn");
     }
     public void HideLeaderboard()
@@ -217,7 +226,7 @@ public class UIManager : MonoBehaviour {
             AudioCenter.Instance.PlaySound("CoinCollect");
         }
     }
-    public void ApplyVolume()
+    public void ApplySettings()
     {
         if(isSettings)
         {
@@ -241,13 +250,13 @@ public class UIManager : MonoBehaviour {
     {
         if (pause)
         {
-            AudioCenter.Instance.PauseMusic("MenuTheme", .1f);
+            AudioCenter.Instance.PauseMusic("MenuTheme", 0f);
             Time.timeScale = 0f;
         }
         else
         {
             Time.timeScale = 1f;
-            AudioCenter.Instance.ResumeMusic("MenuTheme", .1f);
+            AudioCenter.Instance.ResumeMusic("MenuTheme", 0f);
         }
     }
     

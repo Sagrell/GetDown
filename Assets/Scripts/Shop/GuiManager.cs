@@ -26,8 +26,8 @@ public class GuiManager : MonoBehaviour {
     private void Start()
     {
         background.material = SkinManager.backgroundMat;
-        showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.cubeMat.GetTexture("_MainTex"));
-        showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
+        showCube.GetComponent<Renderer>().material = SkinManager.cubeMat;
+        showPlatform.GetComponent<Renderer>().material = SkinManager.platformMat;
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
         SceneController.currentScene = "Shop";
     }
@@ -112,7 +112,8 @@ public class GuiManager : MonoBehaviour {
                     
                 showCube.GetComponent<MeshFilter>().mesh = item.model;
                 showCube.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
-                showCube.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
+                showCube.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", item.objectMat.GetTextureOffset("_MainTex"));
+                showCube.GetComponent<Renderer>().material.SetTextureScale("_MainTex", item.objectMat.GetTextureScale("_MainTex"));
                 break;
             case "Platform":
                 if (!item.bought)
@@ -126,7 +127,8 @@ public class GuiManager : MonoBehaviour {
                 }   
                 showPlatform.GetComponent<MeshFilter>().mesh = item.model;
                 showPlatform.GetComponent<Renderer>().material.SetTexture("_MainTex", item.objectMat.GetTexture("_MainTex"));
-                showPlatform.GetComponent<Renderer>().material.SetTexture("_BumpMap", item.objectMat.GetTexture("_BumpMap"));
+                showPlatform.GetComponent<Renderer>().material.SetTextureOffset("_MainTex", item.objectMat.GetTextureOffset("_MainTex"));
+                showPlatform.GetComponent<Renderer>().material.SetTextureScale("_MainTex", item.objectMat.GetTextureScale("_MainTex"));
                 break;
             case "Background":
                 background.material = item.objectMat;

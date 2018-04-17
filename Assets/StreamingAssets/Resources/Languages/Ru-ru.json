@@ -17,10 +17,6 @@
 			"value":"Лидеры"
 		},
 		{
-			"key":"Score_Leaderboard",
-			"value":"Рекорд: <color=#3EFFE7><b>2128</b></color>"
-		},
-		{
 			"key":"Button_SignInWithGoogle",
 			"value":"Войти с помощью"
 		},
@@ -137,7 +133,7 @@
 		},
 		{
 			"key":"Upgrades_DoubleCoins_Desc",
-			"value":"Удваивает все монеты"
+			"value":"Удваивает все собранные монеты"
 		},
 		{
 			"key":"Upgrades_FastRun_Title",

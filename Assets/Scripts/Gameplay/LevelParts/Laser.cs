@@ -7,13 +7,13 @@ public class Laser : MonoBehaviour, IPooledObject {
 
     Animator laserAnimation;
 
-
+    public bool isOver;
     bool isShooting;
     // Use this for initialization
     int layer_mask = (1 << 9) | (1 << 10);
     public void OnObjectSpawn()
     {
-        //GetComponentInChildren<ParticleSystem>().Play();
+        isOver = false;
         isShooting = false;
         laserAnimation = GetComponent<Animator>();
         StartCoroutine(LaserShot());
@@ -38,15 +38,18 @@ public class Laser : MonoBehaviour, IPooledObject {
     IEnumerator LaserShot()
     {
         AudioCenter.Instance.PlaySound("LaserStart");
-        yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserStart"));
+        float soundDuration = AudioCenter.Instance.GetSoundDuration("LaserStart");
+        yield return new WaitForSeconds(soundDuration*3/4);
+        isOver = true;
+        yield return new WaitForSeconds(soundDuration*1/4);
         laserAnimation.SetBool("LaserOn", true);
         isShooting = true;
-
         AudioCenter.Instance.PlaySound("LaserShot");
         yield return new WaitForSeconds(AudioCenter.Instance.GetSoundDuration("LaserShot"));
         laserAnimation.SetBool("LaserOn", false);
         isShooting = false;
         yield return new WaitForSeconds(.25f);
+       
         gameObject.SetActive(false);
     }
 

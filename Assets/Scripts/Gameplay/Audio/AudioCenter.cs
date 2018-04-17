@@ -59,11 +59,14 @@ public class AudioCenter : MonoBehaviour
             musicObjects[musicName].Call("prepare");
             musicObjects[musicName].Call("Play", new object[] { fadeDuration });
         }
+        public void StartMute( string musicName ) {
+            musicObjects[musicName].Call("StartMute");
+        }
         public void PlayMusic( string musicName, float fadeDuration, float volume ) {
+            Debug.Log("PLAY VOLUME");
             musicObjects[musicName].Call("stop");
             musicObjects[musicName].Call("prepare");
-            SetVolumeMusic(musicName, volume);
-            musicObjects[musicName].Call("Play", new object[] { fadeDuration });
+            musicObjects[musicName].Call("Play", new object[] { fadeDuration, volume });
         }
         public void ResumeMusic( string musicName, float fadeDuration ) {
             musicObjects[musicName].Call("Play", new object[] { fadeDuration });
@@ -131,9 +134,9 @@ public class AudioCenter : MonoBehaviour
     {
         musicSources[musicName].Play();
     }
-    public void PlayMusic(string musicName, float fadeDuration, float volume)
+    public void StartMute(string musicName)
     {
-        musicSources[musicName].volume = volume * 0.2f;
+        musicSources[musicName].volume = 0;
         musicSources[musicName].Play();
     }
     public void ResumeMusic(string musicName, float fadeDuration)
@@ -180,47 +183,48 @@ public class AudioCenter : MonoBehaviour
         {
             data = DataManager.Instance.GetUserData();
             Instance = this;
-#if UNITY_ANDROID && !UNITY_EDITOR
-			        unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
-			        activityObj = unityActivityClass.GetStatic<AndroidJavaObject>( "currentActivity" );
-			        soundObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Sound", 4, activityObj );
+            DontDestroyOnLoad(gameObject);
+        #if UNITY_ANDROID && !UNITY_EDITOR
+			unityActivityClass =  new AndroidJavaClass( "com.unity3d.player.UnityPlayer" );
+			activityObj = unityActivityClass.GetStatic<AndroidJavaObject>( "currentActivity" );
+			soundObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Sound", 4, activityObj );
 
-                    musicObjects = new Dictionary<string, AndroidJavaObject>();
-                    for (int i = 0; i < musics.Length; i++)
-                    {
-                        Music music = musics[i];
-                        music.volume = data.musicVolume;
-                        musicDic[music.name] = music;
-                        AndroidJavaObject musicObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Music", activityObj ); 
-                        musicObj.Call("Load", new object[] { music.name + ".mp3", music.maxVolume, music.isLooping });
-                        musicObjects[music.name] = musicObj;
-                    }
-                    for (int i = 0; i < sounds.Length; i++)
-                    {
-                        Sound sound = sounds[i];
-                        sound.volume = data.soundVolume;
-                        sound.id = LoadSound(sound.name);
-                        soundDic[sound.name] = sound;
-                    }
-#else
-                    musicSources = new Dictionary<string, AudioSource>();
-                    for (int i = 0; i < musics.Length; i++)
-                    {
-                        AudioSource musicSource = gameObject.AddComponent<AudioSource>();
-                        Music music = musics[i];
-                        music.volume = data.musicVolume;
-                        musicDic[music.name] = music;
-                        musicSources[music.name] = musicSource;
-                        LoadMusic(music.name);
-                    }
-                    for (int i = 0; i < sounds.Length; i++)
-                    {
-                        Sound sound = sounds[i];
-                        sound.volume = data.soundVolume;
-                        sound.source = gameObject.AddComponent<AudioSource>();
-                        soundDic[sound.name] = sound;
-                        sound.id = LoadSound(sound.name);
-                    }
+            musicObjects = new Dictionary<string, AndroidJavaObject>();
+            for (int i = 0; i < musics.Length; i++)
+            {
+                Music music = musics[i];
+                music.volume = data.musicVolume;
+                musicDic[music.name] = music;
+                AndroidJavaObject musicObj = new AndroidJavaObject( "com.sagrell.androidaudiomanager.Music", activityObj ); 
+                musicObj.Call("Load", new object[] { music.name + ".mp3", music.maxVolume, music.isLooping });
+                musicObjects[music.name] = musicObj;
+            }
+            for (int i = 0; i < sounds.Length; i++)
+            {
+                Sound sound = sounds[i];
+                sound.volume = data.soundVolume;
+                sound.id = LoadSound(sound.name);
+                soundDic[sound.name] = sound;
+            }
+        #else
+            musicSources = new Dictionary<string, AudioSource>();
+            for (int i = 0; i < musics.Length; i++)
+            {
+                AudioSource musicSource = gameObject.AddComponent<AudioSource>();
+                Music music = musics[i];
+                music.volume = data.musicVolume;
+                musicDic[music.name] = music;
+                musicSources[music.name] = musicSource;
+                LoadMusic(music.name);
+            }
+            for (int i = 0; i < sounds.Length; i++)
+            {
+                Sound sound = sounds[i];
+                sound.volume = data.soundVolume;
+                sound.source = gameObject.AddComponent<AudioSource>();
+                soundDic[sound.name] = sound;
+                sound.id = LoadSound(sound.name);
+            }
 
         #endif
         }
@@ -228,7 +232,7 @@ public class AudioCenter : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        
 
 
     }

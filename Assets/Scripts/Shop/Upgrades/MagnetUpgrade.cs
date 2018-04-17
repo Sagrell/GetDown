@@ -32,28 +32,28 @@ public class MagnetUpgrade : Upgrade {
         switch (level)
         {
             case 0:
-                price = 50; time = 10; imp = 0;
+                price = 200; time = 10; imp = 0;
                 break;
             case 1:
-                price = 100; time = 2; imp = 0;
+                price = 400; time = 2; imp = 0;
                 break;
             case 2:
-                price = 200; time = 3; imp = 0;
+                price = 800; time = 3; imp = 0;
                 break;
             case 3:
-                price = 500; time = 4; imp = 0;
+                price = 1400; time = 4; imp = 0;
                 break;
             case 4:
-                price = 700; time = 3; imp = 0;
+                price = 1900; time = 3; imp = 0;
                 break;
             case 5:
-                price = 900; time = 4; imp = 0;
+                price = 2700; time = 4; imp = 0;
                 break;
             case 6:
-                price = 1200; time = 5; imp = 0;
+                price = 4500; time = 5; imp = 0;
                 break;
             case 7:
-                price = 2500; time = 10; imp = 0;
+                price = 9000; time = 10; imp = 0;
                 break;
             default:
                 break;

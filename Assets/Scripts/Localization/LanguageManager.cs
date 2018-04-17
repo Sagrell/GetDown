@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LanguageManager : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class LanguageManager : MonoBehaviour {
         if(Instance == null)
         {
             Instance = this;
+            isStart = true;
             DontDestroyOnLoad(gameObject);
         } else
         {
@@ -28,19 +30,22 @@ public class LanguageManager : MonoBehaviour {
     DataManager dataManager;
     UserData data;
     string currentLang;
+    bool isStart;
     // Use this for initialization
     void Start () {
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
-        currentLang = data.Lang;
-        
-        ChangeLanguage(currentLang);
+        currentLang = "";
+        ChangeLanguage(data.Lang);
     }
 	
     public void ChangeLanguage(string lang)
     {
+        if (currentLang.Equals(lang))
+        {
+            return;
+        }
         currentLang = lang;
-
 #if UNITY_ANDROID && !UNITY_EDITOR
         string filepath = Application.persistentDataPath + "/" + currentLang +".json";
 
@@ -88,17 +93,13 @@ public class LanguageManager : MonoBehaviour {
         }
         localization.Add("Game", gameData);
 
-        
-        if(!currentLang.Equals(data.Lang))
+        if(!isStart)
         {
-            data.Lang = lang;
-            dataManager.SaveUserData(data);
-            LocalizedText[] texts = FindObjectsOfType<LocalizedText>();
-            for (int i = 0; i < texts.Length; i++)
-            {
-                texts[i].SetText();
-            }
+            UIManager.Instance.ApplySettings();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        isStart = false;
+        
     }
     public string GetLocalizedValue(string scene, string key)
     {
