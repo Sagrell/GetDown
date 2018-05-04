@@ -62,7 +62,7 @@ public class ElementsPool : MonoBehaviour {
             coin.Normal();
         }
     }
-    public void RemovePlatformsFromPool()
+    public void RemovePlatformsFromPool(bool isEffect)
     {
         foreach (GameObject platform in poolDictionary["Normal"])
         {
@@ -74,7 +74,8 @@ public class ElementsPool : MonoBehaviour {
                     child.gameObject.SetActive(false);
                     child.SetParent(null);
                 }
-                PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
+                if(isEffect)
+                    PickFromPool("PlatformChange", platform.transform.position, platform.transform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
                 platform.SetActive(false);
             } 
         }

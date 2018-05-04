@@ -8,12 +8,12 @@ public class Shield : MonoBehaviour, IPooledObject {
 
     public GameObject shieldEffect;
 
-    Animator shieldHitAnim;
+    Animation shieldHitAnim;
     float countShield;
 
     public void OnObjectSpawn()
     {
-        shieldHitAnim = GetComponent<Animator>();
+        shieldHitAnim = GetComponent<Animation>();
         shieldHitAnim.Play("ShieldAppearance");
         countShield = DataManager.Instance.GetUserData().Shield[2];
     }

@@ -1,13 +1,15 @@
 ﻿
+using System.Collections;
 using UnityEngine;
 
 public class Spike : Enemy {
-    
 
+    public GameObject destroyed;
     public override void Destroy()
     {
         AudioCenter.Instance.PlaySound("DiamondDestroy");
-        ElementsPool.Instance.PickFromPool("DestroyedSpike", transform.position, transform.rotation);    
+        GameObject parts = Instantiate(destroyed, transform.position, transform.rotation);
+        Destroy(parts, 3f);
         GetComponentInParent<Animator>().enabled = false;
         gameObject.SetActive(false);
     }

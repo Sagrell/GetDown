@@ -41,6 +41,7 @@ public class PlatformSpawner : MonoBehaviour {
     [Space]
     [Header("Patterns:")]
     public Pattern[] patterns;
+    public GameObject learning;
     //PRIVATE
     bool isDoubleCoin;
     bool isFastRun;
@@ -78,75 +79,99 @@ public class PlatformSpawner : MonoBehaviour {
         spawnIn = 40f;
         _transform = transform;
         _localPosition = _transform.localPosition;
-        currentWave = new PlatformType[6] {
-        PlatformType.Normal,
-        PlatformType.Empty,
-        PlatformType.Empty,
-        PlatformType.Empty,
-        PlatformType.Empty,
-        PlatformType.Empty};
+        
         isCoin = false;
         isDiamond = true;
         isLaserAttack = false;
         isSpike = true;
         objectPooler = ElementsPool.Instance;
-        objectPooler.PickFromPool("Normal", spawnPoints[0].position, spawnPoints[0].rotation, transform.parent);
+        if(!data.isFirstTime)
+        {
+            currentWave = new PlatformType[6] {
+                PlatformType.Normal,
+                PlatformType.Empty,
+                PlatformType.Empty,
+                PlatformType.Empty,
+                PlatformType.Empty,
+                PlatformType.Empty};
+            objectPooler.PickFromPool("Normal", spawnPoints[0].position, spawnPoints[0].rotation, transform.parent);
+        } else
+        {
+            GameObject learn = Instantiate(learning, transform.parent);
+            foreach(Platform plat in learn.GetComponentsInChildren<Platform>())
+            {
+                plat.GetComponent<Renderer>().sharedMaterial = SkinManager.platformMat;
+            }      
+            _localPosition.y -= 1.5f*49f;
+            _transform.localPosition = _localPosition;
+            currentWave = new PlatformType[6] {
+                PlatformType.Empty,
+                PlatformType.Empty,
+                PlatformType.Empty,
+                PlatformType.Normal,
+                PlatformType.Empty,
+                PlatformType.Empty};
+            objectPooler.PickFromPool("Normal", spawnPoints[3].position, spawnPoints[3].rotation, transform.parent);
+        }
+
         _localPosition.y -= 1.5f;
-        spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         _transform.localPosition = _localPosition;
+        spawnerDistance = Mathf.Abs(topCoordY - _localPosition.y);
         while (spawnerDistance <= spawnIn)
         {
             if (isFastRun)
             {
                 currentWave = GenerateFastWaveFromPrevious(currentWave);
                 SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
-            }  
+            }
             else
             {
                 currentWave = GenerateNormalWaveFromPrevious(currentWave);
                 SpawnWave(currentWave, isDoubleCoin);
             }
-               
-            
+
+
             //Move to next position
             _transform.localPosition = _localPosition;
-            spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
+            spawnerDistance = Mathf.Abs(topCoordY - _localPosition.y);
         }
-
-       
-        
+        StartCoroutine("Spawn");
     }
 
-    void Update()
+    IEnumerator Spawn()
     {
 
-        spikeChance = startSpikeChance * GameState.currentSpeedFactor;
-        diamondChance = startDiamondChance * GameState.currentSpeedFactor;
-        hardChance = startHardChance * GameState.currentSpeedFactor;
-        spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
-        if (spawnerDistance <= spawnIn)
+        while(true)
         {
-            if (isFastRun || isLaserAttack)
+            spikeChance = startSpikeChance * GameState.currentSpeedFactor;
+            diamondChance = startDiamondChance * GameState.currentSpeedFactor;
+            hardChance = startHardChance * GameState.currentSpeedFactor;
+            spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
+            if (spawnerDistance <= spawnIn)
             {
-                currentWave = GenerateFastWaveFromPrevious(currentWave);
-                SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
-            }
-            else
-            {
-                currentWave = GenerateNormalWaveFromPrevious(currentWave);
-                SpawnWave(currentWave, isDoubleCoin);
-            }
-            
-            _transform.localPosition = _localPosition;
-            if (GameState.score >= laserAttackAfter && !isLaserAttack)
-            {
-                isLaserAttack = true;
-                spawnerPosition = (int)(_localPosition.y / -1.5f);
-                targetPlayerPosition = spawnerPosition;
-                StartCoroutine(LaserAttack());
-            }
-        }
+                if (isFastRun || isLaserAttack)
+                {
+                    currentWave = GenerateFastWaveFromPrevious(currentWave);
+                    SpawnWaveWithoutEnemy(currentWave, isDoubleCoin);
+                }
+                else
+                {
+                    currentWave = GenerateNormalWaveFromPrevious(currentWave);
+                    SpawnWave(currentWave, isDoubleCoin);
+                }
 
+                _transform.localPosition = _localPosition;
+                if (GameState.score >= laserAttackAfter && !isLaserAttack)
+                {
+                    isLaserAttack = true;
+                    spawnerPosition = (int)(_localPosition.y / -1.5f);
+                    targetPlayerPosition = spawnerPosition;
+                    StartCoroutine(LaserAttack());
+                }
+            }
+
+            yield return new WaitForSeconds(.25f);
+        }
     }
     IEnumerator LaserAttack()
     {
@@ -173,7 +198,8 @@ public class PlatformSpawner : MonoBehaviour {
     }
     public void Restart()
     {
-        objectPooler.RemovePlatformsFromPool();
+        StopCoroutine("Spawn");
+        objectPooler.RemovePlatformsFromPool(false);
         if(isLaserAttack)
         {
             StopAllCoroutines();
@@ -192,6 +218,7 @@ public class PlatformSpawner : MonoBehaviour {
             _transform.localPosition = _localPosition;
             spawnerDistance = Mathf.Abs(topCoordY - _transform.position.y);
         }
+        StartCoroutine("Spawn");
     }
     public void ActivateDoubleCoins()
     {
@@ -201,7 +228,7 @@ public class PlatformSpawner : MonoBehaviour {
     public void ActivateFastRun()
     {
         isFastRun = true;
-        objectPooler.RemovePlatformsFromPool();
+        objectPooler.RemovePlatformsFromPool(true);
         objectPooler.RemoveEnemyiesFromPool();
         MoveSpawnerTo(GameState.playerPositionY);
     }

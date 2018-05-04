@@ -31,7 +31,13 @@ public class GuiManager : MonoBehaviour {
         currency.text = DataManager.Instance.GetUserData().GoldAmount.ToString();
         SceneController.currentScene = "Shop";
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+           BackToMenu();
+        }
+    }
     IEnumerator StartScene(string scene)
     {
         fadeAnim.Play("FadeOut");

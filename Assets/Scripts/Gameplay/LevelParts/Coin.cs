@@ -22,6 +22,7 @@ public class Coin : MonoBehaviour, IPooledObject {
     public Color sixthCoin;
     public Color eightCoin;
 
+    bool isDouble;
     public int defaultValue;
     [HideInInspector]
     public int currentValue;
@@ -36,18 +37,38 @@ public class Coin : MonoBehaviour, IPooledObject {
     public static Quaternion startRotation;
     private void Awake()
     {
+        isDouble = false;
         mainPS = effect.GetComponent<ParticleSystem>().main;
         rendererCoin = GetComponent<Renderer>();
-        defaultValue = 1;
+        if(!PurchaseManager.isDoubleCoins)
+        {
+            defaultValue = 1;
+            currentValue = 1;
+        } else
+        {
+            defaultValue = 2;
+            currentValue = 2;
+        }
+        
         rendererCoin.material.SetTexture("_MainTex", normalCoinTex);
-        startPosition = transform.position;
-        startRotation = transform.rotation;
+        startPosition = new Vector3(0,0.6f,0);
+        startRotation = Quaternion.identity;
+        _RBTransform = GetComponent<Rigidbody>().transform;
+        GetComponent<MagnetToPlayer>().enabled = false;
     }
+
     public void OnObjectSpawn()
     {
         rendererCoin = GetComponent<Renderer>();
-        defaultValue = 1;
-        
+        if (!PurchaseManager.isDoubleCoins)
+        {
+
+            defaultValue = 1;
+        }
+        else
+        {
+            defaultValue = 2;
+        }
         if (GameState.score> doubleAfter)
         {
             if(GameState.score > tripleAfter)
@@ -79,13 +100,13 @@ public class Coin : MonoBehaviour, IPooledObject {
     public void ChangeToDouble()
     {
         defaultValue += 1;
-        currentValue = defaultValue;
+        currentValue = isDouble ? defaultValue*2 : defaultValue;
         ChangeTexture(currentValue);
     }
     public void ChangeToTriple()
     {
         defaultValue += 2;
-        currentValue = defaultValue;
+        currentValue = isDouble ? defaultValue * 2 : defaultValue;
         ChangeTexture(currentValue);
     }
 

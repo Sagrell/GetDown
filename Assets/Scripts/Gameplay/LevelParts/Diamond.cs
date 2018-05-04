@@ -5,7 +5,7 @@ public class Diamond : Enemy, IPooledObject
 
     public float speed = 5f;
     public float rotationSpeed = 10f;
-
+    public GameObject destroyed;
     float startSpeed;
     Transform _RBTransform;
     Vector3 currPosition;
@@ -56,7 +56,9 @@ public class Diamond : Enemy, IPooledObject
     public override void Destroy()
     {
         AudioCenter.Instance.PlaySound("DiamondDestroy");
-        ElementsPool.Instance.PickFromPool("DestroyedDiamond", transform.position, transform.rotation);
+
+        GameObject parts = Instantiate(destroyed, transform.position, transform.rotation);
+        Destroy(parts, 3f);
         gameObject.SetActive(false);
     }
 

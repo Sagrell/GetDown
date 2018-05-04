@@ -17,7 +17,11 @@ public class ShopManager : MonoBehaviour
     public Animator platformAnim;
     DataManager dataManager;
     UserData data;
-    
+    public Animator buyDoubleCoins;
+    public GameObject check;
+    public GameObject buy;
+    public GameObject check1;
+    public GameObject buy1;
     private void Awake()
     {
         Instance = this;
@@ -27,6 +31,18 @@ public class ShopManager : MonoBehaviour
     {
         dataManager = DataManager.Instance;
         data = dataManager.GetUserData();
+        PurchaseManager.Instance.doubleCoins = buyDoubleCoins;
+        PurchaseManager.Instance.disableAd = buyDoubleCoins;
+        if (PurchaseManager.isDoubleCoins)
+        {
+            buy.SetActive(false);
+            check.SetActive(true);
+        }
+        if (PurchaseManager.isDisabledAd)
+        {
+            buy1.SetActive(false);
+            check1.SetActive(true);
+        }
     }
 
 
@@ -101,6 +117,16 @@ public class ShopManager : MonoBehaviour
         GuiManager.Instance.UpdateInfo();
         
         GuiManager.Instance.Show(item);
+    }
+    public void BuyConsumable(int id)
+    {
+        
+        PurchaseManager.Instance.BuyConsumable(id);
+    }
+    public void BuyNonConsumable(int id)
+    {
+
+        PurchaseManager.Instance.BuyNonConsumable(id);
     }
     private void OnApplicationPause(bool pause)
     {

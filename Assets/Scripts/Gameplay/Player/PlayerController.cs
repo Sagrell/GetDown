@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("References")]
-    public GameObject[] destroyedVersions;
+    public ParticleSystem destroyedVersion;
 
     //Main camera
     Camera mainCamera;
@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     Transform _RBTransform;
     Vector3 _RBLocalPosition;
     Quaternion _RBLocalRotation;
-
+    Vector3 _RBLocalScale;
+    Vector3 startScale;
     //GameState
     GameState GS;
     //PowerUpManager
@@ -37,7 +38,6 @@ public class PlayerController : MonoBehaviour
     //Material
     Material cubeMat;
     bool isHit;
-    GameObject DP;
     Animator jump;
     void Start()
     {
@@ -48,12 +48,13 @@ public class PlayerController : MonoBehaviour
         _RBTransform = rb.transform;
         _RBLocalPosition = _RBTransform.localPosition;
         _RBLocalRotation = _RBTransform.localRotation;
+        _RBLocalScale = _RBTransform.localScale;
+        startScale = _RBTransform.localScale;
         willDie = false;
         alive = true;
         onGround = false;
         jumping = Jump(Vector3.back * 90, speed, true);
         timeForJump = 1.5f / speed;
-
         mainCamera = Camera.main;
 
         isHit = false;
@@ -63,38 +64,36 @@ public class PlayerController : MonoBehaviour
         GetComponent<MeshFilter>().mesh = SkinManager.cubeMesh;
         cubeMat = SkinManager.cubeMat;
         GetComponent<Renderer>().material = cubeMat;
-
-        for (int i = 0; i < destroyedVersions.Length; i++)
-        {
-            Renderer[] cubeParts = destroyedVersions[i].GetComponentsInChildren<Renderer>();
-            for (int j = 0; j < cubeParts.Length; ++j)
-            {
-                cubeParts[j].material = cubeMat;
-            }
-        }
+        destroyedVersion.GetComponent<ParticleSystemRenderer>().sharedMaterial = cubeMat;
         GetComponent<Animator>().enabled = false;
-        StartCoroutine(ControllSpeed());
+        StartCoroutine("ControllSpeed");
     }
+
     IEnumerator ControllSpeed()
     {
         while(speed < GameManager.Instance.maxPlayerSpeed)
         {
             speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
-            yield return new WaitForSeconds(.1f);
-        }   
+            yield return new WaitForSeconds(.2f);
+        }
+        speed = GameManager.Instance.maxPlayerSpeed;
     }
-    void Update()
+    private void FixedUpdate()
     {
         if (!isHit)
         {
             _RBTransform.localRotation = _RBLocalRotation;
             _RBTransform.localPosition = _RBLocalPosition;
+            _RBTransform.localScale = _RBLocalScale;
         }
+    }
+    void Update()
+    { 
         //Check for bounds and destroy player if he's out of them
         playerScreenPos = mainCamera.WorldToScreenPoint(_RBTransform.position);
         if ((playerScreenPos.y >= Screen.height || playerScreenPos.y <= 0))
         {
-            DestroyPlayer();
+            DestroyPlayer(false);
         }
 
         if (Input.GetKey("d") && onGround && GameState.playerPositionX < 5)
@@ -141,7 +140,6 @@ public class PlayerController : MonoBehaviour
         jumping = Jump(Vector3.forward * 90, -speed, false);
         StartCoroutine(jumping);
     }
-
     IEnumerator Jump(Vector3 byAngles, float speed, bool dir)
     {
         onGround = false;
@@ -152,11 +150,8 @@ public class PlayerController : MonoBehaviour
         float x = 0;
         float y = 0;
         Quaternion rotation = Quaternion.identity;
-        bool isContinue = false;
         Quaternion fromAngle = _RBTransform.localRotation;
         Quaternion toAngle = Quaternion.Euler(fromAngle.eulerAngles + byAngles);
-
-        Vector3 startScale = _RBTransform.localScale;
         float height = 0.8f;
         float width = 0.6f;
         Vector3 readyToJumpScale = new Vector3(height, width, height);
@@ -166,14 +161,14 @@ public class PlayerController : MonoBehaviour
             readyToJumpScale = new Vector3(width, height, height);
             jumpScale = new Vector3(height, width, width);
         }
-        for (float t = 0f; true; t += Time.deltaTime/timeForJump)
+        for (float t = 0f; true; t += GameManager.fixedDeltaTime / timeForJump)
         {
             //If player is grounded, then stop falling
             if (onGround)
             {
                 break;
             }
-            x += speed*Time.deltaTime;
+            x += speed*GameManager.fixedDeltaTime;
             y = Parabolic(Mathf.Abs(x));
             if(t>1)
             {
@@ -186,58 +181,44 @@ public class PlayerController : MonoBehaviour
             {
                 willDie = true;
             }
-            //Freeze player on the end position to avoid "miss-position" and check for the collision 
-            if (Mathf.Abs(x) > 1.5f && !isContinue)
+            _RBLocalPosition.x = prevPosition.x + x;
+            _RBLocalPosition.y = prevPosition.y + y;
+            _RBLocalRotation = rotation;
+            if (t > 0.5f)
             {
-                x = dir ? 1.5f : -1.5f;
-                y = -1.5f;
-                rotation = toAngle;
-                _RBLocalPosition.x = prevPosition.x + x;
-                _RBLocalPosition.y = prevPosition.y + y;
-                _RBLocalRotation = rotation;
-                _RBTransform.localRotation = _RBLocalRotation;
-                _RBTransform.localPosition = _RBLocalPosition;
-                _RBTransform.localScale = startScale;
-                yield return new WaitForFixedUpdate();
-                if (!onGround)
-                {
-                    isContinue = true;
-                }
-            } else
+                _RBLocalScale = Vector3.Lerp(jumpScale, startScale, (t - 0.5f) * 2f);
+            }
+            else if (t > 0.1f)
             {
-                _RBLocalPosition.x = prevPosition.x + x;
-                _RBLocalPosition.y = prevPosition.y + y;
-                _RBLocalRotation = rotation;
-                if(t>0.5f)
-                {
-                    _RBTransform.localScale = Vector3.Lerp(jumpScale, startScale, (t - 0.5f)*2f);
-                } else if (t > 0.1f)
-                {
-                    _RBTransform.localScale = Vector3.Lerp(readyToJumpScale, jumpScale, (t - 0.1f) * 2.5f);
-                } else
-                {
-                    _RBTransform.localScale = Vector3.Lerp(startScale, readyToJumpScale, t*10);
-                }
-                
-                //We need to sync it with Physics
-                yield return null;
-            }      
+                _RBLocalScale = Vector3.Lerp(readyToJumpScale, jumpScale, (t - 0.1f) * 2.5f);
+            }
+            else
+            {
+                _RBLocalScale = Vector3.Lerp(startScale, readyToJumpScale, t * 10);
+            }
+            yield return new WaitForFixedUpdate();     
         }
     }
-    public void DestroyPlayer()
+    public void DestroyPlayer(bool isMario)
     {
         alive = false;
         GameState.isAlive = false;
-        GameManager.Instance.Kill();
+        if(!GameState.isLearning)
+        {
+            GameManager.Instance.Kill();
+        } else
+        {
+            InGameGUI.Instance.DieInLearning(isMario);
+        }
         powerUp.DeactivateAll();
-        DP = Instantiate(destroyedVersions[Random.Range(0,3)], _RBTransform.position, _RBTransform.rotation);
+        Instantiate(destroyedVersion.gameObject, _RBTransform.position, _RBTransform.rotation, transform.parent).GetComponent<ParticleSystem>().Play();
         AudioCenter.Instance.PlaySound("DestroyPlayer");
         ShakeManager.ShakeAfterDeath();
+        StopCoroutine("ControllSpeed");
         gameObject.SetActive(false);
     }
     public void RespawnPlayer()
     {
-        Destroy(DP);
         currentPosition = 0;
         willDie = false;
         isHit = false;
@@ -246,14 +227,7 @@ public class PlayerController : MonoBehaviour
         _RBLocalPosition.y = GameState.playerPositionY * -1.5f + 0.5f;
         _RBTransform.localRotation = _RBLocalRotation;
         _RBTransform.localPosition = _RBLocalPosition;
-        if (speed < GameManager.Instance.maxPlayerSpeed)
-        {
-            speed = GameManager.Instance.playerSpeed * GameState.currentSpeedFactor;
-        }
-        else
-        {
-            speed = GameManager.Instance.maxPlayerSpeed;
-        }
+        StartCoroutine("ControllSpeed");
     }
     public bool IsAlive()
     {
@@ -267,30 +241,48 @@ public class PlayerController : MonoBehaviour
         if(collider.tag == "Enemy")
         {
            if(!PowerUpManager.isShield)
-             DestroyPlayer();    
+           {
+
+               if(GameState.isLearning && collider.GetComponent<Diamond>()!=null)
+               {
+                   DestroyPlayer(true);
+               } else
+               { 
+                   DestroyPlayer(false);
+               }
+              
+           }
+                
         }
         if (collider.tag == "Platform")
         {
             if (willDie)
             {  
-               DestroyPlayer();
+               DestroyPlayer(false);
             } else
             {
+                //Correct position
+                _RBLocalPosition.x = collider.transform.localPosition.x;
+                _RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
+                _RBLocalScale = startScale;
+                _RBLocalRotation = Quaternion.Euler(new Vector3(0,0,currentPosition*90));
+                if (!GameState.isLearning)
+                {
+                    score = ++GameState.score;
+                } else
+                {
+                    score = ++GameState.learningProgress;
+                }
                 
-                //AudioCenter.PlaySound(AudioCenter.jumpSoundId);
-                //Correct position if somethink happend 
-                //_RBLocalPosition.x = collider.transform.localPosition.x;
-                //_RBLocalPosition.y = collider.transform.localPosition.y + 0.5f;
-                score = ++GameState.score;
                 switch(score)
                 {
                     case 50:
                         GooglePlayManager.Instance.Achieve(GooglePlayManager.firstJumpsAchieve);
                         break;
-                    case 100:
+                    case 150:
                         GooglePlayManager.Instance.Achieve(GooglePlayManager.ugbprofessionalAchieve);
                         break;
-                    case 200:
+                    case 250:
                         GooglePlayManager.Instance.Achieve(GooglePlayManager.murProfessionalAchieve);
                         break;
                     case 500:

@@ -12,11 +12,13 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             player = Instantiate(playerObject, playerPosition.position, playerPosition.rotation, playerPosition.parent).GetComponent<PlayerController>();
+            trail.objToFollow = player.transform;
         }
     #endregion  
     public static float deltaTime = 0.0f;
     public static float fixedDeltaTime = 0.0f;
 
+    public TrailLocal trail;
     public static PlayerController player;
 
     public Renderer background;
@@ -25,7 +27,6 @@ public class GameManager : MonoBehaviour
     public Transform playerPosition;
     public float playerSpeed = 3f;
     public float maxPlayerSpeed = 7f;
-
     [Space]
     [Header("Difficulty settings:")]
     [Range(0f, 1f)]
@@ -41,9 +42,8 @@ public class GameManager : MonoBehaviour
     IEnumerator respawnProgress;
     bool isMute;
     float musicVolume;
-    //string fullScreenAd = "ca-app-pub-1962167994065434/5399272086";
     void Start () {
-        platform.material = SkinManager.platformMat;
+        platform.sharedMaterial = SkinManager.platformMat;
         platformWithSpike.sharedMaterial.SetTexture("_MainTex", SkinManager.platformMat.GetTexture("_MainTex"));
         platformWithSpike.sharedMaterial.SetTextureOffset("_MainTex", SkinManager.platformMat.GetTextureOffset("_MainTex"));
         platformWithSpike.sharedMaterial.SetTextureScale("_MainTex", SkinManager.platformMat.GetTextureScale("_MainTex"));
@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
         {
             AudioCenter.Instance.SetVolumeAllMusic(0f);
         }
+        GameState.isLearning = data.isFirstTime;
+
         StartCoroutine(StartGame());
     }
    
@@ -79,11 +81,10 @@ public class GameManager : MonoBehaviour
         {
             yield return null;
         }
-        Time.timeScale = 1f;
         GooglePlayManager.Instance.Achieve(GooglePlayManager.beginnerAchieve);
-        //AdManager.Instance.ShowFullscreenAd(fullScreenAd);
-        StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));        
-
+        while (GameState.isLearning) { yield return new WaitForSeconds(.2f); }
+        Time.timeScale = 1f;
+        StartCoroutine(IncreaseSpeedFactorEvery(increaseEvery));
     }
     void Update () {
         deltaTime = Time.deltaTime;    
@@ -110,18 +111,20 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if (!GameState.isGameOver)
+        if (!GameState.isGameOver && !GameState.isLearning && !GameState.isPaused)
         {
             if (pause)
             {
 
                 AudioCenter.Instance.PauseMusic("MainTheme", .2f);
-                InGameGUI.Instance.Pause();
+                Time.timeScale = 0f;
             }
             else
             {
+                
                 AudioCenter.Instance.ResumeMusic("MainTheme", .2f);
-                InGameGUI.Instance.Resume();
+                Time.timeScale = 1f;
+
             }
         }
     }

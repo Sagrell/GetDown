@@ -32,9 +32,12 @@ public class InGameGUI : MonoBehaviour {
     public Animator buyCoinsAnim;
     public Image progressRespawn;
     public Button respawn;
+    public Button pause;
     public Button buyRespawn;
     public Button freeRespawn;
     public Button watchAdRespawn;
+
+    public Animator learningAnim;
     PlayerController player;
     bool isRespawnWindow;
     
@@ -47,7 +50,6 @@ public class InGameGUI : MonoBehaviour {
     bool isStartRespawn;
     bool isStartRespawnTimer;
     bool isRewarded;
-    bool isStopTime;
     bool isDisabledAd;
     bool isRespawnPaused;
 
@@ -69,46 +71,233 @@ public class InGameGUI : MonoBehaviour {
         watchAdRespawn.gameObject.SetActive(!isDisabledAd);
         respawnCost = 50;
         respawnProgress = RespawnProgress(0, null);
+        if(GameState.isLearning)
+        {
+            StartCoroutine(StartLearning());
+        }
+        StartCoroutine("CheckState");
+    }
+
+    bool waitForTap;
+    bool isAnimating;
+    bool isDead = false;
+    IEnumerator StartLearning()
+    {
+        pause.interactable = false;
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        if(!isDead)
+        learningAnim.Play("ShowFirst");
+        isAnimating = true;
+        player.enabled = false; pause.interactable = false;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideFirst");
+        yield return new WaitForSecondsRealtime(1f);
+        pause.interactable = true;
+        player.enabled = true;
+        isAnimating = false;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+
+        while (LevelController.levelPosition.y < 11) { yield return null; }
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        player.enabled = false; pause.interactable = false;
+        if (!isDead)
+            learningAnim.Play("ShowSecond");
+        isAnimating = true;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideSecond");
+        yield return new WaitForSecondsRealtime(1f);
+        isAnimating = false;
+        pause.interactable = true;
+        player.enabled = true;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+
+        while (LevelController.levelPosition.y < 22) { yield return null; }
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        player.enabled = false; pause.interactable = false;
+        if (!isDead)
+            learningAnim.Play("ShowThird");
+        isAnimating = true;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideThird");
+        yield return new WaitForSecondsRealtime(1f);
+        isAnimating = false;
+        pause.interactable = true;
+        player.enabled = true;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+
+        while (LevelController.levelPosition.y < 36) { yield return null; }
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        player.enabled = false; pause.interactable = false;
+        if (!isDead)
+            learningAnim.Play("ShowQuad");
+        isAnimating = true;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideQuad");
+        yield return new WaitForSecondsRealtime(1f);
+        isAnimating = false;
+        pause.interactable = true;
+        player.enabled = true;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+
+        while (LevelController.levelPosition.y < 50) { yield return null; }
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        player.enabled = false;pause.interactable = false;
+        if (!isDead)
+            learningAnim.Play("ShowFifth");
+        isAnimating = true;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideFifth");
+        yield return new WaitForSecondsRealtime(1f);
+        isAnimating = false;
+        pause.interactable = true;
+        player.enabled = true;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+
+        while (LevelController.levelPosition.y < 65) { yield return null; }
+        pause.interactable = false;
+        Time.timeScale = 0f;
+        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+        player.enabled = false;
+        if (!isDead)
+            learningAnim.Play("ShowSixth");
+        isAnimating = true;
+        yield return new WaitForSecondsRealtime(1f);
+        waitForTap = true;
+        while (waitForTap) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("HideSixth");
+        yield return new WaitForSecondsRealtime(1f);
+        isAnimating = false;
+        pause.interactable = true;
+        player.enabled = true;
+        AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
+        Time.timeScale = 1f;
+        pause.interactable = false;
+        while (LevelController.levelPosition.y < 70) { yield return null; }
+        if (!isDead)
+            learningAnim.Play("YouAreReady");
+        yield return new WaitForSecondsRealtime(1f);
+        if (!isDead)
+            learningAnim.Play("YouAreReadyHide");
+
+        GameState.isLearning = false;
+        GameState.score += GameState.learningProgress;
+        data.isFirstTime = false;
+        dataManager.SaveUserData(data);
+        pause.interactable = true;
+
+    }
+    public void DieInLearning(bool isDeadAfterJump)
+    {
+        StartCoroutine(DieInLearningIE(isDeadAfterJump));
+    }
+    IEnumerator DieInLearningIE(bool isDeadAfterJump)
+    {
+        isDead = true;
+        learningAnim.Play("Idle");
+        if (isDeadAfterJump)
+        {
+            learningAnim.Play("MarioShow");
+            float toTimeSpeed = 0f;
+            for (var t = 0f; t < 1; t += Time.unscaledDeltaTime / 2f)
+            {
+                Time.timeScale = Mathf.Lerp(1f, toTimeSpeed, t);
+                yield return null;
+            }
+            learningAnim.Play("MarioHide");
+            yield return new WaitForSecondsRealtime(.5f);
+        }
+        else
+        {
+            learningAnim.Play("DeadShow");
+            float toTimeSpeed = 0f;
+            for (var t = 0f; t < 1; t += Time.unscaledDeltaTime / 1.5f)
+            {
+                Time.timeScale = Mathf.Lerp(1f, toTimeSpeed, t);
+                yield return null;
+            }
+            learningAnim.Play("DeadHide");
+            yield return new WaitForSecondsRealtime(.5f);
+        }
+        SceneManager.LoadScene("Game");
     }
     void Update()
     {
-        if (isStartRespawn)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            watchAdRespawn.interactable = false;
-            isStartRespawn = false;
-            Respawn();
+            if(!isShowingAd)
+            {
+                if (!GameState.isGameOver && !GameState.isPaused)
+                {
+                    Pause();
+                }
+                else if (GameState.isPaused)
+                {
+                    Resume();
+                }
+            }   
         }
-        if (isStartRespawnTimer)
+        if (GameState.isLearning)
         {
-            isStartRespawnTimer = false;
-            Time.timeScale = 0f;
-            StopCoroutine(respawnProgress);
-            respawnProgress = RespawnProgress(5f, progressRespawn);
-            StartCoroutine(respawnProgress);
-        }
-        if (isStopTime)
-        {
-            isStopTime = false;
-            Time.timeScale = 0f;
-        }
+            Touch[] touches = Input.touches;
+            if (Input.GetKey("d") || Input.GetKey("a") || (touches.Length == 1))
+            {
+                waitForTap = false;
+            }
+        } 
+        
     }
-    IEnumerator StartScene(string scene)
+    IEnumerator CheckState()
     {
-        anim.Play("FadeOut");
-        AsyncOperation loading = SceneManager.LoadSceneAsync(scene);
-        loading.allowSceneActivation = false;
-        anim.Update(0f);
-        while (anim.GetCurrentAnimatorStateInfo(0).IsName("Main.FadeOut"))
+        while(true)
         {
-            yield return null;
+            if (isStartRespawn)
+            {
+                watchAdRespawn.interactable = false;
+                isStartRespawn = false;
+                Respawn();
+            }
+            if (isStartRespawnTimer)
+            {
+                isStartRespawnTimer = false;
+                Time.timeScale = 0f;
+                Debug.Log("AD SEND");
+                StopCoroutine(respawnProgress);
+                respawnProgress = RespawnProgress(5f, progressRespawn);
+                StartCoroutine(respawnProgress);
+            }
+            yield return new WaitForSecondsRealtime(.2f);
         }
-        AudioCenter.Instance.StopMusic("MainTheme");
-        loading.allowSceneActivation = true;
-        SceneController.previousScene = "Game";
     }
     public void UpdateScore()
     {
-        string score = GameState.score.ToString();
+
+        string score = GameState.isLearning ? GameState.learningProgress.ToString() : GameState.score.ToString();
         scoreInGame.text = score;
     }
     public void UpdateCoins()
@@ -123,29 +312,36 @@ public class InGameGUI : MonoBehaviour {
     }
     public void Pause()
     {
-        AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
-        pausePanel.SetActive(true);
-        Time.timeScale = 0f;
-        scoreInPause.text = GameState.score.ToString();
-        bestScoreInPause.text = bestScore.ToString();
-        GameState.isPaused = true;
-        player.enabled = false;
-        anim.SetBool("isPaused", true);
+        if (!isAnimating)
+        {
+            AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
+            pausePanel.SetActive(true);
+            Time.timeScale = 0f;
+            scoreInPause.text = GameState.isLearning ? GameState.learningProgress.ToString() : GameState.score.ToString();
+            bestScoreInPause.text = bestScore.ToString();
+            GameState.isPaused = true;
+            player.enabled = false;
+            anim.SetBool("isPaused", true);
+        }    
     }
+    bool isShowingAd = false;
     public void GameOver()
     {
+        isStartRespawnTimer = false;
         isRespawnPaused = false;
         AudioCenter.Instance.PauseMusic("MainTheme", 0.5f);
         gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
-        scoreInGameOver.text = GameState.score.ToString();
+        scoreInGameOver.text = GameState.isLearning ? GameState.learningProgress.ToString() : GameState.score.ToString();
         bestScoreInGameOver.text = bestScore.ToString();
         player.enabled = false;
         GameState.isGameOver = true;
-        anim.SetBool("isGameOver", true);  
+        anim.SetBool("isGameOver", true);
         if (++AdManager.countRestart >= AdManager.nextShowAd)
         {
-            AdManager.nextShowAd = Random.Range(3, 6);
+            isShowingAd = true;
+            AdManager.nextShowAd = Random.Range(2, 4);
+            Debug.Log("AD 1");
             AdManager.Instance.ShowGameOverAd(HandleOnGameOverAdClosed);
             AdManager.countRestart = 0;
             
@@ -158,8 +354,10 @@ public class InGameGUI : MonoBehaviour {
     }
     void HandleOnGameOverAdClosed(object sender, System.EventArgs args)
     {
+        isShowingAd = false;
         AdManager.Instance.LoadGameOverAd();
         isStartRespawnTimer = true;
+        Debug.Log("AD OVER");
     }
     public IEnumerator ResumeAnimation(float time)
     {
@@ -193,8 +391,8 @@ public class InGameGUI : MonoBehaviour {
         AudioCenter.Instance.ResumeMusic("MainTheme", 0.5f);
         GameState.isPaused = false;
         player.enabled = true;
-        StopAllCoroutines();
-        StartCoroutine(ResumeAnimation(2f));
+        StopCoroutine("ResumeAnimation");
+        StartCoroutine("ResumeAnimation",2f);
         anim.SetBool("isPaused", false);
     }
     public void Respawn()
@@ -205,7 +403,7 @@ public class InGameGUI : MonoBehaviour {
         GameState.isAlive = true;  
         anim.SetBool("isGameOver", false);
         respawnAnim.Play("HideRespawnType");
-        StartCoroutine(RespawnAnimation());
+        StartCoroutine("RespawnAnimation");
     }
     public void FreeRespawn()
     {
@@ -277,9 +475,6 @@ public class InGameGUI : MonoBehaviour {
         if (isRewarded)
         {      
             isStartRespawn = true;
-        } else
-        {
-            isStopTime = true;
         }
     }
     IEnumerator startShield;
@@ -346,6 +541,7 @@ public class InGameGUI : MonoBehaviour {
     }
     IEnumerator RespawnProgress(float time, Image progressImage)
     {
+        Debug.Log("AD START PROGRESS");
         respawn.interactable = true;
         progressImage.transform.parent.gameObject.SetActive(true);
         float currentProgress = 1f;
@@ -354,7 +550,7 @@ public class InGameGUI : MonoBehaviour {
             currentProgress -= Time.unscaledDeltaTime / time;
             progressImage.fillAmount = currentProgress;
             yield return null;
-            while (isRespawnPaused) { yield return null; }
+            while (isRespawnPaused || isShowingAd) { yield return null; }
         }
         respawn.interactable = false;
         progressImage.transform.parent.gameObject.SetActive(false);

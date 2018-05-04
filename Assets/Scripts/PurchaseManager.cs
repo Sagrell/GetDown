@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -14,6 +15,7 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
     public string[] C_PRODUCTS;
 
     public Animator disableAd;
+    public Animator doubleCoins;
     /// <summary>
     /// Событие, которое запускается при удачной покупке многоразового товара.
     /// </summary>
@@ -29,6 +31,7 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
 
     public static PurchaseManager Instance;
     public static bool isDisabledAd;
+    public static bool isDoubleCoins;
     private void Awake()
     {
         if (Instance == null )
@@ -54,21 +57,30 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
         {
             isDisabledAd = false; 
         }
+        if (CheckBuyState("double_coins"))
+        {
+            isDoubleCoins = true;
+        }
+        else
+        {
+            isDoubleCoins = false;
+        }
     }
 
     void OnPurchaseConsumableHandler(PurchaseEventArgs args)
     {
+        AudioCenter.Instance.PlaySound("Purchase");
         UserData data = DataManager.Instance.GetUserData();
         switch (args.purchasedProduct.definition.id)
         {
             case "gold_s_amount":
-                data.GoldAmount += 2000;
+                data.GoldAmount += 10000;
                 break;
             case "gold_m_amount":
-                data.GoldAmount += 5000;
+                data.GoldAmount += 30000;
                 break;
             case "gold_l_amount":
-                data.GoldAmount += 15000;
+                data.GoldAmount += 80000;
                 break;
             default:
                 break;
@@ -85,13 +97,23 @@ public class PurchaseManager : MonoBehaviour, IStoreListener
     }
     void OnPurchaseNonConsumableHandler(PurchaseEventArgs args)
     {
-        if(args.purchasedProduct.definition.id.Equals("disable_ad"))
+        AudioCenter.Instance.PlaySound("Purchase");
+        if (args.purchasedProduct.definition.id.Equals("disable_ad"))
         {
             isDisabledAd = true;
             disableAd.Play("DisableAd");
+        } else if (args.purchasedProduct.definition.id.Equals("double_coins"))
+        {
+            doubleCoins.Play("BuyDoubleCoins");
+            isDoubleCoins = true;
         }
-        
+
     }
+    public static Product GetProduct(string id)
+    {
+        return m_StoreController.products.WithID(id);
+    }
+
     /// <summary>
     /// Проверить, куплен ли товар.
     /// </summary>

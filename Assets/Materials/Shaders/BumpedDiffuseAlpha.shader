@@ -7,7 +7,8 @@ Properties {
 SubShader {
     Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
     LOD 200
-
+	Cull Back
+	ZWrite Off
 CGPROGRAM
 #pragma surface surf Lambert alpha:fade noforwardadd 
 

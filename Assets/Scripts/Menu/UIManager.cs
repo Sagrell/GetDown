@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,8 @@ public class UIManager : MonoBehaviour {
             Instance = this;
         }
     }
+
+
     public Text coins;
     public GameObject cube;
     public Transform cubePosition;
@@ -31,11 +34,11 @@ public class UIManager : MonoBehaviour {
     public Image enableSound;
     public GameObject disabledAd;
     public GameObject disableAd;
-    
+    public Animator disableAdAnim;
     UserData data;
     float musicVolume;
     float soundVolume;
-    bool isMute;
+    bool isMute = true;
     [HideInInspector]
     public bool isSettings;
     [HideInInspector]
@@ -44,14 +47,17 @@ public class UIManager : MonoBehaviour {
     public bool isCredits;
     [HideInInspector]
     public bool isLeaderboard;
+
     private void Start()
     {
+        PurchaseManager.Instance.disableAd = disableAdAnim;
         isSettings = false;
         isCredits = false;
         isLeaderboard = false;
         data = DataManager.Instance.GetUserData();
         musicVolume = data.musicVolume;
         soundVolume = data.soundVolume;      
+
         isMute = data.isMute;
         disableSound.enabled = isMute;
         enableSound.enabled = !isMute;
@@ -84,6 +90,29 @@ public class UIManager : MonoBehaviour {
         }
 
     }
+    public void SetRemainingTime()
+    {
+
+    }
+ 
+
+    public void BuyConsumable(int id)
+    {
+
+        PurchaseManager.Instance.BuyConsumable(id);
+    }
+    public void BuyNonConsumable(int id)
+    {
+
+        PurchaseManager.Instance.BuyNonConsumable(id);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();    
+        }
+    }
     public void GoToShop()
     {
         AudioCenter.Instance.PlaySound("Button");
@@ -100,9 +129,10 @@ public class UIManager : MonoBehaviour {
         {
             AudioCenter.Instance.PauseMusic("MenuTheme", 1f);
         }
-        
 
-        StartCoroutine(StartScene("Game"));
+
+        //StartCoroutine(StartScene("Game"));
+        SceneManager.LoadScene("Game");
     }
     public void CoinsClick()
     {
@@ -141,19 +171,12 @@ public class UIManager : MonoBehaviour {
     public void ShowLeaderboard()
     {
         AudioCenter.Instance.PlaySound("Button");
-        isLeaderboard = true;
-        SwipeController.isAnimating = true;
-        LeaderboardManager.Instance.ShowLeaders();
-        contentAnim.Play("LeaderboardFadeIn");
+        GooglePlayManager.Instance.ShowLeaderboard();
     }
-    public void HideLeaderboard()
+    public void ShowAchievements()
     {
-        if (isLeaderboard)
-        {
-            SwipeController.isAnimating = true;
-            contentAnim.Play("LeaderboardFadeOut");
-            isLeaderboard = false;
-        }
+        AudioCenter.Instance.PlaySound("Button");
+        GooglePlayManager.Instance.ShowAchievements();
     }
     public void ShowCoins()
     {
@@ -248,15 +271,19 @@ public class UIManager : MonoBehaviour {
     }
     private void OnApplicationPause(bool pause)
     {
+        
         if (pause)
         {
-            AudioCenter.Instance.PauseMusic("MenuTheme", 0f);
             Time.timeScale = 0f;
+            if (!isMute)
+                AudioCenter.Instance.PauseMusic("MenuTheme", 0f);
+           
         }
         else
         {
             Time.timeScale = 1f;
-            AudioCenter.Instance.ResumeMusic("MenuTheme", 0f);
+            if(!isMute)
+                AudioCenter.Instance.ResumeMusic("MenuTheme", 0f);
         }
     }
     

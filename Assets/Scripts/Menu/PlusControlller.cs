@@ -20,7 +20,7 @@ public class PlusControlller : MonoBehaviour {
     public GameObject signInFacebook;
     public GameObject signOutFacebook;
     public GameObject inviteFriendsFacebook;
-
+    public Button leaderboard;
 
     bool isDragging;
     bool isOpened;
@@ -67,11 +67,13 @@ public class PlusControlller : MonoBehaviour {
     {
         signInGoogle.SetActive(false);
         signOutGoogle.SetActive(true);
+        leaderboard.interactable = true;
     }
     public void SignOutStateGoogle()
     {
         signInGoogle.SetActive(true);
         signOutGoogle.SetActive(false);
+        leaderboard.interactable = false;
     }
     // Update is called once per frame
     void Update () {

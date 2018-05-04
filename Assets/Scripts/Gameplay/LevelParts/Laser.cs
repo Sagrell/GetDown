@@ -26,7 +26,7 @@ public class Laser : MonoBehaviour, IPooledObject {
         {
             if (hit.collider.CompareTag("Player"))
             {
-                hit.collider.gameObject.GetComponent<PlayerController>().DestroyPlayer();
+                hit.collider.gameObject.GetComponent<PlayerController>().DestroyPlayer(false);
             }
             if (hit.collider.CompareTag("Shield"))
             {

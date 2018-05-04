@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/Sagrell/Desktop/GameDev/GetDownMobile/getDown_v33.0(Debug).apk
+C:/Users/Sagrell/Desktop/GameDev/GetDownMobile/getDown_v35.0(Debug).apk
 SceneListBegin?
 Assets/Scenes/Menu.unity
 Assets/Scenes/Shop.unity
@@ -11,27 +11,27 @@ SceneListEnd?
 05524b8f659e7bfe5756d1335fec24ba Stores.dll:UnityEngine.Purchasing.AsyncWebUtil
 05524b8f659e7bfe5756d1335fec24ba Stores.dll:UnityEngine.Purchasing.MoolahStoreImpl
 05524b8f659e7bfe5756d1335fec24ba Stores.dll:UnityEngine.Purchasing.Extension.UnityUtil
+8c6a157db8c23388af29bca51a7de743 Assembly-CSharp.dll:.RewardDay
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Magnet
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
-dbc29a6f2739d277c10da432d73adb6d UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
+4b12dd839b2293f8457cd67cc3610b85 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 8144169769d51429c4aedc8b0f92d47b UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
-13c0cc12d9db99559b2469b7b524857c UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationTrack
+f937056ecc8f8a2a0650da2109391d9e UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationTrack
 c28edace1fdf0563f7e72075531c5744 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioPlayableAsset
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioTrack
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.BasicPlayableBehaviour
 ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlPlayableAsset
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlTrack
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 7eaacad264a0bd796404e53dc74fe307 Assembly-CSharp.dll:.Laser
 5958172b79d44c060f2241a38a5ae4dc Assembly-CSharp.dll:.PlatformWithSpike
 6b52fafdfc29200292232ed028497f37 Assembly-CSharp.dll:.Leader
 f25fd3873e43d46640b1fd4aa42dc1ab Assembly-CSharp-firstpass.dll:.IAPDemoProductUI
 a2205716825ec469d1261a4e1cadddf2 Assembly-CSharp-firstpass.dll:UnityEngine.Purchasing.IAPButton
-118bfc205d58ae1ec0f8cd39c825336c Assembly-CSharp-firstpass.dll:Better.StreamingAssets.BSA_TestSceneGUI
-0753d9c94e4bc045bb747a1b159f6f5e Assembly-CSharp.dll:.InGameGUI
-b5d3d14b94f14ae8943e7c28e08a29a2 Assembly-CSharp.dll:.PlusControlller
+bc758099925a8c81400699ece22553a5 Assembly-CSharp.dll:.InGameGUI
+434cc13820e98997bb7e181ebc60fae9 Assembly-CSharp.dll:.PlusControlller
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.AppEvents
 ea7ebf69aaaf7e60af89f01e536a2dbc Assembly-CSharp.dll:.AudioCenter
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.MagnetToPlayer
@@ -109,16 +109,16 @@ f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LanguageManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SpiralPhaseManager
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
-dbc29a6f2739d277c10da432d73adb6d UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
+4b12dd839b2293f8457cd67cc3610b85 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 8144169769d51429c4aedc8b0f92d47b UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
-13c0cc12d9db99559b2469b7b524857c UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationTrack
+f937056ecc8f8a2a0650da2109391d9e UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationTrack
 c28edace1fdf0563f7e72075531c5744 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioPlayableAsset
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.AudioTrack
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.BasicPlayableBehaviour
 ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlPlayableAsset
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlTrack
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
-31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.ControlTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
+92d7a83ea3c7404e484f3b2eed421855 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 43e0bb756dbd788930987fd144a47b68 Assembly-CSharp-firstpass.dll:UnityEngine.Purchasing.IAPListener
 d90197112ad935b69d6750f97b2adb0f Assembly-CSharp.dll:.LevelController
@@ -141,11 +141,12 @@ c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.MagnetPowerUp
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 80199407f489bb3260d8c05631bc509d Assembly-CSharp.dll:.DoubleCoin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp-firstpass.dll:UnityEngine.Purchasing.DemoInventory
+a30056a9476f18e44916f7250c5f004f Assembly-CSharp.dll:.TrailLocal
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GameState
 39a29a27d670c5970e79cd691176f9aa Assembly-CSharp.dll:.GuiManager
 322cb40e1e282f28af980cbef7922a90 UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsEventTracker
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
-e493b77200bd545595146e08b36e46b7 Assembly-CSharp.dll:.PlatformSpawner
+ae55885f20d2036f6435f4aadc6412dd Assembly-CSharp.dll:.PlatformSpawner
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
@@ -155,6 +156,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 5df4678b6b072767a548c5edfea9833a Assembly-CSharp.dll:.ElementsPool
 4e110da1318d044edaaa626136d3fe9d Assembly-CSharp.dll:.PatternItem
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.DialogShare
+0d5d01c704024304937a943de9fd1c76 Assembly-CSharp.dll:.MenuManager
 50667894c33b478dc38ae949114bb1e8 Assembly-CSharp-firstpass.dll:AppStoresSupport.AppStoreSettings
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DestroyAfter
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.GraphRequest
@@ -163,16 +165,16 @@ c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.DoubleCoinPowerUp
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.ConsoleBase
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.RotateWithTouch
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.MagnetUpgrade
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Spike
+4ebf3babf772bf85ac451e47860778ad Assembly-CSharp.dll:.Spike
 b2aadab4d740fdf710553050fff176ac Assembly-CSharp.dll:.Shield
-82b926556151ab70ce1d8f5b2130baee Assembly-CSharp.dll:.PurchaseManager
+b7c257ad4aabf1258c689b1a6c3ad7fd Assembly-CSharp.dll:.PurchaseManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.AdManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DataManager
-4c89cbbf07844cd6b857915cfcf9f0b3 Assembly-CSharp.dll:.LeaderboardManager
 6b9fca8dd6d3bb20fd6472920d533f2c Assembly-CSharp.dll:.Coin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.BuyCoins
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
+bf2d739055d61e8d31bc407b9b8ea75b Assembly-CSharp.dll:.SplashScreen
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.UnityMainThreadDispatcher
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.GooglePlayManager
 05524b8f659e7bfe5756d1335fec24ba Facebook.Unity.dll:Facebook.Unity.Mobile.Android.AndroidFacebookGameObject
@@ -192,7 +194,7 @@ b2aadab4d740fdf710553050fff176ac Assembly-CSharp.dll:.Shield
 05524b8f659e7bfe5756d1335fec24ba Facebook.Unity.dll:Facebook.Unity.Canvas.JsBridge
 05524b8f659e7bfe5756d1335fec24ba Facebook.Unity.dll:Facebook.Unity.Editor.Dialogs.MockLoginDialog
 05524b8f659e7bfe5756d1335fec24ba Facebook.Unity.dll:Facebook.Unity.Editor.Dialogs.MockShareDialog
-a583d94e96bcfadabb65f630fb5e82cb Assembly-CSharp.dll:.GameManager
+fa209aba7f12998ebd3a4d9d0790a5b0 Assembly-CSharp.dll:.GameManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.MainMenu
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
@@ -209,6 +211,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 0b539736074a5903608bcd619dd490c5 Assembly-CSharp.dll:.SkinManager
+708e24d1d43d00b1a42ce4bb9346af27 Assembly-CSharp.dll:.DailyGift
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LaserInMenu
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SceneController
 c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.FastRunPowerUp
@@ -229,9 +232,11 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
 c155a394adca7150e655710872cdbd4f Assembly-CSharp.dll:.ShieldPowerUp
 099e37e737209d13a4c6a3454bae05b3 Assembly-CSharp.dll:.CameraShaker
-e361d8d15c59e8b77f6e681f134e74f9 Assembly-CSharp.dll:.ShopManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainMenu
+24c3688416455d99bf7b3b80c3ba35e6 Assembly-CSharp.dll:.ShopManager
 9182867c83396a4a6e8107f7b6babd1b Assembly-CSharp.dll:.Pattern
 11de3303ea36bc97a0ae0d4f7d445eff Assembly-CSharp.dll:.PowerUpManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EventHandler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.FacebookManager
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -242,21 +247,19 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 262aaa477017d14e3024d81f20fb0913 Assembly-CSharp.dll:.PowerUpModel
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CameraBehaviour
-252d66f8602efa8c491b3f8d8686f1fc Assembly-CSharp.dll:.UIManager
+7596078ee24cc71d1364d34b42401225 Assembly-CSharp.dll:.UIManager
 05ea61858b5786d3ec86fc0b70e7cef8 Assembly-CSharp.dll:.FastRunUpgrade
 138027de23169bfe51202a18d284c4b7 Assembly-CSharp.dll:.ShopItem
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.Scrolling
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShopMenu
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.AppInvites
 a873c5c17779c95786964cd402acac60 Assembly-CSharp.dll:.SpeedController
-a0a61a2c1f4ae8fd6a3eacf369888045 Assembly-CSharp.dll:.PlayerController
+46a6942c2a70c344cee2d0e6879d9371 Assembly-CSharp.dll:.PlayerController
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Platform
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:GooglePlayGames.OurUtils.PlayGamesHelperObject
-606018aefe64abed79f3ca41de7576b8 Assembly-CSharp.dll:.Diamond
+877e3e195f2b03afbf0fd8a9104218a9 Assembly-CSharp.dll:.Diamond
 32e8fe00b63ed946490b898f6024a2f2 Facebook.Unity.Settings.dll:Facebook.Unity.Settings.FacebookSettings
 1f9dfc14bbf548d256d3ee29ecf4a461 Assembly-CSharp.dll:.LocalizedText
 818d8467b4908e4ce68afe680f662c7c Assembly-CSharp.dll:.Skin
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:Facebook.Unity.Example.AppRequests
 8159363767c8f67409b50fbc4e1f1264 Assembly-CSharp-firstpass.dll:.IAPDemo
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ShopMenu
-0d5d01c704024304937a943de9fd1c76 Assembly-CSharp.dll:.MenuManager
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainMenu

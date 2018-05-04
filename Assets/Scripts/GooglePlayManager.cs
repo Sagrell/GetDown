@@ -43,23 +43,16 @@ public class GooglePlayManager : MonoBehaviour {
 
 
     //Found diamond
-    public static string foundAchive = "CgkIuYTB-6YdEAIQDQ";
-
-
+    public static string alwaysWithYouAchive = "CgkIuYTB-6YdEAIQEg";
 
     string leaderboardId = "CgkIuYTB-6YdEAIQAA";
     Dictionary<string, IAchievement> achievements;
-    User[] users;
-    User[] friends;
     bool isAchievesLoaded;
-    bool isUsersLoaded;
-    bool isScoreLoaded;
     bool isLogIn;
     private void Awake()
     {
         if (Instance == null)
         {
-            isScoreLoaded = false;
             isAchievesLoaded = false;
             Instance = this;
             PlayGamesPlatform.Activate();
@@ -89,6 +82,7 @@ public class GooglePlayManager : MonoBehaviour {
                     isAchievesLoaded = true;
                 });
                 isLogIn = true;
+                (Social.Active as PlayGamesPlatform).SetDefaultLeaderboardForUI(leaderboardId);
                 PlusControlller.Instance.SignInStateGoogle();
             }
             else
@@ -108,24 +102,15 @@ public class GooglePlayManager : MonoBehaviour {
         isLogIn = false;
         PlusControlller.Instance.SignOutStateGoogle();
     }
-    public bool IsUsersLoaded()
-    {
-        return isUsersLoaded;
-    }
+
     public void SetNewRecord(int newScore)
     {
         Social.ReportScore(newScore, leaderboardId, (success) => {
         });
         
     }
-    public User[] GetAllUsers()
-    {
-        return users;
-    }
-    public void LoadAllUsers()
-    {
-        StartCoroutine(WaitForScoreLoading());
-    }
+    
+
     public void Achieve(string id)
     {
         if(isAchievesLoaded)
@@ -151,52 +136,30 @@ public class GooglePlayManager : MonoBehaviour {
             }
         }    
     }
-    IEnumerator WaitForScoreLoading()
+    public void ShowLeaderboard()
     {
-        isUsersLoaded = false;
-        int j = 0;
-        IScore[] scores = null;
-        isScoreLoaded = false;
-        Social.LoadScores(leaderboardId, (result)=> {
-            scores = result;
-            isScoreLoaded = true;
-        });
-        
-        while (!isScoreLoaded)
-        {
-            yield return new WaitForSecondsRealtime(.1f);
-        }
-        users = new User[scores.Length];
-        friends = new User[scores.Length];
-        string[] userIds = new string[scores.Length];
-        for (int i = 0; i < scores.Length; i++)
-        {
-            userIds[i] = scores[i].userID;
-        }
-        Social.LoadUsers(userIds, (GPSUsers) => {
-            for (int i = 0; i < users.Length; i++)
-            {
-
-                IUserProfile userProfile = GPSUsers[i];
-                users[i] = new User()
-                {
-                    userName = userProfile.userName,
-                    score = int.Parse(scores[i].formattedValue),
-                    place = i + 1,
-                    userImg = userProfile.image
-                };
-                if(userProfile.isFriend)
-                {
-                    friends[j++] = users[i];
-                }
-
-            }
-            isUsersLoaded = true;
+        Social.ShowLeaderboardUI();
+    }
+    public void ShowAchievements()
+    {
+        Social.ShowAchievementsUI();
+    }
+    /*public User[] GetAllUsers()
+    {
+        return users;
+    }
+    public void LoadUsers()
+    {
+        StartCoroutine(WaitForScoreLoading());
+    }
+    public void LoadScores()
+    {
+        Social.LoadScores(leaderboardId, (result) => {
         });
     }
     public User[] GetFriends()
     {
         return friends;
-    }
+    }*/
 
 }

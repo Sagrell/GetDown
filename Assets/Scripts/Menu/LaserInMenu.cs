@@ -23,10 +23,14 @@ public class LaserInMenu : MonoBehaviour {
         laserAnimation = GetComponent<Animator>();
         newPosition = new Vector3(Random.Range(minX,maxX),0f, 1f);
         _transform.position = newPosition;
-        StartCoroutine(LaserShot());
-        
-    }
+        StartCoroutine("LaserShot");
 
+
+    }
+    private void OnDestroy()
+    {
+        StopCoroutine("LaserShot");
+    }
     IEnumerator LaserShot()
     {
         while(true)

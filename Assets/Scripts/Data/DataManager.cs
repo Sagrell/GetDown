@@ -44,19 +44,19 @@ public class DataManager : MonoBehaviour {
        }
        userData.GoldAmount += GameState.countCoins;
        userData.TotalGold += GameState.countCoins;
-        if(userData.TotalGold >= 50)
+        if(userData.TotalGold >= 300)
         {
             GooglePlayManager.Instance.Achieve(GooglePlayManager.trtWealthAchieve);
-            if (userData.TotalGold >= 200)
+            if (userData.TotalGold >= 1000)
             {
                 GooglePlayManager.Instance.Achieve(GooglePlayManager.otrtWealthAchieve);
-                if (userData.TotalGold >= 1000)
+                if (userData.TotalGold >= 5000)
                 {
                     GooglePlayManager.Instance.Achieve(GooglePlayManager.richGuyAchieve);
-                    if (userData.TotalGold >= 2000)
+                    if (userData.TotalGold >= 11000)
                     {
                         GooglePlayManager.Instance.Achieve(GooglePlayManager.cugmSomeMoneyAchieve);
-                        if(userData.TotalGold >= 10000)
+                        if(userData.TotalGold >= 100000)
                         {
                             GooglePlayManager.Instance.Achieve(GooglePlayManager.whyAchieve);
                         }
@@ -112,10 +112,13 @@ public class DataManager : MonoBehaviour {
             HighScore = 0,
             GoldAmount = 0,
             TotalGold = 0,
-            CubesUnlocked = new bool[25] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false, false, false, false, false },
+            CubesUnlocked = new bool[28] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             PlatformsUnlocked = new bool[16] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             BackgroundsUnlocked = new bool[25] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             SelectedCube = 0,
+            isClaimedGift = false,
+            currentDayInARow = -1,
+            prevTimestamp = 0,
             SelectedPlatform = 0,
             SelectedBackground = 0,
             Shield = new int[] { 0, 0, 0 },
@@ -124,6 +127,7 @@ public class DataManager : MonoBehaviour {
             FastRun = new int[] { 0, 0, 0 },
             musicVolume = 1f,
             soundVolume = 1f,
+            isFirstTime = true,
             isMute = false
         };
         userData.hashOfContent = GenerateHashFromData(userData);
@@ -139,7 +143,10 @@ public class DataManager : MonoBehaviour {
             HighScore = 1000,
             GoldAmount = 1000000,
             TotalGold = 1000000,
-            CubesUnlocked = new bool[25] { true, false, false, false, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false, false, false, false, false, false, false },
+            currentDayInARow = -1,
+            prevTimestamp = 0,
+            isClaimedGift = false,
+            CubesUnlocked = new bool[28] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false, false, false, false, false, false, false },
             PlatformsUnlocked = new bool[16] { true, false,false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             BackgroundsUnlocked = new bool[25] { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false },
             SelectedCube = 0,
@@ -151,6 +158,7 @@ public class DataManager : MonoBehaviour {
             FastRun = new int[] { 0, 0, 0 },
             musicVolume = 1f,
             soundVolume = 1f,
+            isFirstTime = true,
             isMute = false
         };
         userData.hashOfContent = GenerateHashFromData(userData);

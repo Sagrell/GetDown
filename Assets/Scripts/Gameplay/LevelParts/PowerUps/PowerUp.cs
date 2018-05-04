@@ -13,10 +13,13 @@ public abstract class PowerUp : MonoBehaviour, IPooledObject
     public static Quaternion startRotation;
     private void Awake()
     {
-        startPosition = transform.position;
-        startRotation = transform.rotation;
+        startPosition = new Vector3(0, 0.6f, 0);
+        startRotation = Quaternion.identity;
     }
-
+    private void Start()
+    {
+        _RBTransform = GetComponent<Rigidbody>().transform;
+    }
     public void OnObjectSpawn()
     {
         _RBTransform = GetComponent<Rigidbody>().transform;

@@ -10,9 +10,13 @@ public class UserData
     public int GoldAmount;
     public int TotalGold;
 
+    public int currentDayInARow;
+    public int prevTimestamp;
+    public bool isClaimedGift;
     public bool[] CubesUnlocked;
     public bool[] PlatformsUnlocked;
     public bool[] BackgroundsUnlocked;
+    public bool isFirstTime;
 
     public int SelectedCube;
     public int SelectedPlatform;

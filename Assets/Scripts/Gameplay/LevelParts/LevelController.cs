@@ -25,33 +25,30 @@ public class LevelController : MonoBehaviour {
         startPlayerSpeed = GameManager.Instance.playerSpeed;
     }
     // Update is called once per frame
-    void Update () {
+    void FixedUpdate () {
         playerScreenPos = GameManager.player.playerScreenPos;
-        if (playerScreenPos.y < Screen.height * 0.45f)
+        if(!GameState.isLearning)
         {
-            if (startLevelSpeed < maxLevelSpeed)
-                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .03f);
-        }
-        /*else if ((playerScreenPos.y > Screen.height * 0.25f) && (playerScreenPos.y < Screen.height * 0.65f))
+            if (playerScreenPos.y < Screen.height * 0.45f)
+            {
+                if (startLevelSpeed < maxLevelSpeed)
+                    startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, startPlayerSpeed, .04f);
+            }
+            else
+            {
+                startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 1f, .04f);
+            }
+
+        } else
         {
-            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 2f, .03f);
-        }*/
-        else
-        {
-            startLevelSpeed = Mathf.MoveTowards(startLevelSpeed, 1f, .03f);
-        }
-        if (GameState.currentSpeedFactor <= 2)
-        {
-            levelSpeed = startLevelSpeed * GameState.currentSpeedFactor;
-        }else
-        {
-            levelSpeed = startLevelSpeed * 2;
+            startLevelSpeed = 2.2f;
         }
         
-        if (levelSpeed > maxLevelSpeed)
-            levelSpeed = maxLevelSpeed;
+        levelSpeed = startLevelSpeed * Mathf.Min(GameState.currentSpeedFactor, 2);
 
-        stepUp = levelSpeed * GameManager.deltaTime;
+            
+
+        stepUp = levelSpeed * GameManager.fixedDeltaTime;
         levelPosition.y += stepUp;
         transform.position = levelPosition;
     }

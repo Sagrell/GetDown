@@ -21,7 +21,7 @@ public class AdManager : MonoBehaviour {
         if (Instance == null)
         {
             countRestart = 0;
-            nextShowAd = Random.Range(3,6);
+            nextShowAd = Random.Range(2, 4);
             Instance = this;
             rewardAd = RewardBasedVideoAd.Instance;
             LoadRewardAd();
